@@ -15,7 +15,7 @@ export interface IProps {
 const Navigation = ({ className }: IProps) => {
   return (
     <nav className={className}>
-      <Logo />
+      <Logo size="small" squareColor='light' />
       <SearchContainer>
         <SearchInput type="text" placeholder="Szukaj przedmiotów" />
         <SearchButton>

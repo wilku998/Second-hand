@@ -3,6 +3,7 @@ import * as React from "react";
 import { render } from "react-dom";
 import { ThemeProvider } from "styled-components";
 import Navigation from "./components/Navigation/Navigation";
+import Dashboard from "./components/Dashboard/Dashboard";
 import theme from "./styledComponents/theme";
 import GlobalStyles from "./styledComponents/GlobalStyles";
 
@@ -11,6 +12,7 @@ const app = (
     <div>
       <GlobalStyles />
       <Navigation />
+      <Dashboard />
     </div>
   </ThemeProvider>
 );

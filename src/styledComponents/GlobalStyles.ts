@@ -26,9 +26,10 @@ export default createGlobalStyle`
         font-size: 1.6rem;
         line-height: 1.6;
         position: relative;
-        background: url('./images/header-background.jpg') center/cover no-repeat;
-        min-height: 90vh;
+        min-height:200vh;
         ${({ theme }) => `
+            color: ${theme.colorGreyDark2};
+            background-color: ${theme.colorGreyLight2};
         `}
     }
 
@@ -40,7 +41,7 @@ export default createGlobalStyle`
 
     button {
         cursor: pointer;
-        border: none;
+        color: inherit;
         font-family: inherit;
         &:focus{
             outline: none;

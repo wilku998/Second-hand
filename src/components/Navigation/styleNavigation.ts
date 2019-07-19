@@ -3,12 +3,17 @@ import { FunctionComponent } from "react";
 import { IProps } from "./Navigation";
 
 export default (Navigation: FunctionComponent<IProps>) => styled(Navigation)`
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   background-color: rgba(255, 255, 255, 0.7);
   padding: 0.5rem 4rem;
   display: flex;
   align-items: center;
+  z-index: 100;
   ${({ theme }) => `
+    border-bottom: ${theme.lightBorder2};
   `};
 `;
 
@@ -55,6 +60,7 @@ export const SearchInput = styled.input`
 `;
 export const SearchButton = styled.button`
   background: none;
+  border: none;
   position: absolute;
   top: 50%;
   right: 1rem;
