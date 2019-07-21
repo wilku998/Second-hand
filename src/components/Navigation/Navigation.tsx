@@ -1,5 +1,6 @@
 import React from "react";
 import ReactSVG from "react-svg";
+import { NavLink, Link } from "react-router-dom";
 import style, {
   Menu,
   SearchButton,
@@ -9,13 +10,15 @@ import style, {
 import Logo from "../Abstracts/Logo";
 
 export interface IProps {
-  className: string;
+  className?: string;
 }
 
 const Navigation = ({ className }: IProps) => {
   return (
     <nav className={className}>
-      <Logo size="small" squareColor='light' />
+      <Link to="/">
+        <Logo size="small" squareColor="light" />
+      </Link>
       <SearchContainer>
         <SearchInput type="text" placeholder="Szukaj przedmiotów" />
         <SearchButton>
@@ -26,8 +29,9 @@ const Navigation = ({ className }: IProps) => {
         <li>Kobiety</li>
         <li>Dzieci</li>
         <li>Mężczyźni</li>
-        <li>Zaloguj się</li>
-        <li>Zarejestruj się</li>
+        <li>
+          <Link to="/login">Zarejestruj / Zaloguj się</Link>
+        </li>
       </Menu>
     </nav>
   );

@@ -2,17 +2,18 @@ import "normalize.css";
 import * as React from "react";
 import { render } from "react-dom";
 import { ThemeProvider } from "styled-components";
-import Navigation from "./components/Navigation/Navigation";
-import Dashboard from "./components/Dashboard/Dashboard";
+import { createBrowserHistory } from "history";
 import theme from "./styledComponents/theme";
 import GlobalStyles from "./styledComponents/GlobalStyles";
+import AppRouter from "./routers/AppRouter";
+
+const history = createBrowserHistory();
 
 const app = (
   <ThemeProvider theme={theme}>
     <div>
-      <GlobalStyles />
-      <Navigation />
-      <Dashboard />
+      <GlobalStyles/>
+      <AppRouter history={history} />
     </div>
   </ThemeProvider>
 );

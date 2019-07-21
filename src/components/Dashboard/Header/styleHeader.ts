@@ -4,7 +4,7 @@ import { IProps } from "./Header";
 import Button_1 from "../../Abstracts/Button_1";
 
 export default (Header: FunctionComponent<IProps>) => styled(Header)`
-  padding: 8.5rem 4rem 8rem 4rem;
+  padding: 4rem 4rem 8rem 4rem;
   display: flex;
   align-items: flex-start;
   position: relative;
@@ -67,7 +67,6 @@ export const BackgroundDesc = styled.span`
   justify-content: center;
   line-height: 1;
   position: absolute;
-  font-size: 1.4rem;
   padding: 0.3rem 2rem;
   bottom: 0;
   right: 2.5rem;

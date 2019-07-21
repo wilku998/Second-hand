@@ -23,10 +23,10 @@ export default createGlobalStyle`
 
     body {
         font-family: 'Source Code Pro', monospace;
-        font-size: 1.6rem;
+        font-size: 1.4rem;
         line-height: 1.6;
         position: relative;
-        min-height:200vh;
+        padding-top: 4.5rem;
         ${({ theme }) => `
             color: ${theme.colorGreyDark2};
             background-color: ${theme.colorGreyLight2};
@@ -52,6 +52,13 @@ export default createGlobalStyle`
     }
 
     input {
+      border-radius: 0.3rem;
+      font-size: 1.4rem;
+      color: inherit;
+
+      ${({ theme }) => `
+        border: ${theme.lightBorder2}
+      `};
         &:focus{
             outline: none;
         }
@@ -59,5 +66,7 @@ export default createGlobalStyle`
     a, a:visited{
         color: inherit;
         text-decoration: none;
+        height: 100%;
+        display: inline-block;
     };
 `;

@@ -7,12 +7,13 @@ export default (Navigation: FunctionComponent<IProps>) => styled(Navigation)`
   top: 0;
   left: 0;
   width: 100%;
-  background-color: rgba(255, 255, 255, 0.7);
+  height: 4.5rem;
   padding: 0.5rem 4rem;
   display: flex;
   align-items: center;
   z-index: 100;
   ${({ theme }) => `
+    background-color: ${theme.colorGreyLight1};
     border-bottom: ${theme.lightBorder2};
   `};
 `;
@@ -24,7 +25,6 @@ export const Menu = styled.ul`
   & > li {
     padding: 0 1rem;
     text-transform: uppercase;
-    font-size: 1.4rem;
     cursor: pointer;
     &:not(:last-child) {
       position: relative;
@@ -48,15 +48,10 @@ export const SearchContainer = styled.div`
 `;
 
 export const SearchInput = styled.input`
-  border-radius: 0.3rem;
-  background-color: rgba(255, 255, 255, 0.7);
-  font-size: 1.4rem;
   padding: 0.3rem 3.4rem 0.3rem 1rem;
   margin-left: 1.5rem;
   width: 50rem;
-  ${({ theme }) => `
-    border: ${theme.lightBorder2}
-  `};
+
 `;
 export const SearchButton = styled.button`
   background: none;

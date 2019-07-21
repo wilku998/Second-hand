@@ -50,7 +50,6 @@ export const FollowButton = styled(InvisibleButton)`
 `;
 
 export const Info = styled.span`
-  font-size: 1.4rem;
   display: flex;
   align-items: flex-end;
   & > h3 {

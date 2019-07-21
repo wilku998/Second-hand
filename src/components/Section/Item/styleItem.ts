@@ -20,7 +20,6 @@ export const ItemDescription = styled.div`
   width: 100%;
   color: white;
   padding: 0.5rem 1rem;
-  font-size: 1.4rem;
   & > span {
     &:last-child {
       margin-left: 2rem;
