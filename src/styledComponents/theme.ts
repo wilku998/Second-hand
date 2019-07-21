@@ -13,6 +13,7 @@ export default {
 	colorBlue4: '#084074',
 	colorBlue5: '#06325a',
 	colorBlue6: '#001529',
+	colorWhiteTransparent: 'rgba(255,255,255, .7)',
 	colorGreyLight1: '#faf9f9',
 	colorGreyLight2: '#f4f2f2',
 	colorGreyLight3: '#f0eeee',

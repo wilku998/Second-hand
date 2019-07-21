@@ -17,7 +17,7 @@ export const Button = styled(Button_1)`
 export const Content = styled.div`
   display: grid;
   grid-template-columns: min-content;
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: ${({theme}) => theme.colorWhiteTransparent};
   padding: 2rem;
   margin-left: 4rem;
   position: relative;
@@ -74,5 +74,5 @@ export const BackgroundDesc = styled.span`
   height: 2.5rem;
   transform-origin: 100% 100%;
   transform: rotate(90deg);
-  background-color: rgba(255,255,255,.7);
+  background-color: ${({theme}) => theme.colorWhiteTransparent};
 `;

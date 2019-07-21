@@ -8,14 +8,14 @@ import style, {
   BackgroundDesc
 } from "./styleHeader";
 import Logo from "../../Abstracts/Logo";
-import images from './images';
+import images from "./images";
 
 export interface IProps {
-  className: string;
+  className?: string;
 }
 
 const Header = ({ className }: IProps) => {
-  const [ position, setPosition ]= useState(0)
+  const [position, setPosition] = useState(0);
   const calcPosition = (position: number) =>
     position + 1 > 1 ? -1 : position + 1;
 
@@ -28,7 +28,11 @@ const Header = ({ className }: IProps) => {
   return (
     <header className={className}>
       {images.map((img, imgIndex) => (
-        <Background key={img.image} visible={position===imgIndex} src={img.image} />
+        <Background
+          key={img.image}
+          visible={position === imgIndex}
+          src={img.image}
+        />
       ))}
       <BackgroundDesc>{images[position].desc}</BackgroundDesc>
       <Content>
