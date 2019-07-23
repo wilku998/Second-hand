@@ -6,7 +6,7 @@ require('dotenv').config({path: path.resolve(__dirname, '..', '.env.all')});
 
 export default async (req: any, res: any, next: any) => {
   try {
-    const token = req.header("Authorization").replace("Bearer ", "");
+    const token = req.cookies.jwtToken //| req.header("Authorization").replace("Bearer ", "");
     const decoded: any = jwt.verify(token, process.env.SECRET_KEY);
     const user = await User.findOne({
       _id: decoded._id,

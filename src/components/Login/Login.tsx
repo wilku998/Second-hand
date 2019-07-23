@@ -1,64 +1,120 @@
 import React, { useState } from "react";
-import style, { Container, Button, Input, RadioGroup } from "./styleLogin";
+import {
+  Container,
+  Content,
+  Form,
+  Button,
+  Input,
+  RadioGroup
+} from "./styleLogin";
+import { loginRequest, registerRequest } from "../../API/users";
+import { Link } from "react-router-dom";
 
 export interface IProps {
-  className: string;
+  className?: string;
 }
 const Login = ({ className }: IProps) => {
-  const [type, setType] = useState("login");
+  const [form, setForm] = useState({
+    type: "register",
+    name: "Skrapapapa",
+    password: "12312312312",
+    confirmPassword: "",
+    email: "przegldarka@test.pl"
+  });
+  const { type, name, password, confirmPassword, email } = form;
 
-  const onTypeChange = (e: any) => setType(e.target.value);
+  const onFormChange = e => {
+    const propety = e.target.name;
+    const value = e.target.value;
+
+    setForm({ ...form, [propety]: value });
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    if (type === "login") {
+      await loginRequest({ email, password });
+    } else {
+      const error = await registerRequest({ email, password, name });
+      console.log(error);
+    }
+  };
 
   return (
     <Container>
-      <form className={className}>
-        <label>
-          Login
-          <Input type="text" />
-        </label>
-        {type === "register" && (
+      <Content>
+        <Form className={className} onSubmit={onSubmit}>
           <label>
             Email
-            <Input type="text" />
-          </label>
-        )}
-        <label>
-          Hasło
-          <Input type="password" />
-        </label>
-        {type === "register" && (
-          <label>
-            Potwierdź hasło
-            <Input type="password" />
-          </label>
-        )}
-        <RadioGroup>
-          <label>
-            Logowanie
-            <input
-              name="type"
-              type="radio"
-              onChange={onTypeChange}
-              value="login"
-              checked={type === "login"}
+            <Input
+              value={email}
+              onChange={onFormChange}
+              name="email"
+              type="text"
             />
           </label>
+
+          {type === "register" && (
+            <label>
+              Imię
+              <Input
+                value={name}
+                onChange={onFormChange}
+                name="name"
+                type="text"
+              />
+            </label>
+          )}
           <label>
-            Rejestracja
-            <input
-              name="type"
-              type="radio"
-              onChange={onTypeChange}
-              value="register"
-              checked={type === "register"}
+            Hasło
+            <Input
+              value={password}
+              onChange={onFormChange}
+              name="password"
+              type="password"
             />
           </label>
-        </RadioGroup>
-        <Button>{type === "register" ? "Zarejestruj" : "Zaloguj"} się</Button>
-        <Button>Wróć się</Button>
-      </form>
+          {type === "register" && (
+            <label>
+              Potwierdź hasło
+              <Input
+                value={confirmPassword}
+                onChange={onFormChange}
+                name="confirmPassword"
+                type="password"
+              />
+            </label>
+          )}
+          <RadioGroup>
+            <label>
+              Logowanie
+              <input
+                name="type"
+                type="radio"
+                onChange={onFormChange}
+                value="login"
+                checked={type === "login"}
+              />
+            </label>
+            <label>
+              Rejestracja
+              <input
+                name="type"
+                type="radio"
+                onChange={onFormChange}
+                value="register"
+                checked={type === "register"}
+              />
+            </label>
+          </RadioGroup>
+          <Button>{type === "register" ? "Zarejestruj" : "Zaloguj"} się</Button>
+        </Form>
+        <Button>
+          <Link to="/">Wróć się</Link>
+        </Button>
+      </Content>
     </Container>
   );
 };
 
-export default style(Login);
+export default Login;

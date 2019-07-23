@@ -8,41 +8,46 @@ import { uploadImage } from "./functions";
 
 const router = express.Router();
 
-router.post("/users", async (req, res) => {
+router.post("/api/users", async (req, res) => {
   try {
     const user = new User(req.body);
     await user.save();
     const token = await user.generateAuthToken();
-    res.status(201).send({ user, token });
+    res.cookie("jwtToken", token, { maxAge: 108000000, httpOnly: true });
+    res.status(201).send(user);
   } catch (e) {
     res.status(400).send(e);
   }
 });
 
-router.post("/users/login", async (req, res) => {
+router.post("/api/users/login", async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findByCredenctials(email, password);
     const token = await user.generateAuthToken();
-    res.send({ user, token });
+    res.cookie("jwtToken", token, { maxAge: 108000000, httpOnly: true });
+    res.send(user);
   } catch (e) {
-    res.status(400).send();
+    res.status(400).send(e);
   }
 });
 
-router.post("/users/logout", AuthMiddleware, async (req: IAuthRequest, res) => {
-  try {
-    const { user, token } = req;
-    console.log(token);
-    user.tokens = user.tokens.filter(
-      (t: { token: string }) => t.token !== token
-    );
-    await user.save();
-    res.send(user);
-  } catch (e) {
-    res.status(500).send();
+router.post(
+  "/api/users/logout",
+  AuthMiddleware,
+  async (req: IAuthRequest, res) => {
+    try {
+      const { user, token } = req;
+      user.tokens = user.tokens.filter(
+        (t: { token: string }) => t.token !== token
+      );
+      await user.save();
+      res.send(user);
+    } catch (e) {
+      res.status(500).send();
+    }
   }
-});
+);
 
 router.post(
   "/users/me/avatar",
@@ -78,7 +83,7 @@ router.get(
   }
 );
 
-router.get("/users/me", AuthMiddleware, async (req: IAuthRequest, res) => {
+router.get("/api/users/me", AuthMiddleware, async (req: IAuthRequest, res) => {
   try {
     const { user } = req;
     await user.populate("ownItems").execPopulate();
@@ -88,19 +93,27 @@ router.get("/users/me", AuthMiddleware, async (req: IAuthRequest, res) => {
   }
 });
 
-router.get("/users/:id", FindUserMiddleware, async (req: IUserRequest, res) => {
-  try {
-    const { user } = req;
-    await user.populate("ownItems").execPopulate();
-    res.send({ user, ownItems: user.ownItems });
-  } catch (e) {
-    res.status(500).send();
+router.get(
+  "/api/users/:id",
+  FindUserMiddleware,
+  async (req: IUserRequest, res) => {
+    try {
+      const { user } = req;
+      await user.populate("ownItems").execPopulate();
+      res.send({ user, ownItems: user.ownItems });
+    } catch (e) {
+      res.status(500).send();
+    }
   }
-});
+);
 
-router.delete("/users/me", AuthMiddleware, async (req: IAuthRequest, res) => {
-  await User.findOneAndDelete({ _id: req.user._id });
-  res.send();
-});
+router.delete(
+  "/api/users/me",
+  AuthMiddleware,
+  async (req: IAuthRequest, res) => {
+    await User.findOneAndDelete({ _id: req.user._id });
+    res.send();
+  }
+);
 
 export default router;

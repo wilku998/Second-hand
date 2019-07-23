@@ -1,6 +1,10 @@
 import React from "react";
 import ReactSVG from "react-svg";
-import { NavLink, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { inject, observer } from "mobx-react";
+import { history } from "../../app";
+import { logoutRequest } from "../../API/users";
+
 import style, {
   Menu,
   SearchButton,
@@ -11,9 +15,20 @@ import Logo from "../Abstracts/Logo";
 
 export interface IProps {
   className?: string;
+  userStore: any;
 }
 
-const Navigation = ({ className }: IProps) => {
+const Navigation = ({ className, userStore }: IProps) => {
+  const isAuth = userStore.isAuth;
+  console.log(isAuth)
+  const onLoginClick = async () => {
+    if (isAuth) {
+      await logoutRequest();
+      userStore.user = undefined;
+    } else {
+      history.push("/login");
+    }
+  };
   return (
     <nav className={className}>
       <Link to="/">
@@ -30,11 +45,13 @@ const Navigation = ({ className }: IProps) => {
         <li>Dzieci</li>
         <li>Mężczyźni</li>
         <li>
-          <Link to="/login">Zarejestruj / Zaloguj się</Link>
+          <button onClick={onLoginClick}>
+            {isAuth ? "Wyloguj" : "Zaloguj"} się
+          </button>
         </li>
       </Menu>
     </nav>
   );
 };
 
-export default style(Navigation);
+export default style(inject("userStore")(observer(Navigation)));

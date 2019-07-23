@@ -19,7 +19,7 @@ const Section = ({ className, title, items, users }: IProps) => {
 
       {users &&
         users.map(user => (
-          <div>
+          <div key={user._id}>
             <UserLabel size="big" user={user} />
             {user.ownItems && (
               <ItemsContainer>

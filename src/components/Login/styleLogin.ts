@@ -3,13 +3,10 @@ import { FunctionComponent } from "react";
 import { IProps } from "./Login";
 import Button_2 from "../Abstracts/Button_2";
 
-export default (Login: FunctionComponent<IProps>) => styled(Login)`
+export const Form = styled.form`
   display: flex;
   flex-direction: column;
-  padding: 2rem;
-  width: 40rem;
-  border-radius: 0.3rem;
-  box-shadow: 0 2rem 2rem rgba(0, 0, 0, 0.1);
+
   & label {
     display: flex;
     align-items: center;
@@ -25,12 +22,20 @@ export default (Login: FunctionComponent<IProps>) => styled(Login)`
       margin-bottom: 1rem;
     }
   }
+`;
+
+export const Content = styled.div`
+  padding: 2rem;
+  width: 40rem;
+  border-radius: 0.3rem;
+  box-shadow: 0 2rem 2rem rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
 
   ${({ theme }) => `
         background-color: ${theme.colorGreyLight1};
     `}
 `;
-
 export const Input = styled.input`
   padding: 0.3rem 1rem;
   flex: 1;
@@ -44,7 +49,7 @@ export const Container = styled.div`
 `;
 
 export const Button = styled(Button_2)`
-  &:first-of-type{
+  &:first-of-type {
     margin-top: 1rem;
   }
 `;

@@ -5,7 +5,7 @@ import { IAuthRequest, IMatch } from "./interfaces";
 
 const router = express.Router();
 
-router.post("/items", AuthMiddleware, async (req: IAuthRequest, res) => {
+router.post("/api/items", AuthMiddleware, async (req: IAuthRequest, res) => {
   const item = new Item({ ...req.body, owner: req.user._id });
 
   try {
@@ -16,7 +16,7 @@ router.post("/items", AuthMiddleware, async (req: IAuthRequest, res) => {
   }
 });
 
-router.get("/items", async (req, res) => {
+router.get("/api/items", async (req, res) => {
   const { size, gender, category, name } = req.query;
   const queries: IMatch = { size, gender, category };
 
@@ -46,7 +46,7 @@ router.get("/items", async (req, res) => {
 });
 
 
-router.get("/items/:id", async (req, res) => {
+router.get("/api/items/:id", async (req, res) => {
   try {
     const item = await Item.findById(req.query.id);
     item.populate("owner").execPopulate()
