@@ -1,5 +1,6 @@
-export default (method: string, url: string, data?:any, expectedStatus?: number ) => {
+const parseResponse = (response: any) => Object.keys(response).length === 0 ? undefined: JSON.parse(response);
 
+export default (method: string, url: string, data?:any, expectedStatus?: number ) => {
   return new Promise(function(resolve, reject) {
     const xhr = new XMLHttpRequest();
     xhr.open(method, url, true);
@@ -7,18 +8,18 @@ export default (method: string, url: string, data?:any, expectedStatus?: number 
     xhr.send(JSON.stringify(data))
     xhr.addEventListener("load", function() {
       if (this.status === expectedStatus) {
-        resolve(JSON.parse(xhr.response));
+        resolve(parseResponse(xhr.response));
       } else {
         reject({
           status: this.status,
-          error: JSON.parse(xhr.response)
+          error: parseResponse(xhr.response)
         });
       }
     });
     xhr.addEventListener("error", function() {
       reject({
         status: this.status,
-        error: JSON.parse(xhr.response)
+        error: parseResponse(xhr.response)
       });
     });
   });

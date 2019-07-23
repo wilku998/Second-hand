@@ -3,10 +3,8 @@ export default {
 	lightBorder: '1px solid #f0eeee',
 	lightBorder2: '1px solid #999',
 	background: '#d1d1d1',
-	colorRed: 'rgb(163, 82, 82)',
 	colorRedLight: 'rgb(255, 180, 180)',
-	colorGreen: 'rgb(98, 160, 74)',
-	colorGreenLight: 'rgb(232, 240, 254)',
+	colorGreenLight: '#A3FF80',
 	colorBlue1: 'rgb(107, 164, 218)',
 	colorBlue2: 'rgb(90, 139, 185)',
 	colorBlue3: '#1890ff', //standard

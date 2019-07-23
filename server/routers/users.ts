@@ -28,7 +28,7 @@ router.post("/api/users/login", async (req, res) => {
     res.cookie("jwtToken", token, { maxAge: 108000000, httpOnly: true });
     res.send(user);
   } catch (e) {
-    res.status(400).send(e);
+    res.status(400).send();
   }
 });
 
@@ -42,7 +42,7 @@ router.post(
         (t: { token: string }) => t.token !== token
       );
       await user.save();
-      res.send(user);
+      res.send();
     } catch (e) {
       res.status(500).send();
     }

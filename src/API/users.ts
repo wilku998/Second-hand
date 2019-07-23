@@ -1,17 +1,22 @@
 import ajax from "./ajax";
 import { userStore } from "../app";
 
+const parseResponse = (response: any) =>
+  Object.keys(response).length === 0 || response.error ? undefined : response;
+
 export const loginRequest = async (data: any) => {
   try {
     const response: any = await ajax("POST", "/api/users/login", data, 200);
-    userStore.user = response;
-  } catch (e) {}
+    userStore.user = parseResponse(response);
+  } catch (e) {
+    return "Podane dane są nieprawidłowe";
+  }
 };
 
 export const registerRequest = async (data: any) => {
   try {
     const response: any = await ajax("POST", "/api/users", data, 201);
-    userStore.user = response;
+    userStore.user = parseResponse(response);
   } catch (e) {
     if (e.error.code === 11000) {
       return "Email jest już zajęty";
@@ -22,8 +27,10 @@ export const registerRequest = async (data: any) => {
 export const getProfileRequest = async () => {
   try {
     const response = await fetch("/api/users/me");
-    const parsed = await response.json()
-    userStore.user = {...parsed.user, ...parsed.ownItems};
+    const parsed = await response.json();
+    if(parseResponse(parsed)){
+      userStore.user = { ...parsed.user, ...parsed.ownItems };
+    }
   } catch (e) {}
 };
 

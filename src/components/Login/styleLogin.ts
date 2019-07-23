@@ -39,6 +39,11 @@ export const Content = styled.div`
 export const Input = styled.input`
   padding: 0.3rem 1rem;
   flex: 1;
+  ${({theme, valid, value, isRegister}) => `
+    ${value !== '' && isRegister ? `
+      background-color: ${valid ? theme.colorGreenLight : theme.colorRedLight};
+    ` : ''}
+  `}
 `;
 
 export const Container = styled.div`

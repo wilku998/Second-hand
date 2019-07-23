@@ -7,36 +7,83 @@ import {
   Input,
   RadioGroup
 } from "./styleLogin";
+import validate from "./validate";
+import initialState from "./initialState";
 import { loginRequest, registerRequest } from "../../API/users";
 import { Link } from "react-router-dom";
 
 export interface IProps {
   className?: string;
 }
+
 const Login = ({ className }: IProps) => {
-  const [form, setForm] = useState({
-    type: "register",
-    name: "Skrapapapa",
-    password: "12312312312",
-    confirmPassword: "",
-    email: "przegldarka@test.pl"
-  });
-  const { type, name, password, confirmPassword, email } = form;
+  const [form, setForm] = useState(initialState);
+  const [type, setType] = useState("register");
+  const [errorMessage, setErrorMessage] = useState("");
+  const { name, password, confirmPassword, email } = form;
+
+  const inputs = Object.keys(form)
+    .filter(key =>
+      type === "login" ? key !== "confirmPassword" && key !== "name" : true
+    )
+    .map((key: "name" | "password" | "confirmPassword" | "email") => ({
+      ...form[key],
+      name: key
+    }));
+
+  const onTypeChange = e => setType(e.target.value);
 
   const onFormChange = e => {
-    const propety = e.target.name;
+    const property = e.target.name;
     const value = e.target.value;
+    let valid = validate(
+      property,
+      value,
+      property === "confirmPassword" ? password.value : undefined
+    );
 
-    setForm({ ...form, [propety]: value });
+    setForm({
+      ...form,
+      confirmPassword:
+        property === "password" && property !== "confirmPassword"
+          ? {
+              ...confirmPassword,
+              valid: validate("confirmPassword", confirmPassword.value, value)
+            }
+          : confirmPassword,
+      [property]: { ...form[property], value, valid }
+    });
   };
 
-  const onSubmit = async (e) => {
+  const onSubmit = async e => {
     e.preventDefault();
-    if (type === "login") {
-      await loginRequest({ email, password });
+    let formValid = true;
+    let error = "";
+    inputs.forEach(e => {
+      if (!e.valid) {
+        formValid = false;
+        error = e.errorMessage;
+      }
+    });
+    if (formValid) {
+      if (type === "login") {
+        var loginError = await loginRequest({
+          email: email.value,
+          password: password.value
+        });
+      } else {
+        var loginError = await registerRequest({
+          email: email.value,
+          password: password.value,
+          name: name.value
+        });
+      }
+      console.log(loginError)
+      if (loginError) {
+        setErrorMessage(loginError);
+      }
     } else {
-      const error = await registerRequest({ email, password, name });
-      console.log(error);
+      setErrorMessage(error);
     }
   };
 
@@ -44,54 +91,27 @@ const Login = ({ className }: IProps) => {
     <Container>
       <Content>
         <Form className={className} onSubmit={onSubmit}>
-          <label>
-            Email
-            <Input
-              value={email}
-              onChange={onFormChange}
-              name="email"
-              type="text"
-            />
-          </label>
+          {inputs.map(e => (
+            <label key={e.name}>
+              {e.label}
+              <Input
+                value={e.value}
+                onChange={onFormChange}
+                name={e.name}
+                type={e.type}
+                valid={e.valid}
+                isRegister={type === "register"}
+              />
+            </label>
+          ))}
 
-          {type === "register" && (
-            <label>
-              Imię
-              <Input
-                value={name}
-                onChange={onFormChange}
-                name="name"
-                type="text"
-              />
-            </label>
-          )}
-          <label>
-            Hasło
-            <Input
-              value={password}
-              onChange={onFormChange}
-              name="password"
-              type="password"
-            />
-          </label>
-          {type === "register" && (
-            <label>
-              Potwierdź hasło
-              <Input
-                value={confirmPassword}
-                onChange={onFormChange}
-                name="confirmPassword"
-                type="password"
-              />
-            </label>
-          )}
           <RadioGroup>
             <label>
               Logowanie
               <input
                 name="type"
                 type="radio"
-                onChange={onFormChange}
+                onChange={onTypeChange}
                 value="login"
                 checked={type === "login"}
               />
@@ -101,12 +121,13 @@ const Login = ({ className }: IProps) => {
               <input
                 name="type"
                 type="radio"
-                onChange={onFormChange}
+                onChange={onTypeChange}
                 value="register"
                 checked={type === "register"}
               />
             </label>
           </RadioGroup>
+          {errorMessage !== "" && <span>{errorMessage}</span>}
           <Button>{type === "register" ? "Zarejestruj" : "Zaloguj"} się</Button>
         </Form>
         <Button>

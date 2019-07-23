@@ -3,6 +3,7 @@ import { Router, Route, Switch } from "react-router-dom";
 import Dashboard from '../components/Dashboard/Dashboard';
 import Login from '../components/Login/Login';
 import Navigation from '../components/Navigation/Navigation';
+import OnlyNotAuthRoute from './OnlyNotAuthRoute';
 
 interface IProps {
     history: any
@@ -15,7 +16,7 @@ const AppRouter = ({history}: IProps) => {
           <Navigation />
             <Switch>
                 <Route path="/" exact component={Dashboard} />
-                <Route path="/login" component={Login}/>
+                <OnlyNotAuthRoute path="/login" component={Login}/>
             </Switch>
         </Router>
     )

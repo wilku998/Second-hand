@@ -20,7 +20,6 @@ export interface IProps {
 
 const Navigation = ({ className, userStore }: IProps) => {
   const isAuth = userStore.isAuth;
-  console.log(isAuth)
   const onLoginClick = async () => {
     if (isAuth) {
       await logoutRequest();

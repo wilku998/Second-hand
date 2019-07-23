@@ -1,11 +1,10 @@
 import { Schema, model } from "mongoose";
 import jwt from "jsonwebtoken";
-import { isEmail } from "validator";
 import bcrypt from "bcryptjs";
-import path from 'path';
+import path from "path";
 import { IUser, IUserModel } from "./interfaces";
 
-require('dotenv').config({path: path.resolve(__dirname, '..', '.env.all')});
+require("dotenv").config({ path: path.resolve(__dirname, "..", ".env.all") });
 
 const userSchema = new Schema({
   name: {
@@ -35,25 +34,6 @@ const userSchema = new Schema({
   ],
   avatar: {
     type: Buffer
-  }
-});
-
-userSchema.path("name").validate((value: string) => {
-  const { length } = value;
-  if (length < 5 && length > 25) {
-    throw new Error("Name should have at least 5 characters and less than 25!");
-  }
-});
-
-userSchema.path("email").validate((value: string) => {
-  if (!isEmail(value)) {
-    throw new Error("Email is incorrect!");
-  }
-});
-
-userSchema.path("password").validate((value: string) => {
-  if (value.toLowerCase().includes("password")) {
-    throw new Error('Password cannot contain "password"');
   }
 });
 
@@ -98,13 +78,11 @@ userSchema.statics.findByCredenctials = async (
 ) => {
   const user = await User.findOne({ email });
   if (!user) {
-    throw new Error("Unable to login!");
+    throw new Error();
   }
-
-  const isMatch = bcrypt.compare(password, user.password);
-
+  const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    throw new Error("Unable to login!");
+    throw new Error();
   }
 
   return user;
@@ -112,4 +90,6 @@ userSchema.statics.findByCredenctials = async (
 
 const User: IUserModel = model<IUser, IUserModel>("User", userSchema);
 
+// const deleteAll = async () => await User.deleteMany({});
+// deleteAll();
 export default User;
