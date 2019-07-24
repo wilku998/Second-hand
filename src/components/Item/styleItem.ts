@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { IProps } from "./Item";
 import { FunctionComponent } from "react";
-import InvisibleButton from "../../Abstracts/InvisibleButton";
+import InvisibleButton from "../Abstracts/InvisibleButton";
 
 export default (Item: FunctionComponent<IProps>) => styled(Item)`
   height: 35rem;

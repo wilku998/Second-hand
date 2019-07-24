@@ -1,9 +1,9 @@
 import React from "react";
 import IUser from "../../interfaces/User";
 import IItem from "../../interfaces/Item";
-import Item from "./Item/Item";
-import style, { Title, ItemsContainer, Button } from "./styleSection";
-import UserLabel from "./UserLabel/UserLabel";
+import Item from "../Item/Item";
+import User from "../User/User";
+import style, { Title, ItemsContainer } from "./styleSection";
 
 export interface IProps {
   className?: string;
@@ -16,26 +16,11 @@ const Section = ({ className, title, items, users }: IProps) => {
   return (
     <section className={className}>
       <Title>{title}</Title>
-
-      {users &&
-        users.map(user => (
-          <div key={user._id}>
-            <UserLabel size="big" user={user} />
-            {user.ownItems && (
-              <ItemsContainer>
-                {user.ownItems.map(item => (
-                <Item userLabelVisible={false} item={item} key={item._id} />
-                ))}
-                <Button>Zobacz wszystkie</Button>
-              </ItemsContainer>
-            )}
-          </div>
-        ))}
-
+      {users && users.map(user => <User key={user._id} user={user}/>)}
       {items && (
         <ItemsContainer>
           {items.map(item => (
-            <Item userLabelVisible={true} item={item} key={item._id} />
+            <Item item={item} key={item._id} />
           ))}
         </ItemsContainer>
       )}

@@ -1,21 +1,18 @@
 import ReactSVG from "react-svg";
 import React from "react";
 import style, { LikeButton, ItemDescription } from "./styleItem";
-import IItem from "../../../interfaces/Item";
-import UserLabel from "../UserLabel/UserLabel";
+import IItem from "../../interfaces/Item";
+
 export interface IProps {
   className?: string;
   item: IItem;
-  userLabelVisible: boolean
 }
 
-const Item = ({ className, item, userLabelVisible }: IProps) => {
+const Item = ({ className, item }: IProps) => {
   const { price, size, category, brand, owner } = item;
 
   return (
     <div className={className}>
-      {userLabelVisible && <UserLabel size='small' user={owner} />}
-
       <ItemDescription>
         <div>
           <h3>

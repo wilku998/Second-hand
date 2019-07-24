@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { FunctionComponent } from "react";
 import { IProps } from "./Section";
-import Button_2 from '../Abstracts/Button_2';
 
 export default (Section: FunctionComponent<IProps>) => styled(Section)`
   display: grid;
@@ -25,7 +24,4 @@ export const ItemsContainer = styled.div`
   padding-bottom: 2rem;
 `;
 
-export const Button = styled(Button_2)`
-  grid-column: 1/2;
-`
 
