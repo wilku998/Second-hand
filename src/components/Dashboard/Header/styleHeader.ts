@@ -48,7 +48,7 @@ export const Description = styled.p`
   margin-bottom: 2rem;
 `;
 
-export const Background = styled.img`
+export const Background = styled.img<{visible: boolean}>`
   position: absolute;
   top: 0;
   left: 0;

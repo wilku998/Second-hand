@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, ChangeEvent } from "react";
 import {
   Container,
   Content,
@@ -31,10 +31,10 @@ const Login = ({ className }: IProps) => {
       name: key
     }));
 
-  const onTypeChange = e => setType(e.target.value);
+  const onTypeChange = (e:ChangeEvent<HTMLInputElement>) => setType(e.target.value);
 
-  const onFormChange = e => {
-    const property = e.target.name;
+  const onFormChange = (e:ChangeEvent<HTMLInputElement>) => {
+    const property: "name" | "password" | "confirmPassword" | "email" = e.target.name;
     const value = e.target.value;
     let valid = validate(
       property,
@@ -45,7 +45,7 @@ const Login = ({ className }: IProps) => {
     setForm({
       ...form,
       confirmPassword:
-        property === "password" && property !== "confirmPassword"
+        property === "password"
           ? {
               ...confirmPassword,
               valid: validate("confirmPassword", confirmPassword.value, value)
@@ -55,7 +55,7 @@ const Login = ({ className }: IProps) => {
     });
   };
 
-  const onSubmit = async e => {
+  const onSubmit = async (e:any) => {
     e.preventDefault();
     let formValid = true;
     let error = "";
@@ -78,7 +78,6 @@ const Login = ({ className }: IProps) => {
           name: name.value
         });
       }
-      console.log(loginError)
       if (loginError) {
         setErrorMessage(loginError);
       }

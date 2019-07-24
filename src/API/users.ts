@@ -4,7 +4,7 @@ import { userStore } from "../app";
 const parseResponse = (response: any) =>
   Object.keys(response).length === 0 || response.error ? undefined : response;
 
-export const loginRequest = async (data: any) => {
+export const loginRequest = async (data: {email: string, password: string}) => {
   try {
     const response: any = await ajax("POST", "/api/users/login", data, 200);
     userStore.user = parseResponse(response);
@@ -13,7 +13,7 @@ export const loginRequest = async (data: any) => {
   }
 };
 
-export const registerRequest = async (data: any) => {
+export const registerRequest = async (data: {email: string, password: string, name: string}) => {
   try {
     const response: any = await ajax("POST", "/api/users", data, 201);
     userStore.user = parseResponse(response);

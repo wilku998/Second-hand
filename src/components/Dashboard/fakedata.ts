@@ -110,8 +110,6 @@ export const users = [
     name: "Bartass ass",
     avatar: "./images/bluzastussy.jpg",
     _id: "423423",
-    description:
-      "dasjkn dkajsnd askjdnas dnasjk dnajkdn asjkd neuwi rnweiu rnweuir nweuir nweui rnwer we nweruir dasd qerwer rwew",
     ownItems: [
       {
         category: "Hoodie",
@@ -142,7 +140,6 @@ export const users = [
     name: "Bartass ass",
     avatar: "./images/bluzastussy.jpg",
     _id: "42343423",
-    description: "nweuir nweui rnwer we nweruir dasd qerwer rwew"
   },
   {
     name: "Bartass ass",
@@ -153,26 +150,20 @@ export const users = [
     name: "Bartass ass",
     avatar: "./images/bluzastussy.jpg",
     _id: "423ds423",
-    description:
-      "nweuir nweui rnwer we nweruir dasd qerwer  rwerwerwer erwr wer werwe rwerwer rwew"
   },
   {
     name: "Bartass ass",
     avatar: "./images/bluzastussy.jpg",
     _id: "42bgf3423",
-    description: "nweuir nweui qerwer rwew"
   },
   {
     name: "Bartass ass",
     avatar: "./images/bluzastussy.jpg",
     _id: "423asdwq423",
-    description:
-      "nweuir nweui rnwer we  23423 423fwe rwerwenweruir dasd qerwer rwew"
   },
   {
     name: "Bartass ass",
     avatar: "./images/bluzastussy.jpg",
     _id: "42342qqq3",
-    description: " dasd qerwer rwew"
   }
 ];

@@ -36,7 +36,7 @@ export const Content = styled.div`
         background-color: ${theme.colorGreyLight1};
     `}
 `;
-export const Input = styled.input`
+export const Input = styled.input<{valid: boolean, isRegister: boolean}>`
   padding: 0.3rem 1rem;
   flex: 1;
   ${({theme, valid, value, isRegister}) => `

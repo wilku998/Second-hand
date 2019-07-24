@@ -15,7 +15,7 @@ import Logo from "../Abstracts/Logo";
 
 export interface IProps {
   className?: string;
-  userStore: any;
+  userStore?: any;
 }
 
 const Navigation = ({ className, userStore }: IProps) => {

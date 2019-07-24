@@ -1,4 +1,4 @@
-import { IUserSmall } from './User';
+import IUser from './User';
 
 export default interface Item {
     brand: string,
@@ -7,5 +7,5 @@ export default interface Item {
     size: string,
     image: string,
     _id: string,
-    owner: IUserSmall
+    owner?: IUser
 }
