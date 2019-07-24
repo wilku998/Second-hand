@@ -25,7 +25,7 @@ export default {
     valid: true,
     label: "Powtórz hasło",
     type: "password",
-    errorMessage: "Hasła nie są zgodne"
+    errorMessage: "Hasła są niezgodne"
   },
 
 };

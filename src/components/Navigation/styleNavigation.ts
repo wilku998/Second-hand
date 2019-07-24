@@ -8,14 +8,25 @@ export default (Navigation: FunctionComponent<IProps>) => styled(Navigation)`
   left: 0;
   width: 100%;
   height: 4.5rem;
-  padding: 0.5rem 4rem;
-  display: flex;
-  align-items: center;
+  padding: 0 4rem;
   z-index: 100;
   ${({ theme }) => `
     background-color: ${theme.colorGreyLight1};
     border-bottom: ${theme.lightBorder2};
   `};
+
+  & li {
+    &:hover{
+      color: black;
+    }
+  }
+`;
+
+export const Content = styled.div`
+  padding: 0.5rem 0;
+  display: flex;
+  align-items: center;
+  position: relative;
 `;
 
 export const Menu = styled.ul`
@@ -23,7 +34,7 @@ export const Menu = styled.ul`
   display: flex;
   margin-left: auto;
   & > li {
-    padding: 0 1rem;
+    padding: ${({ theme }) => `0 ${theme.navigationListItemLeftRightPadding}`};
     text-transform: uppercase;
     cursor: pointer;
     &:not(:last-child) {
@@ -36,7 +47,7 @@ export const Menu = styled.ul`
         transform: translateY(-50%);
         width: 1px;
         height: 75%;
-        background-color: ${props => props.theme.colorGreyDark2};
+        background-color: ${props => props.theme.colorGreyLight4};
       }
     }
   }
@@ -51,7 +62,6 @@ export const SearchInput = styled.input`
   padding: 0.3rem 3.4rem 0.3rem 1rem;
   margin-left: 1.5rem;
   width: 50rem;
-
 `;
 export const SearchButton = styled.button`
   background: none;

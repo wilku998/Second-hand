@@ -22,8 +22,8 @@ const Item = ({ className, item }: IProps) => {
             <ReactSVG src="./svg/heart.svg" />
           </LikeButton>
         </div>
-        <span>Size: {size}</span>
-        <span>Price: {price}</span>
+        <span>Rozmiar: {size}</span>
+        <span>Cena: {price}</span>
       </ItemDescription>
     </div>
   );

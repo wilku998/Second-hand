@@ -1,10 +1,12 @@
 export default {
+	navigationListItemLeftRightPadding: '1rem',
 	darkBorder: '1px solid #666',
 	lightBorder: '1px solid #f0eeee',
 	lightBorder2: '1px solid #999',
 	background: '#d1d1d1',
-	colorRedLight: 'rgb(255, 180, 180)',
-	colorGreenLight: '#A3FF80',
+	colorRed: '#BF2E21',
+	colorRedLight: '#FFC1B4',
+	colorGreenLight: '#C9FFB0',
 	colorBlue1: 'rgb(107, 164, 218)',
 	colorBlue2: 'rgb(90, 139, 185)',
 	colorBlue3: '#1890ff', //standard

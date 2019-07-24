@@ -5,7 +5,8 @@ import {
   Form,
   Button,
   Input,
-  RadioGroup
+  RadioGroup,
+  ErrorMessage
 } from "./styleLogin";
 import validate from "./validate";
 import initialState from "./initialState";
@@ -31,10 +32,14 @@ const Login = ({ className }: IProps) => {
       name: key
     }));
 
-  const onTypeChange = (e:ChangeEvent<HTMLInputElement>) => setType(e.target.value);
+  const onTypeChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setType(e.target.value);
+    setErrorMessage("");
+  }
 
-  const onFormChange = (e:ChangeEvent<HTMLInputElement>) => {
-    const property: "name" | "password" | "confirmPassword" | "email" = e.target.name;
+  const onFormChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const property: "name" | "password" | "confirmPassword" | "email" =
+      e.target.name;
     const value = e.target.value;
     let valid = validate(
       property,
@@ -55,7 +60,7 @@ const Login = ({ className }: IProps) => {
     });
   };
 
-  const onSubmit = async (e:any) => {
+  const onSubmit = async (e: any) => {
     e.preventDefault();
     let formValid = true;
     let error = "";
@@ -81,8 +86,10 @@ const Login = ({ className }: IProps) => {
       if (loginError) {
         setErrorMessage(loginError);
       }
-    } else {
+    } else if (type === "register") {
       setErrorMessage(error);
+    } else {
+      setErrorMessage('Podane dane są nieprawidłowe');
     }
   };
 
@@ -126,7 +133,7 @@ const Login = ({ className }: IProps) => {
               />
             </label>
           </RadioGroup>
-          {errorMessage !== "" && <span>{errorMessage}</span>}
+          {errorMessage !== "" && <ErrorMessage>{errorMessage}</ErrorMessage>}
           <Button>{type === "register" ? "Zarejestruj" : "Zaloguj"} się</Button>
         </Form>
         <Button>

@@ -68,3 +68,7 @@ export const RadioGroup = styled.div`
     }
   }
 `;
+
+export const ErrorMessage = styled.span`
+  color: ${({theme}) => theme.colorRed}
+`
