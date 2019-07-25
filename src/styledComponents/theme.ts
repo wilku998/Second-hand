@@ -1,5 +1,6 @@
 export default {
 	navigationListItemLeftRightPadding: '1rem',
+	navigationHeight: '4.5rem',
 	darkBorder: '1px solid #666',
 	lightBorder: '1px solid #f0eeee',
 	lightBorder2: '1px solid #999',
@@ -20,7 +21,6 @@ export default {
 	colorGreyLight4: '#e9e9e9',
 	colorGreyLight5: '#e2e2e2',
 	colorGreyLight6: '#ccc',
-
 	colorGreyDark1: '#333',
 	colorGreyDark2: 'rgb(59, 59, 59)',
 	colorGreyDark3: '#444',

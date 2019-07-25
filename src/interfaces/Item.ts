@@ -5,7 +5,7 @@ export default interface Item {
     category: string,
     price: number,
     size: string,
-    image: string,
+    images: Array<string>,
     _id: string,
     owner?: IUser
 }

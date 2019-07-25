@@ -7,12 +7,12 @@ export default (Navigation: FunctionComponent<IProps>) => styled(Navigation)`
   top: 0;
   left: 0;
   width: 100%;
-  height: 4.5rem;
   padding: 0 4rem;
   z-index: 100;
   ${({ theme }) => `
     background-color: ${theme.colorGreyLight1};
     border-bottom: ${theme.lightBorder2};
+    height: ${theme.navigationHeight};
   `};
 
   & li {

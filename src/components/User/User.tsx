@@ -4,7 +4,7 @@ import IUser from "../../interfaces/User";
 import FollowButton from "../Abstracts/FollowButton";
 import Avatar from "../Abstracts/Avatar";
 import { ItemsContainer } from "../Section/styleSection";
-import Item from '../Item/Item';
+import ItemSmall from "../ItemSmall/ItemSmall";
 
 export interface IUserProps {
   user: IUser;
@@ -28,7 +28,7 @@ const User = ({ user }: IUserProps) => {
       {user.ownItems && (
         <ItemsContainer>
           {user.ownItems.map(item => (
-            <Item userLabelVisible={false} item={item} key={item._id} />
+            <ItemSmall item={item} key={item._id} />
           ))}
           <Button>Zobacz wszystkie</Button>
         </ItemsContainer>

@@ -7,9 +7,9 @@ export const items = [
     owner: {
       name: "Bartek skr",
       _id: "2132",
-      avatar: "./images/bluzastussy.jpg"
+      avatar: "/images/bluzastussy.jpg"
     },
-    image: "./images/bluzastussy.jpg",
+    images: ["/images/bluzastussy.jpg", "/images/bluzastussy.jpg", "/images/bluzastussy.jpg", "/images/header-background-1.jpg", "/images/header-background-2.jpg"],
     _id: "gdf312"
   },
   {
@@ -20,9 +20,9 @@ export const items = [
     owner: {
       name: "Bartek skr",
       _id: "2132",
-      avatar: "./images/bluzastussy.jpg"
+      avatar: "/images/bluzastussy.jpg"
     },
-    image: "./images/bluzastussy.jpg",
+    images: ["/images/bluzastussy.jpg"],
     _id: "31gtr2"
   },
   {
@@ -33,9 +33,9 @@ export const items = [
     owner: {
       name: "Bartek skr",
       _id: "2132",
-      avatar: "./images/bluzastussy.jpg"
+      avatar: "/images/bluzastussy.jpg"
     },
-    image: "./images/bluzastussy.jpg",
+    images: ["/images/bluzastussy.jpg"],
     _id: "312332"
   },
   {
@@ -46,9 +46,9 @@ export const items = [
     owner: {
       name: "Bartek skr",
       _id: "2132",
-      avatar: "./images/bluzastussy.jpg"
+      avatar: "/images/bluzastussy.jpg"
     },
-    image: "./images/bluzastussy.jpg",
+    images: ["/images/bluzastussy.jpg"],
     _id: "316452"
   },
   {
@@ -59,9 +59,9 @@ export const items = [
     owner: {
       name: "Bartek skr",
       _id: "2132",
-      avatar: "./images/bluzastussy.jpg"
+      avatar: "/images/bluzastussy.jpg"
     },
-    image: "./images/bluzastussy.jpg",
+    images: ["/images/bluzastussy.jpg"],
     _id: "33212"
   },
   {
@@ -72,9 +72,9 @@ export const items = [
     owner: {
       name: "Bartek skr",
       _id: "2132",
-      avatar: "./images/bluzastussy.jpg"
+      avatar: "/images/bluzastussy.jpg"
     },
-    image: "./images/bluzastussy.jpg",
+    images: ["/images/bluzastussy.jpg"],
     _id: "3712"
   },
   {
@@ -85,9 +85,9 @@ export const items = [
     owner: {
       name: "Bartek skr",
       _id: "2132",
-      avatar: "./images/bluzastussy.jpg"
+      avatar: "/images/bluzastussy.jpg"
     },
-    image: "./images/bluzastussy.jpg",
+    images: ["/images/bluzastussy.jpg"],
     _id: "3152"
   },
   {
@@ -98,9 +98,9 @@ export const items = [
     owner: {
       name: "Bartek skr",
       _id: "2132",
-      avatar: "./images/bluzastussy.jpg"
+      avatar: "/images/bluzastussy.jpg"
     },
-    image: "./images/bluzastussy.jpg",
+    images: ["/images/bluzastussy.jpg"],
     _id: "3123"
   }
 ];
@@ -108,7 +108,7 @@ export const items = [
 export const users = [
   {
     name: "Bartass ass",
-    avatar: "./images/bluzastussy.jpg",
+    avatar: "/images/bluzastussy.jpg",
     _id: "423423",
     ownItems: [
       {
@@ -116,7 +116,7 @@ export const users = [
         brand: "Stussy",
         price: 129,
         size: "M",
-        image: "./images/bluzastussy.jpg",
+        images: ["/images/bluzastussy.jpg"],
         _id: "3152"
       },
       {
@@ -124,46 +124,46 @@ export const users = [
         brand: "Stussy",
         price: 129,
         size: "M",
-        image: "./images/bluzastussy.jpg",
+        images: ["/images/bluzastussy.jpg"],
         _id: "3123"
       }
     ],
     followers: [
       {
         name: "Bartass ass",
-        avatar: "./images/bluzastussy.jpg",
+        avatar: "/images/bluzastussy.jpg",
         _id: "423423"
       }
     ]
   },
   {
     name: "Bartass ass",
-    avatar: "./images/bluzastussy.jpg",
-    _id: "42343423",
+    avatar: "/images/bluzastussy.jpg",
+    _id: "42343423"
   },
   {
     name: "Bartass ass",
-    avatar: "./images/bluzastussy.jpg",
+    avatar: "/images/bluzastussy.jpg",
     _id: "4234ge23"
   },
   {
     name: "Bartass ass",
-    avatar: "./images/bluzastussy.jpg",
-    _id: "423ds423",
+    avatar: "/images/bluzastussy.jpg",
+    _id: "423ds423"
   },
   {
     name: "Bartass ass",
-    avatar: "./images/bluzastussy.jpg",
-    _id: "42bgf3423",
+    avatar: "/images/bluzastussy.jpg",
+    _id: "42bgf3423"
   },
   {
     name: "Bartass ass",
-    avatar: "./images/bluzastussy.jpg",
-    _id: "423asdwq423",
+    avatar: "/images/bluzastussy.jpg",
+    _id: "423asdwq423"
   },
   {
     name: "Bartass ass",
-    avatar: "./images/bluzastussy.jpg",
-    _id: "42342qqq3",
+    avatar: "/images/bluzastussy.jpg",
+    _id: "42342qqq3"
   }
 ];

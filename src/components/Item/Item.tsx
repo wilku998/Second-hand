@@ -1,31 +1,109 @@
-import ReactSVG from "react-svg";
-import React from "react";
-import style, { LikeButton, ItemDescription } from "./styleItem";
-import IItem from "../../interfaces/Item";
+import React, { useEffect, useState } from "react";
+import style, {
+  Container,
+  Content,
+  Image,
+  Description,
+  Title,
+  ButtonMessage,
+  Seller,
+  SellerProfile,
+  Info,
+  GridContainer,
+  FakeImage,
+  MainImageContainer,
+  MainImage,
+  ButtonSeeAll,
+  SellerOtherItems,
+  OtherItemDescription
+} from "./styleItem";
+import { items } from "../Dashboard/fakedata";
+import Avatar from "../Abstracts/Avatar";
 
 export interface IProps {
-  className?: string;
-  item: IItem;
+  className: string;
+  match: any;
 }
+//gdf312
 
-const Item = ({ className, item }: IProps) => {
-  const { price, size, category, brand, owner } = item;
+const Item = ({ className, match }: IProps) => {
+  const itemID = match.params.id;
+  const [item, setItem] = useState(undefined);
+  const [sellerOtherItems, setSellerOtherItems] = useState([]);
+
+  if (item) {
+    var { category, brand, size, price, images, owner } = item;
+  }
+  useEffect(() => {
+    const foundedItem = items.find(e => e._id === itemID);
+    if (foundedItem) {
+      setItem({...foundedItem, images: [foundedItem.images[0]]});
+    }
+  }, [itemID]);
 
   return (
-    <div className={className}>
-      <ItemDescription>
-        <div>
-          <h3>
-            {category} {brand}
-          </h3>
-          <LikeButton>
-            <ReactSVG src="./svg/heart.svg" />
-          </LikeButton>
+    <Container>
+      {!item ? (
+        <span>przedmiot nie został znaleziony</span>
+      ) : (
+        <div className={className}>
+          <Seller>
+            <SellerProfile>
+              <Avatar size="big" src={owner.avatar} />
+              <span>{owner.name}</span>
+            </SellerProfile>
+            {sellerOtherItems.length > 0 ? (
+              <SellerOtherItems>
+                <Info>Inne przedmioty sprzedającego</Info>
+                <GridContainer>
+                  {sellerOtherItems.slice(0, 6).map(otherItem => (
+                    <Image key={otherItem._id}>
+                      <img src={otherItem.images[0]} />
+                      <OtherItemDescription>
+                        Rozmiar:{otherItem.size} Cena:{otherItem.price}PLN
+                      </OtherItemDescription>
+                    </Image>
+                  ))}
+                </GridContainer>
+                {sellerOtherItems.length > 6 && (
+                  <ButtonSeeAll>Zobacz wszystkie</ButtonSeeAll>
+                )}
+              </SellerOtherItems>
+            ) : (
+              <Info>Sprzedawca nie posiada więcej przedmiotów na sprzedaż</Info>
+            )}
+          </Seller>
+          <MainImageContainer>
+            <FakeImage />
+            <MainImage src={images[0]} />
+          </MainImageContainer>
+          <Content>
+            <Title>
+              {category} {brand}
+            </Title>
+            <Description>
+              <span>Rozmiar: {size}</span>
+              <span>Cena: {price}PLN</span>
+            </Description>
+            <ButtonMessage>Napisz wiadomość do sprzedawcy</ButtonMessage>
+            {images.length > 1 ? (
+              <div>
+                <Info>Inne zdjęcia przedmiotu</Info>
+                <GridContainer>
+                  {images.slice(1).map(otherImage => (
+                    <Image key={otherImage}>
+                      <img src={otherImage} />
+                    </Image>
+                  ))}
+                </GridContainer>
+              </div>
+            ) : (
+              <Info>Przedmiot nie posiada więcej zdjęć</Info>
+            )}
+          </Content>
         </div>
-        <span>Rozmiar: {size}</span>
-        <span>Cena: {price}</span>
-      </ItemDescription>
-    </div>
+      )}
+    </Container>
   );
 };
 export default style(Item);

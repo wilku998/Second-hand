@@ -1,24 +1,25 @@
 import express from "express";
-import path from 'path';
-import cookieParser from 'cookie-parser';
+import path from "path";
+import cookieParser from "cookie-parser";
 import itemsRouter from "./routers/items";
 import usersRouter from "./routers/users";
 import "./db/mongoose";
+
 const app = express();
 const port = process.env.PORT || 3000;
+const publicPath = path.join(__dirname, "..", "public");
 
-const publicPath = path.join(__dirname, '..', 'public');
+app.use(express.static(path.join(publicPath, "static")));
 
-app.use(express.static(publicPath));
-//It parses incoming requests with JSON payloads and is based on body-parser.
+app.get("*", (req, res) => {
+  res.sendFile(path.join(publicPath, "index.html"));
+});
+
+// It parses incoming requests with JSON payloads and is based on body-parser.
 app.use(express.json());
-app.use(cookieParser())
+app.use(cookieParser());
 app.use(itemsRouter);
 app.use(usersRouter);
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(publicPath, 'index.html'));
-});
 
 app.listen(port, () => {
   console.log(`Server is listing on port ${port}`);
@@ -29,7 +30,6 @@ const foo = async () => {
   // await item.populate("owner").execPopulate();
   // console.log(item)
   // const user = item.owner;
-
   // const user: any = await User.findById('5d2afd41b60b3a179c1119ec')
   // await user.populate("ownItems").execPopulate();;
   // console.log(user.ownItems)

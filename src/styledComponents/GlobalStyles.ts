@@ -26,10 +26,10 @@ export default createGlobalStyle`
         font-size: 1.4rem;
         line-height: 1.6;
         position: relative;
-        padding-top: 4.5rem;
         ${({ theme }) => `
             color: ${theme.colorGreyDark2};
             background-color: ${theme.colorGreyLight2};
+            padding-top: ${theme.navigationHeight};
         `}
     }
 
@@ -69,4 +69,5 @@ export default createGlobalStyle`
         height: 100%;
         display: inline-block;
     };
+
 `;

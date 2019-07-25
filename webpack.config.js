@@ -6,7 +6,7 @@ module.exports = (env) => {
 	return {
 		entry: ['babel-polyfill', path.resolve(__dirname, 'src', 'app.tsx')],
 		output: {
-			path: path.resolve(__dirname, 'public', 'dist'),
+			path: path.resolve(__dirname, 'public', 'static'),
 			filename: 'bundle.js'
 		},
 		module: {
@@ -33,7 +33,7 @@ module.exports = (env) => {
         devtool: isProduction ? 'source-map' : 'inline-source-map',
 		devServer: {
 			contentBase: path.join(__dirname, 'public'),
-			publicPath: '/dist/',
+			publicPath: '/static/',
 			historyApiFallback: true
 		}
 	};

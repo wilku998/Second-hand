@@ -1,7 +1,7 @@
 import React from "react";
 import IUser from "../../interfaces/User";
 import IItem from "../../interfaces/Item";
-import Item from "../Item/Item";
+import ItemSmall from "../ItemSmall/ItemSmall";
 import User from "../User/User";
 import style, { Title, ItemsContainer } from "./styleSection";
 
@@ -20,7 +20,7 @@ const Section = ({ className, title, items, users }: IProps) => {
       {items && (
         <ItemsContainer>
           {items.map(item => (
-            <Item item={item} key={item._id} />
+            <ItemSmall item={item} key={item._id} />
           ))}
         </ItemsContainer>
       )}
