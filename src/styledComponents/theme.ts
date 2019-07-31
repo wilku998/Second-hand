@@ -1,6 +1,7 @@
 export default {
 	navigationListItemLeftRightPadding: '1rem',
 	navigationHeight: '4.5rem',
+	rowWidth: '109rem',
 	darkBorder: '1px solid #666',
 	lightBorder: '1px solid #f0eeee',
 	lightBorder2: '1px solid #ccc',

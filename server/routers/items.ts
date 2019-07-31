@@ -7,7 +7,6 @@ const router = express.Router();
 
 router.post("/api/items", AuthMiddleware, async (req: IAuthRequest, res) => {
   const item = new Item({ ...req.body, owner: req.user._id });
-//, price: parseInt(req.body.price)
   try {
     await item.save();
     res.status(201).send(item);

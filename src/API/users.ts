@@ -1,6 +1,7 @@
 import ajax from "./ajax";
 import { userStore } from "../app";
 import { parseResponse, setUserStore } from "./functions";
+import fetchData from "./fetchData";
 
 export const loginRequest = async (data: {
   email: string;
@@ -55,3 +56,5 @@ export const logoutRequest = async () => {
     userStore.ownItems = [];
   } catch (e) {}
 };
+
+export const getUserRequest = async (id: string) => await fetchData(id, '/api/users/')

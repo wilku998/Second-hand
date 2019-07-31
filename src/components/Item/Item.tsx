@@ -10,7 +10,6 @@ import style, {
   SellerProfile,
   Info,
   GridContainer,
-  FakeImage,
   MainImageContainer,
   MainImage,
   ButtonSeeAll,
@@ -18,6 +17,7 @@ import style, {
   OtherItemDescription
 } from "./styleItem";
 import Avatar from "../Abstracts/Avatar";
+import { FakeImage } from "../Abstracts/FakeImage";
 import { getItemRequest } from "../../API/items";
 
 export interface IProps {
@@ -39,7 +39,7 @@ const Item = ({ className, match }: IProps) => {
       const foundedItem = await getItemRequest(itemID);
       if (foundedItem) {
         setItem(foundedItem);
-        console.log(foundedItem)
+        console.log(foundedItem);
       }
     };
     fetchData();

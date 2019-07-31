@@ -2,6 +2,7 @@ import IItem from '../interfaces/item'
 import ajax from './ajax';
 import { parseResponse } from './functions';
 import { userStore } from "../app";
+import fetchData from './fetchData';
 
 export const addItemRequest = async (item: IItem, images: Array<string>) => {
     try {
@@ -14,11 +15,4 @@ export const addItemRequest = async (item: IItem, images: Array<string>) => {
     }
 }
 
-export const getItemRequest = async (id: string) => {
-    try {
-        const item = await fetch(`/api/items/${id}`)
-        return parseResponse(await item.json());
-    }catch(e){
-
-    }
-}
+export const getItemRequest = async (id: string) => await fetchData(id, '/api/items/')

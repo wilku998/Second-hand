@@ -27,13 +27,6 @@ export const Container = styled.section`
   `}
 `;
 
-export const FakeImage = styled.img.attrs(() => ({
-  src: "/images/square.png"
-}))`
-  opacity: 0;
-  width: initial;
-`;
-
 export const MainImage = styled.img`
   position: absolute;
   top: 0%;

@@ -24,6 +24,14 @@ const userSchema = new Schema({
     required: true,
     trim: true
   },
+  followedBy: {
+    type: Array,
+    required: true
+  },
+  follows: {
+    type: Array,
+    required: true
+  },
   tokens: [
     {
       token: {
@@ -34,7 +42,7 @@ const userSchema = new Schema({
   ],
   avatar: {
     type: String,
-    default: '/images/default-avatar.png'
+    default: "/images/default-avatar.png"
   }
 });
 

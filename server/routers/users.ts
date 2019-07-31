@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.post("/api/users", async (req, res) => {
   try {
-    const user = new User(req.body);
+    const user = new User({...req.body, follows: [], followedBy: []});
     await user.save();
     const token = await user.generateAuthToken();
     res.cookie("jwtToken", token, { maxAge: 108000000, httpOnly: true });
@@ -59,7 +59,7 @@ router.post(
       .png()
       .resize(250)
       .toBuffer();
-    req.user.avatar = buffer;
+    // req.user.avatar = buffer;
     await req.user.save();
     res.send();
   },

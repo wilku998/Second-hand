@@ -4,13 +4,15 @@ export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
-  avatar: Buffer;
+  avatar: string;
   generateAuthToken: () => string;
   tokens: Array<{
     token: string;
     _id?: string;
   }>;
-  ownItems?: Array<IItem>;
+  ownItems: Array<IItem>;
+  followedBy: Array<mongoose.Types.ObjectId>;
+  follows: Array<mongoose.Types.ObjectId>;
 }
 
 export interface IUserModel extends Model<IUser> {

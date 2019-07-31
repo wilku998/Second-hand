@@ -5,7 +5,6 @@ import { IProps } from "./Section";
 export default (Section: FunctionComponent<IProps>) => styled(Section)`
   display: grid;
   grid-auto-rows: max-content;
-  padding: 4rem 4rem 2rem 4rem;
   justify-content: center;
 `;
 

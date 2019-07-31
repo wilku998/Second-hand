@@ -3,6 +3,8 @@ import styled from "styled-components";
 export default styled.img<{ size: string }>`
   object-fit: cover;
   object-position: center;
+  border-radius: 50%;
+
   ${({ size, theme }) => `
     border: ${theme.lightBorder2};
     ${
@@ -16,6 +18,4 @@ export default styled.img<{ size: string }>`
     margin-right: 1rem;`
     }
   `}
-
-  border-radius: 50%;
 `;
