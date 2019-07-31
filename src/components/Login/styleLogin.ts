@@ -1,28 +1,5 @@
 import styled from "styled-components";
-import { FunctionComponent } from "react";
-import { IProps } from "./Login";
 import Button_2 from "../Abstracts/Button_2";
-
-export const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-
-  & label {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  & input {
-    margin-left: 1rem;
-  }
-
-  & > * {
-    &:not(:last-child) {
-      margin-bottom: 1rem;
-    }
-  }
-`;
 
 export const Content = styled.div`
   padding: 2rem;
@@ -35,15 +12,6 @@ export const Content = styled.div`
   ${({ theme }) => `
         background-color: ${theme.colorGreyLight1};
     `}
-`;
-export const Input = styled.input<{valid: boolean, isRegister: boolean}>`
-  padding: 0.3rem 1rem;
-  flex: 1;
-  ${({theme, valid, value, isRegister}) => `
-    ${value !== '' && isRegister ? `
-      background-color: ${valid ? theme.colorGreenLight : theme.colorRedLight};
-    ` : ''}
-  `}
 `;
 
 export const Container = styled.div`

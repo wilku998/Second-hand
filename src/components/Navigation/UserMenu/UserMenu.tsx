@@ -1,4 +1,5 @@
 import React, { useState, useLayoutEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import Avatar from "../../Abstracts/Avatar";
 import { logoutRequest } from "../../../API/users";
 import style, { Label, List, CollapseIcon } from "./styleUserMenu";
@@ -23,15 +24,24 @@ const UserMenu = ({ userStore, className }: IProps) => {
   return (
     <div ref={componentRef} className={className}>
       <Label onClick={onLabelClick}>
-        <Avatar src="./images/bluzastussy.jpg" size="small" />
+        <Avatar src={user.avatar} size="small" />
         <span>{user.name}</span>
-        <CollapseIcon listvisible={listVisible.toString()} src="./svg/left.svg" />
+        <CollapseIcon
+          listvisible={listVisible.toString()}
+          src="/svg/left.svg"
+        />
         {listVisible && (
           <List width={listWidth}>
             <li>Twój profil</li>
             <li>Wiadomości</li>
-            <li>Dodaj przedmiot</li>
-            <li><InvisibleButton onClick={logoutRequest}>Wyloguj się</InvisibleButton></li>
+            <li>
+              <Link to="/items/create">Dodaj przedmiot</Link>
+            </li>
+            <li>
+              <InvisibleButton onClick={logoutRequest}>
+                Wyloguj się
+              </InvisibleButton>
+            </li>
           </List>
         )}
       </Label>

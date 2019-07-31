@@ -1,21 +1,37 @@
 import ajax from "./ajax";
 import { userStore } from "../app";
+import { parseResponse, setUserStore } from "./functions";
 
-const parseResponse = (response: any) =>
-  Object.keys(response).length === 0 || response.error ? undefined : response;
-
-export const loginRequest = async (data: {email: string, password: string}) => {
+export const loginRequest = async (data: {
+  email: string;
+  password: string;
+}) => {
   try {
-    const response: any = await ajax("POST", "/api/users/login", data, 200);
-    userStore.user = parseResponse(response);
+    const response: any = await ajax(
+      "POST",
+      "/api/users/login",
+      JSON.stringify(data),
+      200
+    );
+    setUserStore(response)
   } catch (e) {
+    console.log(e)
     return "Podane dane są nieprawidłowe";
   }
 };
 
-export const registerRequest = async (data: {email: string, password: string, name: string}) => {
+export const registerRequest = async (data: {
+  email: string;
+  password: string;
+  name: string;
+}) => {
   try {
-    const response: any = await ajax("POST", "/api/users", data, 201);
+    const response: any = await ajax(
+      "POST",
+      "/api/users",
+      JSON.stringify(data),
+      201
+    );
     userStore.user = parseResponse(response);
   } catch (e) {
     if (e.error.code === 11000) {
@@ -27,10 +43,8 @@ export const registerRequest = async (data: {email: string, password: string, na
 export const getProfileRequest = async () => {
   try {
     const response = await fetch("/api/users/me");
-    const parsed = await response.json();
-    if(parseResponse(parsed)){
-      userStore.user = { ...parsed.user, ...parsed.ownItems };
-    }
+    const data = await response.json();
+    setUserStore(data)
   } catch (e) {}
 };
 
@@ -38,5 +52,6 @@ export const logoutRequest = async () => {
   try {
     await ajax("POST", "/api/users/logout", undefined, 200);
     userStore.user = undefined;
+    userStore.ownItems = [];
   } catch (e) {}
 };

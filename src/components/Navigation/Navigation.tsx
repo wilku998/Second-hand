@@ -1,7 +1,6 @@
 import React from "react";
 import ReactSVG from "react-svg";
 import { Link } from "react-router-dom";
-import { inject, observer } from "mobx-react";
 
 import style, {
   Content,
@@ -15,7 +14,7 @@ import UserMenu from "./UserMenu/UserMenu";
 
 export interface IProps {
   className?: string;
-  userStore?: any;
+  userStore: any;
 }
 
 const Navigation = ({ className, userStore }: IProps) => {
@@ -29,7 +28,7 @@ const Navigation = ({ className, userStore }: IProps) => {
         <SearchContainer>
           <SearchInput type="text" placeholder="Szukaj przedmiotów" />
           <SearchButton>
-            <ReactSVG src="./svg/search.svg" />
+            <ReactSVG src="/svg/search.svg" />
           </SearchButton>
         </SearchContainer>
         <Menu>
@@ -49,4 +48,4 @@ const Navigation = ({ className, userStore }: IProps) => {
   );
 };
 
-export default style(inject("userStore")(observer(Navigation)));
+export default style(Navigation);

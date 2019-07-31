@@ -23,10 +23,11 @@ router.post("/api/users", async (req, res) => {
 router.post("/api/users/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findByCredenctials(email, password);
+    const user:any = await User.findByCredenctials(email, password);
     const token = await user.generateAuthToken();
     res.cookie("jwtToken", token, { maxAge: 108000000, httpOnly: true });
-    res.send(user);
+    await user.populate("ownItems").execPopulate();
+    res.send({ user, ownItems: user.ownItems });
   } catch (e) {
     res.status(400).send();
   }

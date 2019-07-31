@@ -3,7 +3,7 @@ export default {
 	navigationHeight: '4.5rem',
 	darkBorder: '1px solid #666',
 	lightBorder: '1px solid #f0eeee',
-	lightBorder2: '1px solid #999',
+	lightBorder2: '1px solid #ccc',
 	background: '#d1d1d1',
 	colorRed: '#BF2E21',
 	colorRedLight: '#FFC1B4',

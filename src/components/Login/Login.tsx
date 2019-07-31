@@ -1,8 +1,9 @@
 import React, { useState, ChangeEvent } from "react";
+import { Link } from "react-router-dom";
+
 import {
   Container,
   Content,
-  Form,
   Button,
   Input,
   RadioGroup,
@@ -11,7 +12,7 @@ import {
 import validate from "./validate";
 import initialState from "./initialState";
 import { loginRequest, registerRequest } from "../../API/users";
-import { Link } from "react-router-dom";
+import { Form, Label, FormInput } from "../Abstracts/Form";
 
 export interface IProps {
   className?: string;
@@ -35,7 +36,7 @@ const Login = ({ className }: IProps) => {
   const onTypeChange = (e: ChangeEvent<HTMLInputElement>) => {
     setType(e.target.value);
     setErrorMessage("");
-  }
+  };
 
   const onFormChange = (e: ChangeEvent<HTMLInputElement>) => {
     const property: "name" | "password" | "confirmPassword" | "email" =
@@ -89,7 +90,7 @@ const Login = ({ className }: IProps) => {
     } else if (type === "register") {
       setErrorMessage(error);
     } else {
-      setErrorMessage('Podane dane są nieprawidłowe');
+      setErrorMessage("Podane dane są nieprawidłowe");
     }
   };
 
@@ -98,21 +99,29 @@ const Login = ({ className }: IProps) => {
       <Content>
         <Form className={className} onSubmit={onSubmit}>
           {inputs.map(e => (
-            <label key={e.name}>
+            <Label key={e.name}>
               {e.label}
-              <Input
-                value={e.value}
-                onChange={onFormChange}
-                name={e.name}
-                type={e.type}
-                valid={e.valid}
-                isRegister={type === "register"}
-              />
-            </label>
+              {type === "register" ? (
+                <FormInput
+                  value={e.value}
+                  onChange={onFormChange}
+                  name={e.name}
+                  type={e.type}
+                  valid={e.valid}
+                />
+              ) : (
+                <input
+                  value={e.value}
+                  onChange={onFormChange}
+                  name={e.name}
+                  type={e.type}
+                />
+              )}
+            </Label>
           ))}
 
           <RadioGroup>
-            <label>
+            <Label>
               Logowanie
               <input
                 name="type"
@@ -121,8 +130,8 @@ const Login = ({ className }: IProps) => {
                 value="login"
                 checked={type === "login"}
               />
-            </label>
-            <label>
+            </Label>
+            <Label>
               Rejestracja
               <input
                 name="type"
@@ -131,7 +140,7 @@ const Login = ({ className }: IProps) => {
                 value="register"
                 checked={type === "register"}
               />
-            </label>
+            </Label>
           </RadioGroup>
           {errorMessage !== "" && <ErrorMessage>{errorMessage}</ErrorMessage>}
           <Button>{type === "register" ? "Zarejestruj" : "Zaloguj"} się</Button>

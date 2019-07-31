@@ -17,8 +17,8 @@ import style, {
   SellerOtherItems,
   OtherItemDescription
 } from "./styleItem";
-import { items } from "../Dashboard/fakedata";
 import Avatar from "../Abstracts/Avatar";
+import { getItemRequest } from "../../API/items";
 
 export interface IProps {
   className: string;
@@ -35,10 +35,14 @@ const Item = ({ className, match }: IProps) => {
     var { category, brand, size, price, images, owner } = item;
   }
   useEffect(() => {
-    const foundedItem = items.find(e => e._id === itemID);
-    if (foundedItem) {
-      setItem({...foundedItem, images: [foundedItem.images[0]]});
-    }
+    const fetchData = async () => {
+      const foundedItem = await getItemRequest(itemID);
+      if (foundedItem) {
+        setItem(foundedItem);
+        console.log(foundedItem)
+      }
+    };
+    fetchData();
   }, [itemID]);
 
   return (

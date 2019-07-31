@@ -60,6 +60,8 @@ export const SearchContainer = styled.div`
 
 export const SearchInput = styled.input`
   padding: 0.3rem 3.4rem 0.3rem 1rem;
+  height: initial;
+  font-size: 1.4rem;
   margin-left: 1.5rem;
   width: 50rem;
 `;
@@ -70,7 +72,8 @@ export const SearchButton = styled.button`
   top: 50%;
   right: 1rem;
   transform: translateY(-50%);
-  & > div {
+  & > div > div {
+    height: 1.2rem;
     width: 1.2rem;
     fill: ${({ theme }) => theme.colorGreyDark5};
   }

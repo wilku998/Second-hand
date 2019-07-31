@@ -116,6 +116,7 @@ export const Seller = styled.div`
 export const SellerProfile = styled.div`
   display: flex;
   align-items: center;
+  font-size: 1.6rem;
 `;
 
 export const SellerOtherItems = styled.div`

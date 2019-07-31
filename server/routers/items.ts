@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/api/items", AuthMiddleware, async (req: IAuthRequest, res) => {
   const item = new Item({ ...req.body, owner: req.user._id });
-
+//, price: parseInt(req.body.price)
   try {
     await item.save();
     res.status(201).send(item);
@@ -48,8 +48,8 @@ router.get("/api/items", async (req, res) => {
 
 router.get("/api/items/:id", async (req, res) => {
   try {
-    const item = await Item.findById(req.query.id);
-    item.populate("owner").execPopulate()
+    const item = await Item.findById(req.params.id);
+    await item.populate("owner").execPopulate()
     if (!item) {
       throw new Error("Unable to find item!");
     }

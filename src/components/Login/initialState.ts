@@ -1,13 +1,13 @@
 export default {
   email: {
-    value: "przegldarka@test.pl",
+    value: "mojekonto5@test.pl",
     valid: true,
     label: "Email",
     type: "email",
     errorMessage: "Email jest nieprawidłowy"
   },
   name: {
-    value: "Skrapapapa",
+    value: "Bartosz Wilk5",
     valid: true,
     label: "Imię",
     type: "text",
@@ -27,5 +27,4 @@ export default {
     type: "password",
     errorMessage: "Hasła są niezgodne"
   },
-
 };

@@ -51,18 +51,27 @@ export default createGlobalStyle`
         }
     }
 
-    input {
+    input, select, textarea {
+      font-family: 'Source Code Pro', monospace;
       border-radius: 0.3rem;
       font-size: 1.4rem;
       color: inherit;
-
+      padding: 0 1rem;
+      flex: 1;
+      font-size: 1.2rem;
+      height: 2rem;
       ${({ theme }) => `
-        border: ${theme.lightBorder2}
+        border: ${theme.lightBorder2};
       `};
-        &:focus{
+        &:focus, &:active{
             outline: none;
         }
     }
+
+    textarea {
+        resize: none;
+    }
+    
     a, a:visited{
         color: inherit;
         text-decoration: none;

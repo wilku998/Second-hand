@@ -33,7 +33,8 @@ const userSchema = new Schema({
     }
   ],
   avatar: {
-    type: Buffer
+    type: String,
+    default: '/images/default-avatar.png'
   }
 });
 

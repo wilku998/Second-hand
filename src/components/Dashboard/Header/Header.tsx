@@ -16,14 +16,15 @@ export interface IProps {
 
 const Header = ({ className }: IProps) => {
   const [position, setPosition] = useState(0);
-  const calcPosition = (position: number) =>
-    position + 1 > 1 ? -1 : position + 1;
 
   useEffect(() => {
-    setTimeout(() => {
+    const interval = setInterval(() => {
       setPosition(position + 1 > 2 ? 0 : position + 1);
     }, 5000);
-  }, [position]);
+    return () => {
+      clearInterval(interval);
+    }
+  }, []);
 
   return (
     <header className={className}>
