@@ -1,11 +1,10 @@
 import styled from "styled-components";
-import { FunctionComponent } from "react";
-import { IProps } from "./Section";
 
-export default (Section: FunctionComponent<IProps>) => styled(Section)`
-  display: grid;
-  grid-auto-rows: max-content;
-  justify-content: center;
+export const Section = styled.section`
+  margin-bottom: 4rem;
+  &:not(:first-of-type){
+    margin-top: 4rem;
+  }
 `;
 
 export const Title = styled.h1`
@@ -19,8 +18,6 @@ export const ItemsContainer = styled.div`
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 2rem;
   align-items: flex-start;
-  width: 109rem;
+  width: ${({ theme }) => theme.rowWidth};
   padding-bottom: 2rem;
 `;
-
-

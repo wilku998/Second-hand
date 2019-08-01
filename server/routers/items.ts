@@ -2,6 +2,7 @@ import express from "express";
 import Item from "../models/item";
 import AuthMiddleware from "../middlwares/auth";
 import { IAuthRequest, IMatch } from "./interfaces";
+import { createRegexObj } from "./functions";
 
 const router = express.Router();
 
@@ -16,22 +17,20 @@ router.post("/api/items", AuthMiddleware, async (req: IAuthRequest, res) => {
 });
 
 router.get("/api/items", async (req, res) => {
-  const { size, gender, category, name } = req.query;
-  const queries: IMatch = { size, gender, category };
+  let match: IMatch = {};
 
-  let match: IMatch = name
-    ? {
-        name: {
-          $regex: new RegExp(name.trim().replace(/_/g, "|")),
-          $options: "i"
-        }
-      }
-    : {};
-
-  Object.keys(queries).forEach(
+  Object.keys(req.query).forEach(
     (key: "size" | "gender" | "category" | "name") => {
-      if (queries[key]) {
-        match = { ...match, [key]: queries[key] };
+      if (key === "name") {
+        match = {
+          ...match,
+          $or: [
+            { itemModel: createRegexObj(req.query.name) },
+            { brand: createRegexObj(req.query.name) }
+          ]
+        };
+      } else {
+        match[key] = createRegexObj(req.query[key]);
       }
     }
   );
@@ -40,15 +39,14 @@ router.get("/api/items", async (req, res) => {
     const items = await Item.find(match);
     res.send(items);
   } catch (e) {
-    res.status(500).send();
+    res.status(404).send();
   }
 });
-
 
 router.get("/api/items/:id", async (req, res) => {
   try {
     const item = await Item.findById(req.params.id);
-    await item.populate("owner").execPopulate()
+    await item.populate("owner").execPopulate();
     if (!item) {
       throw new Error("Unable to find item!");
     }

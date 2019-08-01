@@ -4,7 +4,6 @@ export const parseResponse = (response: any) =>
   !response || Object.keys(response).length === 0 || response.error ? undefined : response;
 
 export const setUserStore = (data: any) => {
-  console.log(data)
   if (parseResponse(data.user)) {
     userStore.user = data.user;
   }

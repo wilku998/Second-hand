@@ -57,4 +57,7 @@ export const logoutRequest = async () => {
   } catch (e) {}
 };
 
-export const getUserRequest = async (id: string) => await fetchData(id, '/api/users/')
+export const getUserRequest = async (id: string) => await fetchData(id, '/api/users/');
+
+export const getUsersRequest = async () => await fetchData('', '/api/users');
+

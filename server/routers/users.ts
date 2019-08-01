@@ -4,13 +4,13 @@ import User from "../models/user";
 import { IAuthRequest, IUserRequest } from "./interfaces";
 import AuthMiddleware from "../middlwares/auth";
 import FindUserMiddleware from "../middlwares/findUser";
-import { uploadImage } from "./functions";
+import { uploadImage, createRegexObj } from "./functions";
 
 const router = express.Router();
 
 router.post("/api/users", async (req, res) => {
   try {
-    const user = new User({...req.body, follows: [], followedBy: []});
+    const user = new User({ ...req.body, follows: [], followedBy: [] });
     await user.save();
     const token = await user.generateAuthToken();
     res.cookie("jwtToken", token, { maxAge: 108000000, httpOnly: true });
@@ -23,7 +23,7 @@ router.post("/api/users", async (req, res) => {
 router.post("/api/users/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user:any = await User.findByCredenctials(email, password);
+    const user: any = await User.findByCredenctials(email, password);
     const token = await user.generateAuthToken();
     res.cookie("jwtToken", token, { maxAge: 108000000, httpOnly: true });
     await user.populate("ownItems").execPopulate();
@@ -68,22 +68,6 @@ router.post(
   }
 );
 
-router.get(
-  "/users/:id/avatar",
-  FindUserMiddleware,
-  (req: IUserRequest, res) => {
-    try {
-      const { user } = req;
-      if (!user.avatar) {
-        throw new Error();
-      }
-      res.set("Content-type", "image/png").send(user.avatar);
-    } catch (e) {
-      res.status(404).send();
-    }
-  }
-);
-
 router.get("/api/users/me", AuthMiddleware, async (req: IAuthRequest, res) => {
   try {
     const { user } = req;
@@ -91,6 +75,27 @@ router.get("/api/users/me", AuthMiddleware, async (req: IAuthRequest, res) => {
     res.send({ user, ownItems: user.ownItems });
   } catch (e) {
     res.status(500).send();
+  }
+});
+
+
+router.get("/api/users", async (req, res) => {
+  const { name } = req.query;
+  let match: { name?: { $regex: RegExp; $options: string } } = name
+    ? {
+        name: createRegexObj(name)
+      }
+    : {};
+  try {
+    const foundedUsers = await User.find(match);
+    Promise.all(foundedUsers.map(async user => {
+      return await user.populate("ownItems").execPopulate();
+    })).then((result) => {
+      const users = result.map(user => ({user, ownItems: user.ownItems}))
+      res.send(users);
+    })
+  } catch (e) {
+    res.status(404).send();
   }
 });
 
@@ -103,7 +108,7 @@ router.get(
       await user.populate("ownItems").execPopulate();
       res.send({ user, ownItems: user.ownItems });
     } catch (e) {
-      res.status(500).send();
+      res.status(404).send();
     }
   }
 );

@@ -1,6 +1,6 @@
 export default {
   email: {
-    value: "mojekonto5@test.pl",
+    value: "bartoszwilk@test.pl",
     valid: true,
     label: "Email",
     type: "email",

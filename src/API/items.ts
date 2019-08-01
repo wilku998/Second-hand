@@ -15,4 +15,9 @@ export const addItemRequest = async (item: IItem, images: Array<string>) => {
     }
 }
 
-export const getItemRequest = async (id: string) => await fetchData(id, '/api/items/')
+export const getItemRequest = async (id: string) => await fetchData(id, '/api/items/');
+
+export const getItemsRequest = async () => {
+    const items = await fetchData("", '/api/items');
+    return items
+}

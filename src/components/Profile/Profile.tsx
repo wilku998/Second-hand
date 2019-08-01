@@ -12,7 +12,7 @@ import { getUserRequest } from "../../API/users";
 import IUser from "../../interfaces/User";
 import IItem from "../../interfaces/User";
 import { FakeImage } from "../Abstracts/FakeImage";
-import Section from "../Section/Section";
+import Section from "../Section/ItemsSection/ItemsSection";
 
 export interface IProps {
   className?: string;
