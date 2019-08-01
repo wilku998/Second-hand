@@ -9,8 +9,8 @@ export default styled.img<{ size: string }>`
     border: ${theme.lightBorder2};
     ${
       size === "big"
-        ? `  width: 3.75rem;
-    height: 3.75rem;
+        ? `  width: 3rem;
+    height: 3rem;
     margin-right: 1.5rem;
     `
         : `  width: 2rem;

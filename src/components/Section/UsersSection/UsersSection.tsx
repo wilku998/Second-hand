@@ -1,12 +1,11 @@
 import React from "react";
-import { Info, UserLabel, Button } from "./styleUser";
+import { UserLabel, Button, Name } from "./UserLabel";
 import IUser from "../../../interfaces/User";
 import FollowButton from "../../Abstracts/FollowButton";
 import Avatar from "../../Abstracts/Avatar";
 import IItem from "../../../interfaces/Item";
-import ItemsSection from "../ItemsSection/ItemsSection";
 import { Title, ItemsContainer, Section } from "../styleSection";
-import Item from "../ItemsSection/Item/Item";
+import Item from "../ItemsSection/ItemSmall/ItemSmall";
 
 export interface IUserProps {
   users: Array<{ user: IUser; ownItems: Array<IItem> }>;
@@ -20,16 +19,9 @@ const UsersSection = ({ users, title }: IUserProps) => {
         <Section key={user.user._id}>
           <UserLabel>
             <Avatar size="big" src={user.user.avatar} />
-            <Info>
-              <h3>{name}</h3>
-              <span>Obserwujących: {user.user.follows.length}</span>
-              <span>Obserwujących: {user.user.followedBy.length}</span>
-              <span>
-                Przedmiotów na sprzedzaż:
-                {user.ownItems ? user.ownItems.length : 0}
-              </span>
-            </Info>
-            <FollowButton />
+            <Name>{user.user.name}</Name>
+            <Button>Zobacz profil</Button>
+            <Button>Obserwuj</Button>
           </UserLabel>
           {user.ownItems && (
             <ItemsContainer>

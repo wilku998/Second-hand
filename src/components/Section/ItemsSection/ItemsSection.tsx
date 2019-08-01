@@ -1,6 +1,6 @@
 import React from "react";
 import IItem from "../../../interfaces/Item";
-import Item from "./Item/Item";
+import ItemSmall from "./ItemSmall/ItemSmall";
 import { Title, ItemsContainer, Section } from "../styleSection";
 
 export interface IProps {
@@ -15,7 +15,7 @@ const ItemsSection = ({ className, title, items }: IProps) => {
       {title && <Title>{title}</Title>}
         <ItemsContainer>
           {items.map(item => (
-            <Item item={item} key={item._id} />
+            <ItemSmall item={item} key={item._id} />
           ))}
         </ItemsContainer>
     </Section>

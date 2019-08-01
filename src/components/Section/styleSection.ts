@@ -16,8 +16,7 @@ export const Title = styled.h1`
 export const ItemsContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-gap: 2rem;
+  grid-gap: 4rem;
   align-items: flex-start;
   width: ${({ theme }) => theme.rowWidth};
-  padding-bottom: 2rem;
 `;
