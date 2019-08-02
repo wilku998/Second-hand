@@ -9,6 +9,7 @@ import PrivateRoute from "./PrivateRoute";
 import Item from "../components/Item/Item";
 import CreateItem from "../components/Item/CreateItem/CreateItem";
 import Profile from "../components/Profile/Profile";
+import EditItem from "../components/Item/CreateItem/EditItem";
 
 interface IProps {
   history: any;
@@ -24,6 +25,7 @@ const AppRouter = ({ history, userStore }: IProps) => {
       <Route path="/" exact component={Dashboard} />
         <Route path="/users/:id" component={Profile} />
         <PrivateRoute path="/items/create" isAuth={isAuth} component={CreateItem} />
+        <PrivateRoute path="/items/edit/:id" isAuth={isAuth} component={EditItem} />
         <Route path="/items/:id" component={Item} />
         <PublicRoute path="/login" isAuth={isAuth} component={Login} />
       </Switch>

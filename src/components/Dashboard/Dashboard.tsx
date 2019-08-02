@@ -23,7 +23,6 @@ const Dashboard = () => {
     }
     fetchData();
   }, []);
-  console.log({items, users})
 
   return (
     <main>
