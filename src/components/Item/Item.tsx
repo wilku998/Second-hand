@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { history } from "../../app";
 import style, {
   Container,
   Content,
@@ -14,32 +16,52 @@ import style, {
   MainImage,
   ButtonSeeAll,
   SellerOtherItems,
-  OtherItemDescription
+  ItemInfo
 } from "./styleItem";
 import Avatar from "../Abstracts/Avatar";
 import { FakeImage } from "../Abstracts/FakeImage";
-import { getItemRequest } from "../../API/items";
+import { getItemRequest, getItemsRequest } from "../../API/items";
+import IItem from "../../interfaces/Item";
 
 export interface IProps {
   className: string;
   match: any;
 }
-//gdf312
 
 const Item = ({ className, match }: IProps) => {
   const itemID = match.params.id;
-  const [item, setItem] = useState(undefined);
+  const [item, setItem]: [IItem, any] = useState(undefined);
   const [sellerOtherItems, setSellerOtherItems] = useState([]);
 
   if (item) {
-    var { category, brand, size, price, images, owner } = item;
+    var {
+      category,
+      brand,
+      size,
+      price,
+      images,
+      owner,
+      description,
+      condition,
+      itemModel
+    } = item;
   }
+
+  const onSeeAllClick = () => {
+    history.push(`/users/${item.owner._id}`);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       const foundedItem = await getItemRequest(itemID);
       if (foundedItem) {
         setItem(foundedItem);
-        console.log(foundedItem);
+        const otherItems = await getItemsRequest({
+          owner: foundedItem.owner._id
+        });
+        if (otherItems) {
+          setSellerOtherItems(otherItems);
+        }
       }
     };
     fetchData();
@@ -61,16 +83,19 @@ const Item = ({ className, match }: IProps) => {
                 <Info>Inne przedmioty sprzedającego</Info>
                 <GridContainer>
                   {sellerOtherItems.slice(0, 6).map(otherItem => (
-                    <Image key={otherItem._id}>
+                    <Image
+                      as={Link}
+                      to={`/items/${otherItem._id}`}
+                      key={otherItem._id}
+                    >
                       <img src={otherItem.images[0]} />
-                      <OtherItemDescription>
-                        Rozmiar:{otherItem.size} Cena:{otherItem.price}PLN
-                      </OtherItemDescription>
                     </Image>
                   ))}
                 </GridContainer>
                 {sellerOtherItems.length > 6 && (
-                  <ButtonSeeAll>Zobacz wszystkie</ButtonSeeAll>
+                  <ButtonSeeAll onClick={onSeeAllClick}>
+                    Zobacz wszystkie
+                  </ButtonSeeAll>
                 )}
               </SellerOtherItems>
             ) : (
@@ -83,12 +108,14 @@ const Item = ({ className, match }: IProps) => {
           </MainImageContainer>
           <Content>
             <Title>
-              {category} {brand}
+              {category} {brand} {itemModel ? itemModel : ""}
             </Title>
-            <Description>
+            <ItemInfo>
+              <span>Stan: {condition}</span>
               <span>Rozmiar: {size}</span>
               <span>Cena: {price}PLN</span>
-            </Description>
+              {description && <Description>{description}</Description>}
+            </ItemInfo>
             <ButtonMessage>Napisz wiadomość do sprzedawcy</ButtonMessage>
             {images.length > 1 ? (
               <div>

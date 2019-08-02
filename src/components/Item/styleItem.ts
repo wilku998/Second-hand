@@ -49,15 +49,24 @@ export const Content = styled.div`
 
 export const Title = styled.h2`
   font-weight: 400;
+  line-height: 1.2;
+  text-transform: uppercase;
 `;
 
-export const Description = styled.div`
-  margin-top: .5rem;
+export const Description = styled.span`
+  padding-top: 1rem;
+  ${({ theme }) => `
+    border-top: ${theme.lightBorder};
+  `}
+`;
+
+export const ItemInfo = styled(Description)`
+  margin-top: 1rem;
   line-height: 1;
+  display: flex;
+  flex-direction: column;
   & > span {
-    &:not(:last-of-type) {
-      margin-right: 2rem;
-    }
+    margin-bottom: 1rem;
   }
 `;
 
@@ -118,13 +127,3 @@ export const SellerOtherItems = styled.div`
   flex-direction: column;
 `;
 
-export const OtherItemDescription = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  font-size: 1.2rem;
-  background-color: rgba(0, 0, 0, 0.75);
-  color: white;
-  padding: 0.2rem 0.5rem;
-`;

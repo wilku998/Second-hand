@@ -1,6 +1,6 @@
 import ReactSVG from "react-svg";
 import React from "react";
-import style, { LikeButton, ItemDescription, Image, Title } from "./styleItemSmall";
+import style, { LikeButton, ItemDescription, Image, Title, LinkToItem } from "./styleItemSmall";
 import IItem from "../../../../interfaces/Item";
 
 export interface IProps {
@@ -9,11 +9,16 @@ export interface IProps {
 }
 
 const ItemSmall = ({ className, item }: IProps) => {
-  const { price, size, category, brand, images, itemModel } = item;
+  const { price, size, category, brand, images, itemModel, _id } = item;
   const name = `${category}  ${brand}  ${itemModel ? itemModel : ""}`;
+
+  const onLikeButtonClick = () => {
+    console.log('e.target')
+  }
   return (
     <div className={className}>
-      <LikeButton>
+      <LinkToItem to={`/items/${_id}`} />
+      <LikeButton onClick={onLikeButtonClick}>
         <ReactSVG src="/svg/heart.svg" />
       </LikeButton>
       <Image src={images[0]} />

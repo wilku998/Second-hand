@@ -49,3 +49,21 @@ export const ErrorMessage = styled.span`
   font-size: 1.2rem;
   color: ${({ theme }) => theme.colorRed};
 `;
+
+export const ImagesErrorMessage = styled(ErrorMessage)`
+  margin-top: 1rem;
+  display: block;
+  text-align: center;
+`;
+
+export const RemoveImageButton = styled.button`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  font-size: 1.2rem;
+`;

@@ -2,7 +2,7 @@ import { isSelectSize } from "./functions";
 
 export default (value: string, property: string, secondProperty?: string) => {
   switch (property) {
-    case "model": {
+    case "itemModel": {
       return value.length <= 20;
     }
     case "price": {
@@ -21,8 +21,10 @@ export default (value: string, property: string, secondProperty?: string) => {
     case "brand": {
       return value.length>=1 && value.length <= 20;
     }
+
     case "description": {
-      return value.length <= 100;
+      const wordsValidation = value.split(" ").findIndex(e => e.length>25) === -1
+      return value.length <= 100 && wordsValidation;
     }
     default: {
       return true

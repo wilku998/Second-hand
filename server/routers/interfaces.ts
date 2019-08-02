@@ -9,6 +9,7 @@ export interface IAuthRequest extends IUserRequest {
 }
 
 export interface IMatch {
+  owner?: string;
   size?: { $regex: RegExp; $options: string };
   gender?: { $regex: RegExp; $options: string };
   category?: { $regex: RegExp; $options: string };

@@ -17,7 +17,9 @@ import {
   ItemForm,
   PhotoButton,
   AddPhotosContainer,
-  ErrorMessage
+  ErrorMessage,
+  RemoveImageButton,
+  ImagesErrorMessage
 } from "./styleCreateItem";
 import initialState from "./initialState";
 import { isSelectSize, onCategory_SizeChange } from "./functions";
@@ -25,6 +27,7 @@ import validation from "./validaton";
 import { getImageBase64Request } from "../../../API/images";
 import InvisibleButton from "../../Abstracts/InvisibleButton";
 import { addItemRequest } from "../../../API/items";
+import { history } from "../../../app";
 
 export interface IProps {
   className?: string;
@@ -37,6 +40,7 @@ const CreateItem = ({ className, userStore }: IProps) => {
   const [images, setImages] = useState([]);
   const [resettingFileInput, setResettingFileInput] = useState(false);
   const [error, setError] = useState("");
+  const [imagesError, setImagesError] = useState("");
 
   const {
     price,
@@ -60,13 +64,22 @@ const CreateItem = ({ className, userStore }: IProps) => {
   const imageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const formData = new FormData();
     const image = e.target.files[0];
-    if (images.findIndex(e => e.name === image.name) === -1) {
-      formData.append("itemImage", image, image.name);
-      const base64 = await getImageBase64Request(formData);
-      setImages([
-        ...images,
-        { image: `data:image/jpeg;base64, ${base64}`, name: image.name }
-      ]);
+    if (
+      images.findIndex(e => e.name === image.name) === -1 &&
+      images.length < 3
+    ) {
+      try {
+        formData.append("itemImage", image, image.name);
+        const base64 = await getImageBase64Request(formData);
+        setImages([
+          ...images,
+          { image: `data:image/jpeg;base64, ${base64}`, name: image.name }
+        ]);
+          setImagesError("")
+      }catch(e){
+        setImagesError("Zdjęcie nie może być większe niż 1mb")
+      }
+
     }
     setResettingFileInput(true);
   };
@@ -108,12 +121,12 @@ const CreateItem = ({ className, userStore }: IProps) => {
     });
   };
 
-  const onSubmit = (e: any) => {
+  const onSubmit = async (e: any) => {
     e.preventDefault();
     let isValid = true;
     let errorMessage = "";
 
-    inputs.forEach(e => {
+    [...inputs, description].forEach(e => {
       if (!e.valid) {
         isValid = false;
         errorMessage = e.errorMessage;
@@ -126,12 +139,16 @@ const CreateItem = ({ className, userStore }: IProps) => {
     if (isValid) {
       console.log("success");
       const item: any = {};
-      [...inputs, ...selectors].forEach(e => {
+      [...inputs, ...selectors, description].forEach(e => {
         if (e.value) {
           item[e.name] = e.value;
         }
       });
-      addItemRequest(item, images.map(e => e.image.replace('data:image/jpeg;base64, ', "")));
+      await addItemRequest(
+        item,
+        images.map(e => e.image.replace("data:image/jpeg;base64, ", ""))
+      );
+      history.push("/");
     } else {
       setError(errorMessage);
     }
@@ -152,15 +169,14 @@ const CreateItem = ({ className, userStore }: IProps) => {
             <span>{user.name}</span>
           </SellerProfile>
           <Info>Dodaj zdjęcia przedmiotu</Info>
+          {imagesError !== "" && <ImagesErrorMessage>{imagesError}</ImagesErrorMessage>}
           <GridContainer>
             {images.map(image => (
               <Image key={image.image}>
                 <img src={image.image} />
-                <OtherItemDescription>
-                  <InvisibleButton name={image.image} onClick={removeImage}>
+                  <RemoveImageButton name={image.image} onClick={removeImage}>
                     Usuń
-                  </InvisibleButton>
-                </OtherItemDescription>
+                  </RemoveImageButton>
               </Image>
             ))}
             {images.length < 3 && !resettingFileInput && (

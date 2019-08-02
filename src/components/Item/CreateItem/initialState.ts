@@ -67,7 +67,7 @@ export default {
     value: "",
     valid: true,
     errorMessage:
-      "Opis nie może posiadać więcej niż 100 znaków lecz może pozostać pusty"
+      "Opis może pozostać pusty lecz nie może posiadać więcej niż 100 znaków oraz więcej niż 25 znaków na słowo"
   },
   condition: {
     isOptional: false,

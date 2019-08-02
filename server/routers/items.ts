@@ -20,7 +20,7 @@ router.get("/api/items", async (req, res) => {
   let match: IMatch = {};
 
   Object.keys(req.query).forEach(
-    (key: "size" | "gender" | "category" | "name") => {
+    (key: "size" | "gender" | "category" | "name" | "owner") => {
       if (key === "name") {
         match = {
           ...match,
@@ -29,6 +29,8 @@ router.get("/api/items", async (req, res) => {
             { brand: createRegexObj(req.query.name) }
           ]
         };
+      }else if(key ==="owner"){
+        match.owner = req.query.owner
       } else {
         match[key] = createRegexObj(req.query[key]);
       }

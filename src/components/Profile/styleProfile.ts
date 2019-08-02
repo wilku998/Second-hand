@@ -17,7 +17,7 @@ export const Content = styled.div`
     ${({theme}) => `
         background-color: ${theme.colorGreyLight1};
         padding: 4rem;
-        width: ${theme.rowWidth};
+        width: calc(${theme.rowWidth} + 8rem);
     `}
 `;
 

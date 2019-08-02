@@ -1,6 +1,7 @@
 import styled from "styled-components";
-import { IProps } from "./ItemSmall";
+import { Link } from "react-router-dom";
 import { FunctionComponent } from "react";
+import { IProps } from "./ItemSmall";
 import InvisibleButton from "../../../Abstracts/InvisibleButton";
 
 export default (ItemSmall: FunctionComponent<IProps>) => styled(ItemSmall)`
@@ -33,10 +34,11 @@ export const Title = styled.h3`
 
 export const LikeButton = styled(InvisibleButton)`
   position: absolute;
+  z-index: 10;
   top: 1.5rem;
   right: 1.5rem;
   border-radius: 50%;
-  padding: .4rem;
+  padding: 0.4rem;
   background-color: ${({ theme }) => `${theme.colorGreyLight1}`};
   &:hover {
     cursor: pointer;
@@ -50,4 +52,12 @@ export const LikeButton = styled(InvisibleButton)`
       fill: ${({ theme }) => `${theme.colorGreyDark1}`};
     }
   }
+`;
+
+export const LinkToItem = styled(Link)`
+  position: absolute;
+  top: 0%;
+  left: 0;
+  width: 100%;
+  height: 100%;
 `;

@@ -1,8 +1,8 @@
 import { parseResponse } from './functions';
 
-export default async (id: string, url: string) => {
+export default async (params: string, url: string) => {
     try {
-        const item = await fetch(`${url}${id}`)
+        const item = await fetch(`${url}${params}`)
         return parseResponse(await item.json());
     }catch(e){
 
