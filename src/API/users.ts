@@ -57,6 +57,16 @@ export const logoutRequest = async () => {
   } catch (e) {}
 };
 
+export const updateUserRequest = async (update: any) => {
+  try {
+    await ajax("PATCH", "/api/users/me", update, 200);
+  }catch(e){
+    if (e.error.code === 11000) {
+      return "Email jest już zajęty";
+    }
+  }
+}
+
 export const getUserRequest = async (id: string) => await fetchData(id, '/api/users/');
 
 export const getUsersRequest = async () => await fetchData('', '/api/users');

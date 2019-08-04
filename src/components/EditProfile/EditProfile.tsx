@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, ChangeEvent } from "react";
 import Modal from "react-modal";
 import { inject, observer } from "mobx-react";
 import { IViewStore } from "../../store/view";
@@ -7,6 +7,8 @@ import styles, { Button } from "./styleEditProfile";
 import { Form, Label, FormInput } from "../Abstracts/Form";
 import useUserForm from "../../hooks/useUserForm";
 import initialFormStateTemplate from "../Login/initialState";
+import { updateUserRequest } from "../../API/users";
+import { IUserUpdate } from "./interfaces";
 
 Modal.setAppElement("#root");
 
@@ -23,7 +25,6 @@ const EditProfile = ({ viewStore, userStore }: IProps) => {
   const isOpen = viewStore.getEditProfileIsOpen;
   const user = userStore.getUser;
   const formKeys = Object.keys(initialFormState);
-
   formKeys.forEach((key: "name" | "email" | "password" | "confirmPassword") => {
     initialFormState[key] = {
       ...initialFormState[key],
@@ -31,12 +32,47 @@ const EditProfile = ({ viewStore, userStore }: IProps) => {
       valid: key !== "password" && key !== "confirmPassword"
     };
   });
-
   const [form, onFormChange] = useUserForm(initialFormState);
+  const [error, setError] = useState(undefined);
+
   const onRequestClose = () => viewStore.toggleEditProfile();
   const inputs = formKeys.map(key => ({ ...form[key], name: key }));
 
-  const onSubmit = () => {};
+  const onSubmit = async (e: any) => {
+    e.preventDefault();
+    const invalidProperty = inputs.find(e => !e.valid);
+    console.log(invalidProperty.name);
+    if (
+      invalidProperty &&
+      (invalidProperty.name === "password" ||
+      invalidProperty.name === "confirmPassword"
+        ? form.password.value !== ""
+        : true)
+    ) {
+      setError(invalidProperty.errorMessage);
+    } else {
+      const update: IUserUpdate = {};
+      inputs.forEach(
+        ({
+          name,
+          value
+        }: {
+          name: "password" | "confirmPassowrd" | "email" | "name";
+          value: string;
+        }) => {
+          if (name !== "confirmPassowrd" && value !== "") {
+            update[name] = value;
+          }
+        }
+      );
+      const requestError = await updateUserRequest(update);
+      if(requestError){
+        setError(requestError)
+      }else{
+        onRequestClose();
+      }
+    }
+  };
 
   return (
     <Modal style={styles} isOpen={isOpen} onRequestClose={onRequestClose}>
@@ -53,6 +89,7 @@ const EditProfile = ({ viewStore, userStore }: IProps) => {
             />
           </Label>
         ))}
+        {error && <span>{error}</span>}
         <Button>Potwierdź</Button>
       </Form>
     </Modal>

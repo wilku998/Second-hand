@@ -78,6 +78,20 @@ router.get("/api/users/me", AuthMiddleware, async (req: IAuthRequest, res) => {
   }
 });
 
+interface IUpdateRequest extends IAuthRequest {
+  update: any
+};
+
+router.patch("/api/users/me", AuthMiddleware, async (req: IUpdateRequest, res) => {
+  try {
+    const { user } = req;
+    await User.findByIdAndUpdate(user._id, req.body)
+    res.send();
+  } catch (e) {
+    res.status(400).send(e);
+  }
+});
+
 
 router.get("/api/users", async (req, res) => {
   const { name } = req.query;
