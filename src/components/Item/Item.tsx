@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { inject, observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { history } from "../../app";
 import style, {
@@ -22,14 +23,17 @@ import Avatar from "../Abstracts/Avatar";
 import { FakeImage } from "../Abstracts/FakeImage";
 import { getItemRequest, getItemsRequest } from "../../API/items";
 import IItem from "../../interfaces/Item";
+import { IUserStore } from "../../store/user";
 
 export interface IProps {
   className: string;
   match: any;
+  userStore: IUserStore;
 }
 
-const Item = ({ className, match }: IProps) => {
+const Item = ({ className, match, userStore }: IProps) => {
   const itemID = match.params.id;
+  const ownItems = userStore.getOwnItems;
   const [item, setItem]: [IItem, any] = useState(undefined);
   const [sellerOtherItems, setSellerOtherItems] = useState([]);
 
@@ -52,19 +56,25 @@ const Item = ({ className, match }: IProps) => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const foundedItem = await getItemRequest(itemID);
-      if (foundedItem) {
-        setItem(foundedItem);
-        const otherItems: Array<IItem> = await getItemsRequest({
-          owner: foundedItem.owner._id
-        });
-        if (otherItems) {
-          setSellerOtherItems(otherItems.filter(e => e._id !== itemID));
+    const isOwn = ownItems.findIndex(e => e._id === itemID) > -1;
+
+    if (isOwn) {
+      history.push(`/items/edit/${itemID}`);
+    } else {
+      const fetchData = async () => {
+        const foundedItem = await getItemRequest(itemID);
+        if (foundedItem) {
+          setItem(foundedItem);
+          const otherItems: Array<IItem> = await getItemsRequest({
+            owner: foundedItem.owner._id
+          });
+          if (otherItems) {
+            setSellerOtherItems(otherItems.filter(e => e._id !== itemID));
+          }
         }
-      }
-    };
-    fetchData();
+      };
+      fetchData();
+    }
   }, [itemID]);
 
   return (
@@ -137,4 +147,5 @@ const Item = ({ className, match }: IProps) => {
     </Container>
   );
 };
-export default style(Item);
+
+export default style(inject("userStore")(observer(Item)));

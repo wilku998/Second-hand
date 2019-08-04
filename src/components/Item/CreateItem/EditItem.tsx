@@ -6,9 +6,10 @@ import IItem from "../../../interfaces/Item";
 import { inject, observer } from "mobx-react";
 import { Iimages, IUpdate, IItemKeys } from "./interfaces";
 import { editItemRequest } from "../../../API/items";
+import { IUserStore } from "../../../store/user";
 
 interface IProps {
-  userStore: any;
+  userStore: IUserStore;
   match: any;
 }
 // http://localhost:3000/items/edit/5d4468f8c1becb261cbcd95f

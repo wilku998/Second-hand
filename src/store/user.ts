@@ -3,11 +3,20 @@ import IUser from "../interfaces/User";
 import IItem from "../interfaces/item";
 import { IUpdate, IItemKeys } from "../components/Item/CreateItem/interfaces";
 
+export interface IUserStore {
+  user: IUser;
+  ownItems: Array<IItem>;
+  getUser: IUserStore["user"];
+  getOwnItems: IUserStore["ownItems"];
+  isAuth: boolean;
+  updateItem: (_id: string, update: IUpdate) => void;
+};
+
 export default class UserStore {
   constructor() {
     autorun(() => {
       // console.log(this.getUser);
-      // console.log(this.getOwnItems);
+      console.log(this.getOwnItems);
     });
   }
 

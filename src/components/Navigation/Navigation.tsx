@@ -11,10 +11,11 @@ import style, {
 } from "./styleNavigation";
 import Logo from "../Abstracts/Logo";
 import UserMenu from "./UserMenu/UserMenu";
+import { IUserStore } from "../../store/user";
 
 export interface IProps {
   className?: string;
-  userStore: any;
+  userStore: IUserStore;
 }
 
 const Navigation = ({ className, userStore }: IProps) => {
