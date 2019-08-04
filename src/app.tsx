@@ -10,8 +10,15 @@ import GlobalStyles from "./styledComponents/GlobalStyles";
 import AppRouter from "./routers/AppRouter";
 import { getProfileRequest } from "./API/users";
 import UserStore from "./store/user";
+import ViewStore from "./store/view";
 
 export const userStore = new UserStore();
+export const viewStore = new ViewStore();
+
+const stores = {
+  userStore,
+  viewStore
+};
 
 const start = async () => {
   await getProfileRequest();
@@ -22,7 +29,7 @@ start();
 export const history = createBrowserHistory();
 const app = (
   <ThemeProvider theme={theme}>
-    <Provider userStore={userStore}>
+    <Provider {...stores}>
       <div>
         <GlobalStyles />
         <AppRouter history={history} />

@@ -1,28 +1,26 @@
 import React, { useState, ChangeEvent } from "react";
 import { Link } from "react-router-dom";
-
 import {
   Container,
   Content,
   Button,
-  Input,
   RadioGroup,
   ErrorMessage
 } from "./styleLogin";
-import validate from "./validate";
 import initialState from "./initialState";
 import { loginRequest, registerRequest } from "../../API/users";
 import { Form, Label, FormInput } from "../Abstracts/Form";
+import useUserForm from "../../hooks/useUserForm";
 
 export interface IProps {
   className?: string;
 }
 
 const Login = ({ className }: IProps) => {
-  const [form, setForm] = useState(initialState);
+  const [form, onFormChange] = useUserForm(initialState);
   const [type, setType] = useState("register");
   const [errorMessage, setErrorMessage] = useState("");
-  const { name, password, confirmPassword, email } = form;
+  const { name, password, email } = form;
 
   const inputs = Object.keys(form)
     .filter(key =>
@@ -36,29 +34,6 @@ const Login = ({ className }: IProps) => {
   const onTypeChange = (e: ChangeEvent<HTMLInputElement>) => {
     setType(e.target.value);
     setErrorMessage("");
-  };
-
-  const onFormChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const property: "name" | "password" | "confirmPassword" | "email" =
-      e.target.name;
-    const value = e.target.value;
-    let valid = validate(
-      property,
-      value,
-      property === "confirmPassword" ? password.value : undefined
-    );
-
-    setForm({
-      ...form,
-      confirmPassword:
-        property === "password"
-          ? {
-              ...confirmPassword,
-              valid: validate("confirmPassword", confirmPassword.value, value)
-            }
-          : confirmPassword,
-      [property]: { ...form[property], value, valid }
-    });
   };
 
   const onSubmit = async (e: any) => {

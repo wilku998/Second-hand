@@ -11,10 +11,11 @@ import CreateItem from "../components/Item/CreateItem/CreateItem";
 import ForeignProfile from "../components/Profile/ForeignProfile";
 import OwnProfile from "../components/Profile/OwnProfile";
 import EditItem from "../components/Item/CreateItem/EditItem";
+import EditProfile from "../components/EditProfile/EditProfile";
 
 interface IProps {
   history: any;
-  userStore: any;
+  userStore?: any;
 }
 
 const AppRouter = ({ history, userStore }: IProps) => {
@@ -22,6 +23,7 @@ const AppRouter = ({ history, userStore }: IProps) => {
   return (
     <Router history={history}>
       <Navigation userStore={userStore} />
+      {isAuth && <EditProfile />}
       <Switch>
         <Route path="/" exact component={Dashboard} />
         <PrivateRoute

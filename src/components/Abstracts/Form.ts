@@ -11,8 +11,8 @@ export const Form = styled.form`
   }
 `;
 
-export const FormInput = styled.input<{ valid: boolean; staticText?: string }>`
-  ${({ theme, valid, value, staticText }) => `
+export const FormInput = styled.input<{ valid: boolean}>`
+  ${({ theme, valid, value}) => `
     ${
       value !== ""
         ? `

@@ -2,7 +2,7 @@ import React from "react";
 import { observer, inject } from "mobx-react";
 import ProfileTemplate from "./ProfileTemplate";
 import { IUserStore } from "../../store/user";
-import { history } from "../../app";
+import { history, viewStore } from "../../app";
 
 interface IProps {
   userStore: IUserStore;
@@ -12,7 +12,12 @@ const ForeignProfile = ({ userStore }: IProps) => {
   const ownItems = userStore.getOwnItems;
 
   const buttons = [
-    { text: "Edytuj profil", onClick: () => {} },
+    {
+      text: "Edytuj profil",
+      onClick: () => {
+        viewStore.toggleEditProfile();
+      }
+    },
     {
       text: "Dodaj przedmiot",
       onClick: () => {
