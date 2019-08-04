@@ -6,9 +6,10 @@ import IItem from "../../../../interfaces/Item";
 export interface IProps {
   className?: string;
   item: IItem;
+  isOwn: boolean;
 }
 
-const ItemSmall = ({ className, item }: IProps) => {
+const ItemSmall = ({ className, item, isOwn }: IProps) => {
   const { price, size, category, brand, images, itemModel, _id } = item;
   const name = `${category}  ${brand}  ${itemModel ? itemModel : ""}`;
 
@@ -17,7 +18,7 @@ const ItemSmall = ({ className, item }: IProps) => {
   }
   return (
     <div className={className}>
-      <LinkToItem to={`/items/${_id}`} />
+      <LinkToItem to={isOwn ? `/items/edit/${_id}` : `/items/${_id}`} />
       <LikeButton onClick={onLikeButtonClick}>
         <ReactSVG src="/svg/heart.svg" />
       </LikeButton>
@@ -30,4 +31,5 @@ const ItemSmall = ({ className, item }: IProps) => {
     </div>
   );
 };
+
 export default style(ItemSmall);

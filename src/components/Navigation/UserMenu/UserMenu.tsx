@@ -32,7 +32,9 @@ const UserMenu = ({ userStore, className }: IProps) => {
         />
         {listVisible && (
           <List width={listWidth}>
-            <li><Link to={`/users/${user._id}`}>Twój profil</Link></li>
+            <li>
+              <Link to="/users/myProfile">Twój profil</Link>
+            </li>
             <li>Wiadomości</li>
             <li>
               <Link to="/items/create">Dodaj przedmiot</Link>

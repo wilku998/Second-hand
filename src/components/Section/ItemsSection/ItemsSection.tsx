@@ -7,15 +7,16 @@ export interface IProps {
   className?: string;
   title?: string;
   items: Array<IItem>;
+  areOwnItems: boolean
 }
 
-const ItemsSection = ({ className, title, items }: IProps) => {
+const ItemsSection = ({ className, title, items, areOwnItems }: IProps) => {
   return (
     <Section className={className}>
       {title && <Title>{title}</Title>}
         <ItemsContainer>
           {items.map(item => (
-            <ItemSmall item={item} key={item._id} />
+            <ItemSmall isOwn={areOwnItems} item={item} key={item._id} />
           ))}
         </ItemsContainer>
     </Section>
