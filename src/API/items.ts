@@ -3,22 +3,18 @@ import ajax from "./ajax";
 import { parseResponse } from "./functions";
 import { userStore } from "../app";
 import fetchData from "./fetchData";
+import { Iimages, IUpdate } from "../components/Item/CreateItem/interfaces";
+import { addImagesRequest, removeImageRequest } from "./images";
 
 export const addItemRequest = async (item: IItem, images: Array<string>) => {
   try {
-    const imagesResponse = await ajax(
-      "POST",
-      "/api/images",
-      JSON.stringify({ images }),
-      200
-    );
-    const imagesURLs = parseResponse(imagesResponse).map(
-      (e: string) => `/api/images/${e}`
-    );
+    const imagesResponse: any = await addImagesRequest(images);
+
+    const imagesURLs = imagesResponse.map((e: string) => `/api/images/${e}`);
     const response = await ajax(
       "POST",
       "/api/items",
-      JSON.stringify({ ...item, images: imagesURLs }),
+      { ...item, images: imagesURLs },
       201
     );
     userStore.ownItems = [...userStore.getOwnItems, response];
@@ -35,11 +31,34 @@ export const getItemsRequest = async (query?: any) => {
     var queryString = Object.keys(query)
       .map(key => `${key}=${query[key]}`)
       .join("&");
-    console.log(queryString);
   }
   const items = await fetchData(
     queryString ? "?" + queryString : "",
     "/api/items"
   );
   return items;
+};
+
+export const editItemRequest = async (
+  _id: string,
+  update: IUpdate,
+  initialImages: Array<string>,
+  imagesToAdd: Array<string>,
+  imagesToRemove: Array<string>
+) => {
+  try {
+    await Promise.all(
+      imagesToRemove.map(async image => {
+        return await removeImageRequest(image.replace("/api/images/", ""));
+      })
+    );
+    const imagesResponse: any = await addImagesRequest(imagesToAdd);
+    const newImagesURLs = imagesResponse.map((e: string) => `/api/images/${e}`);
+    update.images = [...initialImages, ...newImagesURLs].filter(
+      e => !imagesToRemove.includes(e)
+    );
+    const response = await ajax("PATCH", `/api/items/${_id}`, { update }, 200);
+    userStore.updateItem(_id, update)
+  } catch (e) {
+  }
 };

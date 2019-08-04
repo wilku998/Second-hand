@@ -11,7 +11,7 @@ export const loginRequest = async (data: {
     const response: any = await ajax(
       "POST",
       "/api/users/login",
-      JSON.stringify(data),
+      data,
       200
     );
     setUserStore(response)
@@ -30,7 +30,7 @@ export const registerRequest = async (data: {
     const response: any = await ajax(
       "POST",
       "/api/users",
-      JSON.stringify(data),
+      data,
       201
     );
     userStore.user = parseResponse(response);

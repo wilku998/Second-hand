@@ -5,7 +5,7 @@ export default (method: string, url: string, data:any, expectedStatus: number ) 
     const xhr = new XMLHttpRequest();
     xhr.open(method, url, true);
     xhr.setRequestHeader("Content-type", "application/json; charset=utf-8");
-    xhr.send(data)
+    xhr.send(JSON.stringify(data));
     xhr.addEventListener("load", function() {
       if (this.status === expectedStatus) {
         resolve(parseResponse(xhr.response));

@@ -54,7 +54,16 @@ router.get("/api/items/:id", async (req, res) => {
     }
     res.send(item);
   } catch (e) {
-    res.status(404).send(e);
+    res.status(404).send();
+  }
+});
+
+router.patch("/api/items/:id", AuthMiddleware, async (req: IAuthRequest, res) => {
+  try{
+    const updatedItem = await Item.findByIdAndUpdate(req.params.id, req.body.update)
+    res.send(updatedItem)
+  }catch(e){
+    res.status(404).send()
   }
 });
 

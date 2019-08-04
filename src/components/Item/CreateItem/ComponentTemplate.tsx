@@ -23,10 +23,9 @@ import {
 import { isSelectSize, onCategory_SizeChange } from "./functions";
 import validation from "./validaton";
 import { getImageBase64Request } from "../../../API/images";
-import { addItemRequest } from "../../../API/items";
 import { history } from "../../../app";
 import IItem from "../../../interfaces/Item";
-import { Iimages, IForm } from "./interfaces";
+import { Iimages, IForm, IItemKeys } from "./interfaces";
 
 export interface IProps {
   className?: string;
@@ -99,14 +98,7 @@ const ComponentTemplate = ({
     e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>
   ) => {
     const property:
-      | "price"
-      | "size"
-      | "category"
-      | "brand"
-      | "itemModel"
-      | "description"
-      | "condition"
-      | "gender" = e.target.name;
+    IItemKeys["keys"] = e.target.name;
     const value = e.target.value;
     setItemForm({
       ...itemForm,
@@ -153,7 +145,7 @@ const ComponentTemplate = ({
         }
       });
       await onSubmitRequest(item, images);
-      // history.push("/");
+      history.push("/");
     } else {
       setError(errorMessage);
     }

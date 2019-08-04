@@ -56,11 +56,11 @@ const Item = ({ className, match }: IProps) => {
       const foundedItem = await getItemRequest(itemID);
       if (foundedItem) {
         setItem(foundedItem);
-        const otherItems = await getItemsRequest({
+        const otherItems: Array<IItem> = await getItemsRequest({
           owner: foundedItem.owner._id
         });
         if (otherItems) {
-          setSellerOtherItems(otherItems);
+          setSellerOtherItems(otherItems.filter(e => e._id !== itemID));
         }
       }
     };

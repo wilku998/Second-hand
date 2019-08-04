@@ -1,12 +1,48 @@
 export interface Iimages {
   images: Array<{ image: string; name: string }>;
 }
+export interface IItemKeys {
+  keys:
+    | "price"
+    | "size"
+    | "category"
+    | "brand"
+    | "itemModel"
+    | "description"
+    | "condition"
+    | "gender"
+}
+export interface IUpdate {
+  price?: number;
+  size?: string;
+  category?:
+    | "buty"
+    | "bluza"
+    | "spodnie"
+    | "szorty"
+    | "kurtka"
+    | "plaszcz"
+    | "koszulka"
+    | "koszula"
+    | "marynarka"
+    | "czapka"
+    | "skarpetki"
+    | "bielizna"
+    | "biżuteria"
+    | "inne";
+  brand?: string;
+  itemModel?: string;
+  description?: string;
+  gender?: "mężczyźni" | "kobiety" | "dzieci";
+  condition?: "nowy" | "używany";
+  images?: Array<string>;
+}
 
 export interface IForm {
   price: {
     isOptional: false;
     name: "price";
-    value: string;
+    value: number;
     valid: boolean;
     label: "Cena";
     type: "number";

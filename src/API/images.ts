@@ -1,3 +1,5 @@
+import ajax from "./ajax";
+
 export const getImageBase64Request = async (data: any) => {
   return new Promise(function(resolve, reject) {
     const xhr = new XMLHttpRequest();
@@ -21,3 +23,9 @@ export const getImageBase64Request = async (data: any) => {
     });
   });
 };
+
+export const addImagesRequest = async (images: Array<string>) =>
+  await ajax("POST", "/api/images", { images }, 201);
+
+export const removeImageRequest = async (id: string) =>
+  await ajax("DELETE", `/api/images/${id}`, undefined, 204);

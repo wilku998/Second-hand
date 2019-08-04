@@ -4,20 +4,21 @@ import formTemplate from "./formTemplate";
 import ComponentTemplate from "./ComponentTemplate";
 import IItem from "../../../interfaces/Item";
 import { inject, observer } from "mobx-react";
-import { Iimages } from "./interfaces";
+import { Iimages, IUpdate, IItemKeys } from "./interfaces";
+import { editItemRequest } from "../../../API/items";
 
 interface IProps {
   userStore: any;
   match: any;
 }
-// http://localhost:3000/items/edit/5d42a656d691910150d57df0
+// http://localhost:3000/items/edit/5d4468f8c1becb261cbcd95f
 const EditItem = ({ userStore, match }: IProps) => {
   const ownItems = userStore.getOwnItems;
   const editItemID = match.params.id;
-  const item = ownItems.find((e: IItem) => e._id === editItemID);
+  const item: IItem = ownItems.find((e: IItem) => e._id === editItemID);
   if (item) {
     var itemEditForm: any = { ...formTemplate };
-    Object.keys(item).map(key => {
+    Object.keys(item).map((key: IItemKeys["keys"] | "images") => {
       if (key !== "images") {
         itemEditForm[key] = {
           ...itemEditForm[key],
@@ -33,29 +34,48 @@ const EditItem = ({ userStore, match }: IProps) => {
     }));
   }
 
+  const findDifferenceInImageArrays = (
+    firstArr: Iimages["images"],
+    secondArr: Iimages["images"]
+  ) => {
+    const diff: Iimages["images"] = [];
+    firstArr.forEach(image => {
+      if (
+        secondArr.findIndex(
+          (e: { name: string; image: string }) => e.name === image.name
+        ) === -1
+      ) {
+        diff.push(image);
+      }
+    });
+    return diff.map(e => e.image);
+  };
+
   const onSubmitRequest = async (
     updatedItem: IItem,
-    images: Iimages["images"]
+    updatedImages: Iimages["images"]
   ) => {
-    const update: IItem = {};
-    Object.keys(updatedItem).map(
-      (
-        key:
-          | "price"
-          | "size"
-          | "category"
-          | "brand"
-          | "itemModel"
-          | "description"
-          | "condition"
-          | "gender"
-      ) => {
-        if (updatedItem[key] !== item[key]) {
-          update[key] = updatedItem[key]
-        }
-      }
+    const update: IUpdate = {};
+    const imagesToAdd = findDifferenceInImageArrays(
+      updatedImages,
+      initialImages
+    ).map(e => e.replace("data:image/jpeg;base64, ", ""));
+    const imagesToRemove = findDifferenceInImageArrays(
+      initialImages,
+      updatedImages
     );
-    console.log(update)
+    Object.keys(updatedItem).forEach((key: IItemKeys["keys"]) => {
+      if (updatedItem[key] !== item[key]) {
+        update[key] = updatedItem[key];
+      }
+    });
+    await editItemRequest(
+      item._id,
+      update,
+      item.images,
+      imagesToAdd,
+      imagesToRemove
+    );
   };
 
   return (

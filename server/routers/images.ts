@@ -29,7 +29,7 @@ router.post("/api/images", authMiddleware, async (req: IAuthRequest, res) => {
   try{
     const imagesBuffers = req.body.images.map((e:string) => ({buffer: Buffer.from(e, 'base64')}))
     const images: any = await Image.insertMany(imagesBuffers)
-    res.send(images.map((e: any) => e._id))
+    res.status(201).send(images.map((e: any) => e._id))
   }catch(e){
     res.status(400).send();
   }
@@ -45,5 +45,19 @@ router.get("/api/images/:id", async (req, res) => {
   } catch (e) {
     res.sendStatus(404);
   }
+});
+
+router.delete("/api/images/:id", async (req, res) => {
+  try {
+    const image = await Image.findByIdAndDelete(req.params.id);
+    if (!image) {
+      throw new Error();
+    }
+    res.status(204).send();
+  } catch (e) {
+    console.log(e)
+    res.sendStatus(404);
+  }
 })
+
 export default router;
