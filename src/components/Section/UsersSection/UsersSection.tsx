@@ -1,15 +1,18 @@
 import React from "react";
+import { inject, observer } from "mobx-react";
 import { UserLabel, Button, Name } from "./UserLabel";
 import IUser from "../../../interfaces/User";
-import FollowButton from "../../Abstracts/FollowButton";
 import Avatar from "../../Abstracts/Avatar";
 import IItem from "../../../interfaces/Item";
 import { Title, ItemsContainer, Section } from "../styleSection";
 import Item from "../ItemsSection/ItemSmall/ItemSmall";
+import { IUserStore } from "../../../store/user";
+import makeItemsIsOwnProperty from "../../../functions/makeItemsIsOwnProperty";
 
 export interface IUserProps {
   users: Array<{ user: IUser; ownItems: Array<IItem> }>;
   title?: string;
+  userStore: IUserStore;
 }
 const UsersSection = ({ users, title }: IUserProps) => {
   return (
@@ -25,7 +28,7 @@ const UsersSection = ({ users, title }: IUserProps) => {
           </UserLabel>
           {user.ownItems && (
             <ItemsContainer>
-              {user.ownItems.map(item => (
+              {makeItemsIsOwnProperty(user.ownItems).map(item => (
                 <Item item={item} key={item._id} />
               ))}
             </ItemsContainer>

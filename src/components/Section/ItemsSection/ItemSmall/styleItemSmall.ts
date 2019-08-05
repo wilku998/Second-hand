@@ -32,25 +32,25 @@ export const Title = styled.h3`
   text-transform: uppercase;
 `;
 
-export const LikeButton = styled(InvisibleButton)`
+export const Button = styled(InvisibleButton)`
   position: absolute;
   z-index: 10;
   top: 1.5rem;
   right: 1.5rem;
   border-radius: 50%;
-  padding: 0.4rem;
+  padding: 1rem;
   background-color: ${({ theme }) => `${theme.colorGreyLight1}`};
   &:hover {
     cursor: pointer;
   }
-  & > div > div {
-    width: 1.2rem;
-    height: 1.2rem;
-    & > svg {
-      width: 100%;
-      height: 100%;
-      fill: ${({ theme }) => `${theme.colorGreyDark1}`};
-    }
+  & > div > div > svg {
+    position: absolute;
+    top: 50%;
+    left: 50;
+    transform: translate(-50%, -50%);
+    width: 1rem;
+    height: 1rem;
+    fill: ${({ theme }) => `${theme.colorGreyDark1}`};
   }
 `;
 

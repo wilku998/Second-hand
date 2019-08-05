@@ -7,7 +7,7 @@ export interface IViewStore {
 }
 
 export default class ViewStore {
-  @observable editProfileIsOpen: boolean = true;
+  @observable editProfileIsOpen: boolean = false;
 
   toggleEditProfile() {
     this.editProfileIsOpen = !this.editProfileIsOpen;

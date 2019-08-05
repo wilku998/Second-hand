@@ -48,7 +48,6 @@ const ProfileTemplate = ({ className, user, ownItems, buttons, isOwnProfile }: I
           {ownItems && (
             <ItemsSection
               items={ownItems}
-              areOwnItems={isOwnProfile}
               title={
                 isOwnProfile ? "Twoje przedmioty" : "Przedmioty użytkownika"
               }

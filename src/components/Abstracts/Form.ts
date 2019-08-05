@@ -11,16 +11,16 @@ export const Form = styled.form`
   }
 `;
 
-export const FormInput = styled.input<{ valid: boolean}>`
-  ${({ theme, valid, value}) => `
+export const FormInput = styled.input<{ valid: boolean }>`
+  ${({ theme, valid, value }) => `
     ${
       value !== ""
         ? `
-      background-color: ${valid ? theme.colorGreenLight : theme.colorRedLight};
-    `
-        : `
-        background-color: ${valid ? theme.colorGreenLight : theme.colorRedLight};
-      `
+          background-color: ${
+            valid ? theme.colorGreenLight : theme.colorRedLight
+          };
+        `
+        : ""
     }
   `};
 `;
