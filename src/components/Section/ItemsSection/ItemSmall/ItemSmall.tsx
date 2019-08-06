@@ -7,10 +7,13 @@ import style, {
   Title,
   LinkToItem
 } from "./styleItemSmall";
-import IItem from "../../../../interfaces/Item";
+import IItem from "../../../../interfaces/IItem";
+import { history } from "../../../../app";
+import { likeItemRequest, unlikeItemRequest } from "../../../../API/users";
 
 interface IItemSmall extends IItem {
   isOwn: boolean;
+  isLiked?: boolean;
 }
 
 export interface IProps {
@@ -19,18 +22,40 @@ export interface IProps {
 }
 
 const ItemSmall = ({ className, item }: IProps) => {
-  const { price, size, category, brand, images, itemModel, _id, isOwn } = item;
+  const {
+    price,
+    size,
+    category,
+    brand,
+    images,
+    itemModel,
+    _id,
+    isOwn,
+    isLiked
+  } = item;
   const name = `${category}  ${brand}  ${itemModel ? itemModel : ""}`;
 
-  const onLikeButtonClick = () => {
-    console.log("e.target");
+  const onButtonClick = async () => {
+    if (isOwn) {
+      history.push(`/items/edit/${_id}`);
+    } else {
+      if(isLiked){
+        await unlikeItemRequest(_id);
+      }else{
+        await likeItemRequest(_id);
+      }
+    }
   };
 
   return (
     <div className={className}>
       <LinkToItem to={isOwn ? `/items/edit/${_id}` : `/items/${_id}`} />
-      <Button onClick={onLikeButtonClick}>
-        <ReactSVG src={`/svg/${isOwn ? "edit" : "heart"}.svg`} />
+      <Button onClick={onButtonClick}>
+        <ReactSVG
+          src={`/svg/${
+            isOwn ? "edit" : `${isLiked ? "heartbreak" : "heart"}`
+          }.svg`}
+        />
       </Button>
       <Image src={images[0]} />
       <ItemDescription>

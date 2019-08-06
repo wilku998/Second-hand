@@ -8,8 +8,8 @@ import style, {
   Content,
   Button
 } from "./styleProfile";
-import IUser from "../../interfaces/User";
-import IItem from "../../interfaces/Item";
+import IUser from "../../interfaces/IUser";
+import IItem from "../../interfaces/IItem";
 import { FakeImage } from "../Abstracts/FakeImage";
 import ItemsSection from "../Section/ItemsSection/ItemsSection";
 

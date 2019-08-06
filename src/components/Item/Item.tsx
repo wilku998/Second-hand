@@ -22,7 +22,7 @@ import style, {
 import Avatar from "../Abstracts/Avatar";
 import { FakeImage } from "../Abstracts/FakeImage";
 import { getItemRequest, getItemsRequest } from "../../API/items";
-import IItem from "../../interfaces/Item";
+import IItem from "../../interfaces/IItem";
 import { IUserStore } from "../../store/user";
 
 export interface IProps {

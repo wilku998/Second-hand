@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import { Redirect } from "react-router";
 import formTemplate from "./formTemplate";
 import ComponentTemplate from "./ComponentTemplate";
-import IItem from "../../../interfaces/Item";
+import IItem from "../../../interfaces/IItem";
 import { inject, observer } from "mobx-react";
 import { Iimages, IUpdate, IItemKeys } from "./interfaces";
 import { editItemRequest } from "../../../API/items";

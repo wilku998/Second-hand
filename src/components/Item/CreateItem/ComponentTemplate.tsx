@@ -24,7 +24,7 @@ import { isSelectSize, onCategory_SizeChange } from "./functions";
 import validation from "./validaton";
 import { getImageBase64Request } from "../../../API/images";
 import { history } from "../../../app";
-import IItem from "../../../interfaces/Item";
+import IItem from "../../../interfaces/IItem";
 import { Iimages, IForm, IItemKeys } from "./interfaces";
 
 export interface IProps {

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import ProfileTemplate from "./ProfileTemplate";
 import { getUserRequest } from "../../API/users";
-import IUser from "../../interfaces/User";
-import IItem from "../../interfaces/Item";
+import IUser from "../../interfaces/IUser";
+import IItem from "../../interfaces/IItem";
 
 export interface IProps {
   match: any;

@@ -3,7 +3,7 @@ import formTemplate from "./formTemplate";
 import ComponentTemplate from "./ComponentTemplate";
 import { addItemRequest } from "../../../API/items";
 import { Iimages } from "./interfaces";
-import IItem from '../../../interfaces/Item';
+import IItem from '../../../interfaces/IItem';
 
 export default () => {
   const onSubmitRequest = async (item: IItem, images: Iimages["images"]) => {

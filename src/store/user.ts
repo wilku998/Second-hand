@@ -1,6 +1,6 @@
 import { observable, computed, autorun, toJS } from "mobx";
-import IUser from "../interfaces/User";
-import IItem from "../interfaces/item";
+import IUser from "../interfaces/IUser";
+import IItem from "../interfaces/IItem";
 import { IUpdate, IItemKeys } from "../components/Item/CreateItem/interfaces";
 
 export interface IUserStore {
@@ -15,7 +15,7 @@ export interface IUserStore {
 export default class UserStore {
   constructor() {
     autorun(() => {
-      // console.log(this.getUser);
+      console.log(this.getUser);
       console.log(this.getOwnItems);
     });
   }

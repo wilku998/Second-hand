@@ -1,8 +1,9 @@
-import { Schema, model } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import path from "path";
 import { IUser, IUserModel } from "./interfaces";
+import IItem from "../../src/interfaces/IItem";
 
 require("dotenv").config({ path: path.resolve(__dirname, "..", ".env.all") });
 
@@ -24,14 +25,6 @@ const userSchema = new Schema({
     required: true,
     trim: true
   },
-  followedBy: {
-    type: Array,
-    required: true
-  },
-  follows: {
-    type: Array,
-    required: true
-  },
   tokens: [
     {
       token: {
@@ -43,7 +36,10 @@ const userSchema = new Schema({
   avatar: {
     type: String,
     default: "/images/default-avatar.png"
-  }
+  },
+  likedItems: [{ item: { type: mongoose.Types.ObjectId, ref: "Item", required: true } }],
+  follows: [{ user: { type: mongoose.Types.ObjectId, ref: "Item" } }],
+  followedBy: [{ user: { type: mongoose.Types.ObjectId, ref: "Item" } }]
 });
 
 userSchema.pre("save", async function(this: IUser, next: () => void) {
@@ -69,7 +65,6 @@ userSchema.methods.toJSON = function() {
 
   delete userObject.password;
   delete userObject.tokens;
-
   return userObject;
 };
 

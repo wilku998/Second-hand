@@ -13,6 +13,7 @@ export interface IUser extends Document {
   ownItems: Array<IItem>;
   followedBy: Array<mongoose.Types.ObjectId>;
   follows: Array<mongoose.Types.ObjectId>;
+  likedItems: Array<{item: mongoose.Types.ObjectId}>;
 }
 
 export interface IUserModel extends Model<IUser> {

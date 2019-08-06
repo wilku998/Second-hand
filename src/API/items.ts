@@ -1,4 +1,4 @@
-import IItem from "../interfaces/item";
+import IItem from "../interfaces/IItem";
 import ajax from "./ajax";
 import { parseResponse } from "./functions";
 import { userStore } from "../app";

@@ -5,12 +5,14 @@ import { IAuthRequest, IUserRequest } from "./interfaces";
 import AuthMiddleware from "../middlwares/auth";
 import FindUserMiddleware from "../middlwares/findUser";
 import { uploadImage, createRegexObj } from "./functions";
+import Mongoose from "mongoose";
+import console = require("console");
 
 const router = express.Router();
 
 router.post("/api/users", async (req, res) => {
   try {
-    const user = new User({ ...req.body, follows: [], followedBy: [] });
+    const user = new User({ ...req.body });
     await user.save();
     const token = await user.generateAuthToken();
     res.cookie("jwtToken", token, { maxAge: 108000000, httpOnly: true });
@@ -72,6 +74,7 @@ router.get("/api/users/me", AuthMiddleware, async (req: IAuthRequest, res) => {
   try {
     const { user } = req;
     await user.populate("ownItems").execPopulate();
+    await user.populate("likedItems.item").execPopulate();
     res.send({ user, ownItems: user.ownItems });
   } catch (e) {
     res.status(500).send();
@@ -79,19 +82,26 @@ router.get("/api/users/me", AuthMiddleware, async (req: IAuthRequest, res) => {
 });
 
 interface IUpdateRequest extends IAuthRequest {
-  update: any
-};
+  update: any;
+}
 
-router.patch("/api/users/me", AuthMiddleware, async (req: IUpdateRequest, res) => {
-  try {
-    const { user } = req;
-    await User.findByIdAndUpdate(user._id, req.body)
-    res.send();
-  } catch (e) {
-    res.status(400).send(e);
+router.patch(
+  "/api/users/me",
+  AuthMiddleware,
+  async (req: IUpdateRequest, res) => {
+    try {
+      let { user }: any = req;
+      Object.keys(req.body).forEach((key: string) => {
+        user[key] = req.body[key];
+      });
+      await user.save();
+      await user.populate("likedItems.item").execPopulate();
+      res.send(user);
+    } catch (e) {
+      res.status(400).send(e);
+    }
   }
-});
-
+);
 
 router.get("/api/users", async (req, res) => {
   const { name } = req.query;
@@ -102,12 +112,14 @@ router.get("/api/users", async (req, res) => {
     : {};
   try {
     const foundedUsers = await User.find(match);
-    Promise.all(foundedUsers.map(async user => {
-      return await user.populate("ownItems").execPopulate();
-    })).then((result) => {
-      const users = result.map(user => ({user, ownItems: user.ownItems}))
+    Promise.all(
+      foundedUsers.map(async user => {
+        return await user.populate("ownItems").execPopulate();
+      })
+    ).then(result => {
+      const users = result.map(user => ({ user, ownItems: user.ownItems }));
       res.send(users);
-    })
+    });
   } catch (e) {
     res.status(404).send();
   }
@@ -120,9 +132,10 @@ router.get(
     try {
       const { user } = req;
       await user.populate("ownItems").execPopulate();
+      await user.populate("likedItems.item").execPopulate();
       res.send({ user, ownItems: user.ownItems });
     } catch (e) {
-      res.status(404).send();
+      res.status(400).send();
     }
   }
 );
@@ -131,8 +144,12 @@ router.delete(
   "/api/users/me",
   AuthMiddleware,
   async (req: IAuthRequest, res) => {
-    await User.findOneAndDelete({ _id: req.user._id });
-    res.send();
+    try {
+      await User.findOneAndDelete({ _id: req.user._id });
+      res.send();
+    } catch (e) {
+      res.status(400).send();
+    }
   }
 );
 

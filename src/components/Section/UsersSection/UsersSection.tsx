@@ -1,20 +1,23 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
 import { UserLabel, Button, Name } from "./UserLabel";
-import IUser from "../../../interfaces/User";
+import IUser from "../../../interfaces/IUser";
 import Avatar from "../../Abstracts/Avatar";
-import IItem from "../../../interfaces/Item";
+import IItem from "../../../interfaces/IItem";
 import { Title, ItemsContainer, Section } from "../styleSection";
 import Item from "../ItemsSection/ItemSmall/ItemSmall";
 import { IUserStore } from "../../../store/user";
-import makeItemsIsOwnProperty from "../../../functions/makeItemsIsOwnProperty";
+import prepareItemProperties from "../../../functions/prepareItemProperties";
 
 export interface IUserProps {
   users: Array<{ user: IUser; ownItems: Array<IItem> }>;
   title?: string;
   userStore: IUserStore;
 }
-const UsersSection = ({ users, title }: IUserProps) => {
+const UsersSection = ({ users, title, userStore }: IUserProps) => {
+  const ownItems = userStore.getOwnItems;
+  const { likedItems } = userStore.getUser;
+
   return (
     <div>
       {title && <Title>{title}</Title>}
@@ -28,9 +31,11 @@ const UsersSection = ({ users, title }: IUserProps) => {
           </UserLabel>
           {user.ownItems && (
             <ItemsContainer>
-              {makeItemsIsOwnProperty(user.ownItems).map(item => (
-                <Item item={item} key={item._id} />
-              ))}
+              {prepareItemProperties(user.ownItems, ownItems, likedItems).map(
+                item => (
+                  <Item item={item} key={item._id} />
+                )
+              )}
             </ItemsContainer>
           )}
         </Section>
@@ -39,4 +44,4 @@ const UsersSection = ({ users, title }: IUserProps) => {
   );
 };
 
-export default UsersSection;
+export default inject("userStore")(observer(UsersSection));
