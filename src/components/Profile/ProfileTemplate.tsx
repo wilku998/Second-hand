@@ -21,9 +21,15 @@ export interface IProps {
   isOwnProfile: boolean;
 }
 
-const ProfileTemplate = ({ className, user, ownItems, buttons, isOwnProfile }: IProps) => {
+const ProfileTemplate = ({
+  className,
+  user,
+  ownItems,
+  buttons,
+  isOwnProfile
+}: IProps) => {
   if (user) {
-    var { avatar, name, followedBy, follows } = user;
+    var { avatar, name, followedBy, follows, likedItems } = user;
   }
 
   return (
@@ -41,7 +47,9 @@ const ProfileTemplate = ({ className, user, ownItems, buttons, isOwnProfile }: I
               <span>Oberwujących: {followedBy.length}</span>
               <span>Obeserwuje: {follows.length}</span>
               {buttons.map(e => (
-                <Button key={e.text} onClick={e.onClick}>{e.text}</Button>
+                <Button key={e.text} onClick={e.onClick}>
+                  {e.text}
+                </Button>
               ))}
             </UserInfo>
           </UserLabel>
@@ -51,6 +59,12 @@ const ProfileTemplate = ({ className, user, ownItems, buttons, isOwnProfile }: I
               title={
                 isOwnProfile ? "Twoje przedmioty" : "Przedmioty użytkownika"
               }
+            />
+          )}
+          {likedItems.length > 0 && (
+            <ItemsSection
+              items={likedItems}
+              title="Polubione przedmioty"
             />
           )}
         </Content>

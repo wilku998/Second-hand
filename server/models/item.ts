@@ -47,6 +47,13 @@ const itemSchema = new Schema({
   likedBy: [{ user: { type: mongoose.Types.ObjectId, ref: "User" } }]
 });
 
+// itemSchema.methods.toJSON = function() {
+//   const item = this;
+//   const itemObject = item.toObject();
+//   itemObject.likedBy = itemObject.likedBy.map((e: any) => e.user);
+//   return itemObject;
+// };
+
 const Item: IItemModel = model<IItem, IItemModel>("Item", itemSchema);
 
 export default Item;

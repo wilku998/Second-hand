@@ -140,7 +140,7 @@ router.delete(
       });
       await user.save();
       const item = await Item.findById(likedID);
-      item.likedBy = item.likedBy.filter(e => e.user !== user._id);
+      item.likedBy = item.likedBy.filter(e => e.user.toString() !== user._id.toString());
       await item.save();
       await user.populate("likedItems.item").execPopulate();
       res.send(user.likedItems);

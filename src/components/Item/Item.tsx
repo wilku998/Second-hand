@@ -17,13 +17,17 @@ import style, {
   MainImage,
   ButtonSeeAll,
   SellerOtherItems,
-  ItemInfo
+  ItemInfo,
+  ButtonSeeWhoLiked,
+  LikeButton
 } from "./styleItem";
 import Avatar from "../Abstracts/Avatar";
 import { FakeImage } from "../Abstracts/FakeImage";
 import { getItemRequest, getItemsRequest } from "../../API/items";
 import IItem from "../../interfaces/IItem";
 import { IUserStore } from "../../store/user";
+import ReactSVG from "react-svg";
+import { unlikeItemRequest, likeItemRequest } from "../../API/users";
 
 export interface IProps {
   className: string;
@@ -34,8 +38,12 @@ export interface IProps {
 const Item = ({ className, match, userStore }: IProps) => {
   const itemID = match.params.id;
   const ownItems = userStore.getOwnItems;
+  const user = userStore.getUser;
   const [item, setItem]: [IItem, any] = useState(undefined);
+  const [isLiked, setIsLiked] = useState(false);
   const [sellerOtherItems, setSellerOtherItems] = useState([]);
+
+  const userID = user ? user._id : "";
 
   if (item) {
     var {
@@ -47,7 +55,9 @@ const Item = ({ className, match, userStore }: IProps) => {
       owner,
       description,
       condition,
-      itemModel
+      itemModel,
+      likedBy,
+      _id
     } = item;
   }
 
@@ -55,16 +65,31 @@ const Item = ({ className, match, userStore }: IProps) => {
     history.push(`/users/${item.owner._id}`);
   };
 
+  const onLikeClick = async () => {
+    if (isLiked) {
+      await unlikeItemRequest(_id);
+    } else {
+      await likeItemRequest(_id);
+    }
+    fetchItem(_id);
+  };
+  const fetchItem = async (id: string) => {
+    const foundedItem: IItem = await getItemRequest(itemID);
+    if (foundedItem) {
+      setIsLiked(foundedItem.likedBy.findIndex(e => e.user === userID) > -1);
+      setItem(foundedItem);
+    }
+    return foundedItem;
+  };
+
   useEffect(() => {
     const isOwn = ownItems.findIndex(e => e._id === itemID) > -1;
-
     if (isOwn) {
       history.push(`/items/edit/${itemID}`);
     } else {
       const fetchData = async () => {
-        const foundedItem = await getItemRequest(itemID);
+        const foundedItem = await fetchItem(itemID);
         if (foundedItem) {
-          setItem(foundedItem);
           const otherItems: Array<IItem> = await getItemsRequest({
             owner: foundedItem.owner._id
           });
@@ -86,7 +111,7 @@ const Item = ({ className, match, userStore }: IProps) => {
           <Seller>
             <SellerProfile>
               <Avatar size="big" src={owner.avatar} />
-              <span>{owner.name}</span>
+              <Link to={`/users/${owner._id}`}>{owner.name}</Link>
             </SellerProfile>
             {sellerOtherItems.length > 0 ? (
               <SellerOtherItems>
@@ -118,12 +143,21 @@ const Item = ({ className, match, userStore }: IProps) => {
           </MainImageContainer>
           <Content>
             <Title>
+              <LikeButton onClick={onLikeClick}>
+                <ReactSVG
+                  src={isLiked ? "/svg/heartbreak.svg" : "/svg/heart.svg"}
+                />
+              </LikeButton>
               {category} {brand} {itemModel ? itemModel : ""}
             </Title>
             <ItemInfo>
               <span>Stan: {condition}</span>
               <span>Rozmiar: {size}</span>
               <span>Cena: {price}PLN</span>
+              <span>
+                Polubione przez {likedBy.length}{" "}
+                {likedBy.length === 1 ? "osobę" : "osób"}
+              </span>
               {description && <Description>{description}</Description>}
             </ItemInfo>
             <ButtonMessage>Napisz wiadomość do sprzedawcy</ButtonMessage>

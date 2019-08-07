@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { IProps } from "./Item";
 import Button_2 from "../Abstracts/Button_2";
 import { Link } from "react-router-dom";
+import InvisibleButton from "../Abstracts/InvisibleButton";
 
 export default (Item: FunctionComponent<IProps>) => styled(Item)`
   display: flex;
@@ -51,6 +52,8 @@ export const Title = styled.h2`
   font-weight: 400;
   line-height: 1.2;
   text-transform: uppercase;
+  display: flex;
+  align-items: center;
 `;
 
 export const Description = styled.span`
@@ -76,6 +79,11 @@ export const ButtonMessage = styled(Button_2)`
 
 export const ButtonSeeAll = styled(Button_2)`
   margin-top: auto;
+`;
+
+export const ButtonSeeWhoLiked = styled(Button_2)`
+  font-size: 1.2rem;
+  align-self: flex-start;
 `;
 
 export const GridContainer = styled.div`
@@ -127,3 +135,20 @@ export const SellerOtherItems = styled.div`
   flex-direction: column;
 `;
 
+export const LikeButton = styled(InvisibleButton)`
+  position: relative;
+  padding: 1rem;
+  margin-right: 1rem;
+  &:hover {
+    cursor: pointer;
+  }
+  & > div > div > svg {
+    position: absolute;
+    top: 50%;
+    left: 50;
+    transform: translate(-50%, -50%);
+    width: 1.6rem;
+    height: 1.6rem;
+    fill: ${({ theme }) => `${theme.colorGreyDark1}`};
+  }
+`;

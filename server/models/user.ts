@@ -62,9 +62,9 @@ userSchema.virtual("ownItems", {
 userSchema.methods.toJSON = function() {
   const user = this;
   const userObject = user.toObject();
-
   delete userObject.password;
   delete userObject.tokens;
+  userObject.likedItems = userObject.likedItems.map((e: any) => e.item);
   return userObject;
 };
 
