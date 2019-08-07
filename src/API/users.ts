@@ -59,19 +59,16 @@ export const updateUserRequest = async (update: any) => {
   }
 };
 
-export const likeItemRequest = (id: string) => {
-  const user = userStore.getUser;
-  const { likedItems } = user;
-  return updateUserRequest({ likedItems: [...likedItems, { item: id }] });
+export const likeItemRequest = async (likedID: string) => {
+  const newLikedItems: IUser["likedItems"] = await ajax("PATCH", "/api/users/me/likes", {likedID}, 200);
+  userStore.user.likedItems = newLikedItems
 };
 
-export const unlikeItemRequest = async (id: string) => {
-  const user = userStore.getUser;
-  const { likedItems } = user;
-  return updateUserRequest({
-    likedItems: likedItems.filter(e => e.item._id !== id)
-  });
+export const unlikeItemRequest = async (likedID: string) => {
+  const newLikedItems: IUser["likedItems"] = await ajax("DELETE", "/api/users/me/likes", {likedID}, 200);
+  userStore.user.likedItems = newLikedItems
 };
+
 
 export const getUserRequest = async (id: string) =>
   await fetchData(id, "/api/users/");

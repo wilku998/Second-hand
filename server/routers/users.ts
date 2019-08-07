@@ -5,8 +5,8 @@ import { IAuthRequest, IUserRequest } from "./interfaces";
 import AuthMiddleware from "../middlwares/auth";
 import FindUserMiddleware from "../middlwares/findUser";
 import { uploadImage, createRegexObj } from "./functions";
-import Mongoose from "mongoose";
-import console = require("console");
+import Item from "../models/item";
+import mongoose from "mongoose";
 
 const router = express.Router();
 
@@ -97,6 +97,53 @@ router.patch(
       await user.save();
       await user.populate("likedItems.item").execPopulate();
       res.send(user);
+    } catch (e) {
+      res.status(400).send(e);
+    }
+  }
+);
+
+interface ILikeRequest extends IAuthRequest {
+  likedID: mongoose.Types.ObjectId;
+}
+
+router.patch(
+  "/api/users/me/likes",
+  AuthMiddleware,
+  async (req: ILikeRequest, res) => {
+    try {
+      let { user } = req;
+      const { likedID } = req.body;
+      user.likedItems.push({ item: likedID });
+      await user.save();
+      const item = await Item.findById(likedID);
+      item.likedBy = [...item.likedBy, { user: user._id }];
+      await item.save();
+      await user.save();
+      await user.populate("likedItems.item").execPopulate();
+      res.send(user.likedItems);
+    } catch (e) {
+      res.status(400).send(e);
+    }
+  }
+);
+
+router.delete(
+  "/api/users/me/likes",
+  AuthMiddleware,
+  async (req: ILikeRequest, res) => {
+    try {
+      let { user } = req;
+      const { likedID } = req.body;
+      user.likedItems = user.likedItems.filter(e => {
+        return e.item.toString() !== likedID;
+      });
+      await user.save();
+      const item = await Item.findById(likedID);
+      item.likedBy = item.likedBy.filter(e => e.user !== user._id);
+      await item.save();
+      await user.populate("likedItems.item").execPopulate();
+      res.send(user.likedItems);
     } catch (e) {
       res.status(400).send(e);
     }

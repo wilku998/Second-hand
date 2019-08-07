@@ -15,7 +15,8 @@ export interface IProps {
 
 const ItemsSection = ({ className, title, items, userStore }: IProps) => {
   const ownItems = userStore.getOwnItems;
-  const { likedItems } = userStore.getUser;
+  const user = userStore.getUser;
+  const likedItems = user ? user.likedItems : [];
 
   return (
     <Section className={className}>

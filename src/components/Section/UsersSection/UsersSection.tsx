@@ -16,8 +16,9 @@ export interface IUserProps {
 }
 const UsersSection = ({ users, title, userStore }: IUserProps) => {
   const ownItems = userStore.getOwnItems;
-  const { likedItems } = userStore.getUser;
-
+  const user = userStore.getUser;
+  const likedItems = user ? user.likedItems : [];
+  
   return (
     <div>
       {title && <Title>{title}</Title>}

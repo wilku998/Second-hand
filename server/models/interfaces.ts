@@ -47,6 +47,7 @@ export interface IItem extends Document {
   _id: string;
   owner: mongoose.Types.ObjectId;
   gender: "mężczyźni" | "kobiety" | "dzieci";
+  likedBy: Array<{user: mongoose.Types.ObjectId}>;
 }
 
 export interface IItemModel extends Model<IItem> {}

@@ -43,7 +43,8 @@ const itemSchema = new Schema({
     type: mongoose.Types.ObjectId,
     required: true,
     ref: "User"
-  }
+  },
+  likedBy: [{ user: { type: mongoose.Types.ObjectId, ref: "User" } }]
 });
 
 const Item: IItemModel = model<IItem, IItemModel>("Item", itemSchema);
