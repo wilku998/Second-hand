@@ -26,8 +26,8 @@ const UsersSection = ({ users, title, userStore }: IUserProps) => {
       {users.map(user => (
         <Section key={user.user._id}>
           <UserLabel
-            isFollowed={checkIfIsFollowed(userStore, user.user._id)}
-            isOwnProfile={user.user._id === ownProfile._id}
+            isFollowed={ownProfile ? checkIfIsFollowed(userStore, user.user._id) : false}
+            isOwnProfile={ownProfile ? user.user._id === ownProfile._id : false}
             user={user.user}
           />
           {user.ownItems && (
