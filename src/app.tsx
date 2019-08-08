@@ -11,19 +11,23 @@ import AppRouter from "./routers/AppRouter";
 import { getProfileRequest } from "./API/users";
 import UserStore from "./store/user";
 import ViewStore from "./store/view";
+import SearchStore from "./store/search";
 
 export const userStore = new UserStore();
 export const viewStore = new ViewStore();
+export const searchStore = new SearchStore();
 
 const stores = {
   userStore,
-  viewStore
+  viewStore,
+  searchStore
 };
 
 const start = async () => {
   await getProfileRequest();
   renderApp();
 };
+
 start();
 
 export const history = createBrowserHistory();

@@ -12,6 +12,8 @@ import ForeignProfile from "../components/Profile/ForeignProfile";
 import OwnProfile from "../components/Profile/OwnProfile";
 import EditItem from "../components/Item/CreateItem/EditItem";
 import EditProfile from "../components/EditProfile/EditProfile";
+import SearchItems from "../components/Search/SearchItems";
+import SearchUsers from "../components/Search/SearchUsers";
 
 interface IProps {
   history: any;
@@ -26,6 +28,8 @@ const AppRouter = ({ history, userStore }: IProps) => {
       {isAuth && <EditProfile />}
       <Switch>
         <Route path="/" exact component={Dashboard} />
+        <Route path="/search/items" component={SearchItems} />
+        <Route path="/search/users" component={SearchUsers} />
         <PrivateRoute
           path="/users/myProfile"
           isAuth={isAuth}

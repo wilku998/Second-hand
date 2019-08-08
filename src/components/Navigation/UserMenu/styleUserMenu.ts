@@ -39,13 +39,3 @@ export const List = styled.ul<{ width: number }>`
   }
 `;
 
-export const CollapseIcon = styled(ReactSVG)<{ listvisible: string }>`
-  margin-left: auto;
-  & > div > svg {
-    ${({ theme, listvisible }) => `
-    width: 1rem;
-    fill: ${theme.colorGreyDark3};
-    transform: ${listvisible==='true' ? "rotate(90deg)" : "rotate(270deg)"};
-  `};
-  }
-`;

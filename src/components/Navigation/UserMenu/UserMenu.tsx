@@ -2,8 +2,9 @@ import React, { useState, useLayoutEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import Avatar from "../../Abstracts/Avatar";
 import { logoutRequest } from "../../../API/users";
-import style, { Label, List, CollapseIcon } from "./styleUserMenu";
+import style, { Label, List } from "./styleUserMenu";
 import InvisibleButton from "../../Abstracts/InvisibleButton";
+import CollapseIcon from "../../Abstracts/CollapseIcon";
 
 export interface IProps {
   className?: string;
@@ -27,8 +28,8 @@ const UserMenu = ({ userStore, className }: IProps) => {
         <Avatar src={user.avatar} size="small" />
         <span>{user.name}</span>
         <CollapseIcon
+          width="1rem"
           listvisible={listVisible.toString()}
-          src="/svg/left.svg"
         />
         {listVisible && (
           <List width={listWidth}>
