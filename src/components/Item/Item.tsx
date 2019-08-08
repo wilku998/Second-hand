@@ -73,9 +73,11 @@ const Item = ({ className, match, userStore }: IProps) => {
     }
     fetchItem(_id);
   };
+  
   const fetchItem = async (id: string) => {
-    const foundedItem: IItem = await getItemRequest(itemID);
+    const foundedItem: IItem = await getItemRequest(id);
     if (foundedItem) {
+      console.log({foundedItem})
       setIsLiked(foundedItem.likedBy.findIndex(e => e.user === userID) > -1);
       setItem(foundedItem);
     }

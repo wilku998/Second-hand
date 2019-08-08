@@ -21,13 +21,15 @@ const ForeignProfile = ({ match }: IProps) => {
   ];
 
   useEffect(() => {
-    const fetchData = async () => {
-      const foundedUser = await getUserRequest(userID);
-      if (foundedUser) {
-        setUser(foundedUser);
-      }
-    };
-    fetchData();
+    if (userID !== "me") {
+      const fetchData = async () => {
+        const foundedUser = await getUserRequest(userID);
+        if (foundedUser) {
+          setUser(foundedUser);
+        }
+      };
+      fetchData();
+    }
   }, [userID]);
 
   return (

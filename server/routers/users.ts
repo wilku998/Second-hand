@@ -119,7 +119,6 @@ router.patch(
       const item = await Item.findById(likedID);
       item.likedBy = [...item.likedBy, { user: user._id }];
       await item.save();
-      await user.save();
       await user.populate("likedItems.item").execPopulate();
       res.send(user.likedItems);
     } catch (e) {

@@ -1,6 +1,6 @@
 import ajax from "./ajax";
 import { userStore } from "../app";
-import { parseResponse, setUserStore } from "./functions";
+import { parseResponse, setUserStore, onlyAuthRequest } from "./functions";
 import fetchData from "./fetchData";
 import IUser from "../interfaces/IUser";
 
@@ -50,7 +50,12 @@ export const logoutRequest = async () => {
 
 export const updateUserRequest = async (update: any) => {
   try {
-    const updatedUser: IUser = await ajax("PATCH", "/api/users/me", update, 200);
+    const updatedUser: IUser = await ajax(
+      "PATCH",
+      "/api/users/me",
+      update,
+      200
+    );
     userStore.user = updatedUser;
   } catch (e) {
     if (e.error.code === 11000) {
@@ -60,15 +65,28 @@ export const updateUserRequest = async (update: any) => {
 };
 
 export const likeItemRequest = async (likedID: string) => {
-  const newLikedItems: IUser["likedItems"] = await ajax("PATCH", "/api/users/me/likes", {likedID}, 200);
-  userStore.user.likedItems = newLikedItems
+  await onlyAuthRequest(async () => {
+    const newLikedItems: IUser["likedItems"] = await ajax(
+      "PATCH",
+      "/api/users/me/likes",
+      { likedID },
+      200
+    );
+    userStore.user.likedItems = newLikedItems;
+  });
 };
 
 export const unlikeItemRequest = async (likedID: string) => {
-  const newLikedItems: IUser["likedItems"] = await ajax("DELETE", "/api/users/me/likes", {likedID}, 200);
-  userStore.user.likedItems = newLikedItems
+  await onlyAuthRequest(async () => {
+    const newLikedItems: IUser["likedItems"] = await ajax(
+      "DELETE",
+      "/api/users/me/likes",
+      { likedID },
+      200
+    );
+    userStore.user.likedItems = newLikedItems;
+  });
 };
-
 
 export const getUserRequest = async (id: string) =>
   await fetchData(id, "/api/users/");

@@ -17,7 +17,6 @@ const ItemsSection = ({ className, title, items, userStore }: IProps) => {
   const ownItems = userStore.getOwnItems;
   const user = userStore.getUser;
   const likedItems = user ? user.likedItems : [];
-
   return (
     <Section className={className}>
       {title && <Title>{title}</Title>}

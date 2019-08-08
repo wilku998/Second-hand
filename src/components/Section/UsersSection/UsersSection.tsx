@@ -1,6 +1,6 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
-import { UserLabel, Button, Name } from "./UserLabel";
+import UserLabel from "./UserLabel/UserLabel";
 import IUser from "../../../interfaces/IUser";
 import Avatar from "../../Abstracts/Avatar";
 import IItem from "../../../interfaces/IItem";
@@ -16,20 +16,15 @@ export interface IUserProps {
 }
 const UsersSection = ({ users, title, userStore }: IUserProps) => {
   const ownItems = userStore.getOwnItems;
-  const user = userStore.getUser;
-  const likedItems = user ? user.likedItems : [];
-  
+  const ownProfile = userStore.getUser;
+  const likedItems = ownProfile ? ownProfile.likedItems : [];
+
   return (
     <div>
       {title && <Title>{title}</Title>}
       {users.map(user => (
         <Section key={user.user._id}>
-          <UserLabel>
-            <Avatar size="big" src={user.user.avatar} />
-            <Name>{user.user.name}</Name>
-            <Button>Zobacz profil</Button>
-            <Button>Obserwuj</Button>
-          </UserLabel>
+          <UserLabel isOwnProfile={user.user._id === ownProfile._id} user={user.user} />
           {user.ownItems && (
             <ItemsContainer>
               {prepareItemProperties(user.ownItems, ownItems, likedItems).map(

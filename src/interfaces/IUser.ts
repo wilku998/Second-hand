@@ -7,5 +7,5 @@ export default interface IUser {
   _id: string;
   follows?: Array<string>;
   followedBy?: Array<string>;
-  likedItems?: Array<IItem>;
+  likedItems?: Array<{item: IItem, _id: string}>;
 }
