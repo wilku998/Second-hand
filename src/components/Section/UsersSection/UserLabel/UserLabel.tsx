@@ -6,16 +6,20 @@ import { inject, observer } from "mobx-react";
 import { IUserStore } from "../../../../store/user";
 import { Link } from "react-router-dom";
 import { history } from "../../../../app";
+import checkIfIsFollowed from "../../../../functions/checkIfIsFollowed";
+import { followUserRequest, unfollowUserRequest } from "../../../../API/users";
 
 export interface IProps {
   className?: string;
   user: IUser;
   userStore: IUserStore;
   isOwnProfile: boolean;
+  isFollowed: boolean;
 }
 
-const UserLabel = ({ className, user, isOwnProfile }: IProps) => {
-  const { _id, name, avatar, follows } = user;
+const UserLabel = ({ className, user, isOwnProfile, isFollowed }: IProps) => {
+  const { _id, name, avatar } = user;
+
   const onProfileButtonClick = () => {
     if (isOwnProfile) {
       history.push("/users/myProfile");
@@ -23,9 +27,13 @@ const UserLabel = ({ className, user, isOwnProfile }: IProps) => {
       history.push(`/users/${_id}`);
     }
   };
-  
-  const onFollowClick = () => {
 
+  const onFollowClick = () => {
+    if (isFollowed) {
+      unfollowUserRequest(_id);
+    } else {
+      followUserRequest(_id);
+    }
   };
 
   return (
@@ -35,7 +43,11 @@ const UserLabel = ({ className, user, isOwnProfile }: IProps) => {
       <Button onClick={onProfileButtonClick}>
         {isOwnProfile ? "Twój profil" : "Zobacz profil"}
       </Button>
-      {!isOwnProfile && <Button onClick={onFollowClick}>Obserwuj</Button>}
+      {!isOwnProfile && (
+        <Button onClick={onFollowClick}>
+          {isFollowed ? "Przestań obserwować" : "Obserwuj"}
+        </Button>
+      )}
     </div>
   );
 };

@@ -102,15 +102,10 @@ router.patch(
     }
   }
 );
-
-interface ILikeRequest extends IAuthRequest {
-  likedID: mongoose.Types.ObjectId;
-}
-
 router.patch(
   "/api/users/me/likes",
   AuthMiddleware,
-  async (req: ILikeRequest, res) => {
+  async (req: IAuthRequest, res) => {
     try {
       let { user } = req;
       const { likedID } = req.body;
@@ -130,7 +125,7 @@ router.patch(
 router.delete(
   "/api/users/me/likes",
   AuthMiddleware,
-  async (req: ILikeRequest, res) => {
+  async (req: IAuthRequest, res) => {
     try {
       let { user } = req;
       const { likedID } = req.body;
@@ -143,6 +138,48 @@ router.delete(
       await item.save();
       await user.populate("likedItems.item").execPopulate();
       res.send(user.likedItems);
+    } catch (e) {
+      res.status(400).send(e);
+    }
+  }
+);
+
+router.patch(
+  "/api/users/me/follows",
+  AuthMiddleware,
+  async (req: IAuthRequest, res) => {
+    try {
+      let { user } = req;
+      const { userID } = req.body;
+      user.follows.push({ user: userID });
+      await user.save();
+      const followedUser = await User.findById(userID);
+      followedUser.followedBy = [...followedUser.followedBy, { user: user._id }];
+      await followedUser.save();
+      await user.populate("follows.user").execPopulate();
+      res.send(user.follows);
+    } catch (e) {
+      res.status(400).send(e);
+    }
+  }
+);
+
+router.delete(
+  "/api/users/me/follows",
+  AuthMiddleware,
+  async (req: IAuthRequest, res) => {
+    try {
+      let { user } = req;
+      const { userID } = req.body;
+      user.follows = user.follows.filter(e => {
+        return e.user.toString() !== userID;
+      });
+      await user.save();
+      const unfollowedUser = await User.findById(userID);
+      unfollowedUser.followedBy = unfollowedUser.followedBy.filter(e => e.user.toString() !== user._id.toString());
+      await unfollowedUser.save();
+      await user.populate("follows.user").execPopulate();
+      res.send(user.follows);
     } catch (e) {
       res.status(400).send(e);
     }

@@ -38,8 +38,8 @@ const userSchema = new Schema({
     default: "/images/default-avatar.png"
   },
   likedItems: [{ item: { type: mongoose.Types.ObjectId, ref: "Item", required: true } }],
-  follows: [{ user: { type: mongoose.Types.ObjectId, ref: "Item" } }],
-  followedBy: [{ user: { type: mongoose.Types.ObjectId, ref: "Item" } }]
+  follows: [{ user: { type: mongoose.Types.ObjectId, ref: "User", required: true } }],
+  followedBy: [{ user: { type: mongoose.Types.ObjectId, ref: "User", required: true } }]
 });
 
 userSchema.pre("save", async function(this: IUser, next: () => void) {

@@ -1,33 +1,54 @@
 import React, { useState, useEffect } from "react";
 import ProfileTemplate from "./ProfileTemplate";
-import { getUserRequest } from "../../API/users";
+import {
+  getUserRequest,
+  unfollowUserRequest,
+  followUserRequest
+} from "../../API/users";
 import IUser from "../../interfaces/IUser";
 import IItem from "../../interfaces/IItem";
+import { observer, inject } from "mobx-react";
+import { IUserStore } from "../../store/user";
+import checkIfIsFollowed from "../../functions/checkIfIsFollowed";
 
 export interface IProps {
   match: any;
+  userStore: IUserStore;
 }
 
-const ForeignProfile = ({ match }: IProps) => {
+const ForeignProfile = ({ match, userStore }: IProps) => {
   const userID = match.params.id;
+
   const [user, setUser]: [
     { user: IUser; ownItems: Array<IItem> },
     (user: { user: IUser; ownItems: Array<IItem> }) => void
   ] = useState({ user: undefined, ownItems: undefined });
+  const isFollowed = checkIfIsFollowed(userStore, userID)
+
+  const fetchData = async () => {
+    const foundedUser = await getUserRequest(userID);
+    if (foundedUser) {
+      setUser(foundedUser);
+    }
+  };
 
   const buttons = [
     { text: "Wyślij wiadomość", onClick: () => {} },
-    { text: "Obserwuj", onClick: () => {} }
+    {
+      text: isFollowed ? "Przestań obserwować" : "Obserwuj",
+      onClick: async () => {
+        if (isFollowed) {
+          await unfollowUserRequest(userID);
+        } else {
+          await followUserRequest(userID);
+        }
+        fetchData();
+      }
+    }
   ];
 
   useEffect(() => {
     if (userID !== "me") {
-      const fetchData = async () => {
-        const foundedUser = await getUserRequest(userID);
-        if (foundedUser) {
-          setUser(foundedUser);
-        }
-      };
       fetchData();
     }
   }, [userID]);
@@ -42,4 +63,4 @@ const ForeignProfile = ({ match }: IProps) => {
   );
 };
 
-export default ForeignProfile;
+export default inject("userStore")(observer(ForeignProfile));

@@ -11,8 +11,8 @@ export interface IUser extends Document {
     _id?: string;
   }>;
   ownItems: Array<IItem>;
-  followedBy: Array<mongoose.Types.ObjectId>;
-  follows: Array<mongoose.Types.ObjectId>;
+  followedBy: Array<{user: mongoose.Types.ObjectId}>;
+  follows: Array<{user: mongoose.Types.ObjectId}>;
   likedItems: Array<{item: mongoose.Types.ObjectId}>;
 }
 

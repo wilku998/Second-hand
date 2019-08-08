@@ -8,6 +8,7 @@ import { Title, ItemsContainer, Section } from "../styleSection";
 import Item from "../ItemsSection/ItemSmall/ItemSmall";
 import { IUserStore } from "../../../store/user";
 import prepareItemProperties from "../../../functions/prepareItemProperties";
+import checkIfIsFollowed from "../../../functions/checkIfIsFollowed";
 
 export interface IUserProps {
   users: Array<{ user: IUser; ownItems: Array<IItem> }>;
@@ -24,7 +25,11 @@ const UsersSection = ({ users, title, userStore }: IUserProps) => {
       {title && <Title>{title}</Title>}
       {users.map(user => (
         <Section key={user.user._id}>
-          <UserLabel isOwnProfile={user.user._id === ownProfile._id} user={user.user} />
+          <UserLabel
+            isFollowed={checkIfIsFollowed(userStore, user.user._id)}
+            isOwnProfile={user.user._id === ownProfile._id}
+            user={user.user}
+          />
           {user.ownItems && (
             <ItemsContainer>
               {prepareItemProperties(user.ownItems, ownItems, likedItems).map(

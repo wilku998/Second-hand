@@ -88,6 +88,30 @@ export const unlikeItemRequest = async (likedID: string) => {
   });
 };
 
+export const followUserRequest = async (userID: string) => {
+  await onlyAuthRequest(async () => {
+    const newFollows: IUser["follows"] = await ajax(
+      "PATCH",
+      "/api/users/me/follows",
+      { userID },
+      200
+    );
+    userStore.user.follows = newFollows;
+  });
+};
+
+export const unfollowUserRequest = async (userID: string) => {
+  await onlyAuthRequest(async () => {
+    const newFollows: IUser["follows"] = await ajax(
+      "DELETE",
+      "/api/users/me/follows",
+      { userID },
+      200
+    );
+    userStore.user.follows = newFollows;
+  });
+};
+
 export const getUserRequest = async (id: string) =>
   await fetchData(id, "/api/users/");
 
