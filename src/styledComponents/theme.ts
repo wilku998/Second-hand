@@ -4,7 +4,7 @@ export default {
 	rowWidth: '109rem',
 	darkBorder: '1px solid #666',
 	lightBorder: '1px solid #f0eeee',
-	lightBorder2: '1px solid #ccc',
+	lightBorder2: '1px solid #e2e2e2',
 	background: '#d1d1d1',
 	colorRed: '#BF2E21',
 	colorRedLight: '#FFC1B4',

@@ -10,7 +10,7 @@ export interface IProps {
   className?: string;
   title?: string;
   items: Array<IItem>;
-  userStore: IUserStore;
+  userStore?: IUserStore;
 }
 
 const ItemsSection = ({ className, title, items, userStore }: IProps) => {

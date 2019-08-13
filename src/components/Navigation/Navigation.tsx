@@ -29,11 +29,12 @@ const Navigation = ({ className, userStore }: IProps) => {
   const isAuth = userStore.isAuth;
   const [searchQuery, setSearchQuery] = useState("");
   const [searchCat, setSearchCat] = useState("Przedmioty");
-  const [searchCatListVisible, setSearchCatListVisible] = useState(true);
+  const [searchCatListVisible, setSearchCatListVisible] = useState(false);
 
   const onCatChange = (e: any) => {
     const { name } = e.target;
     setSearchCat(name);
+    setSearchCatListVisible(false);
   };
 
   const onSearchCatButtonClick = () => {

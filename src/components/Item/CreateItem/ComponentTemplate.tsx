@@ -137,7 +137,6 @@ const ComponentTemplate = ({
       isValid = false;
     }
     if (isValid) {
-      console.log("success");
       const item: any = {};
       [...inputs, ...selectors, description].forEach(e => {
         if (e.value) {

@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 export const Section = styled.section`
+  max-width: ${({ theme }) => theme.rowWidth};
   margin-bottom: 4rem;
   &:not(:first-of-type){
     margin-top: 4rem;
@@ -18,5 +19,5 @@ export const ItemsContainer = styled.div`
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 4rem;
   align-items: flex-start;
-  width: ${({ theme }) => theme.rowWidth};
+  width: 100%;
 `;
