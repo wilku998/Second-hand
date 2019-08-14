@@ -140,7 +140,7 @@ const ComponentTemplate = ({
       const item: any = {};
       [...inputs, ...selectors, description].forEach(e => {
         if (e.value) {
-          item[e.name] = e.value;
+          item[e.name] = e.name==="size" && category.value ==="buty" ? `${e.value}EU` : e.value;
         }
       });
       await onSubmitRequest(item, images);

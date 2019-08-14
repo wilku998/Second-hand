@@ -1,20 +1,46 @@
 import React, { useState, ChangeEvent, Fragment } from "react";
 import initialFormState from "./initialFormState";
-import style, { Button, ItemsContainer } from "./styleSearchMenu";
+import style, {
+  Button,
+  ItemsContainer,
+  ActiveFilter,
+  RemoveActiveFilterButton,
+  SmallTitle,
+  SearchContainer
+} from "./styleSearchMenu";
 import ItemInput from "./ItemInput";
 import ItemSelector from "./ItemSelector";
 import ItemSize from "./ItemSize";
 import { createActiveFiltersObject } from "./functions";
+import { IActiveFilters } from "./interfaces";
+import ReactSVG from "react-svg";
 
-interface IProps {
+export interface IProps {
   className?: string;
 }
+
 const SearchMenu = ({ className }: IProps) => {
   const [form, setForm] = useState(initialFormState);
   const { category, condition, gender, price, name, size } = form;
   const selectors = [gender, category, condition];
   const inputs = [price, name];
-  const activeFilters = createActiveFiltersObject(selectors, name, price, size);
+  const activeFilters: IActiveFilters["activeFilters"] = createActiveFiltersObject(
+    selectors,
+    name,
+    price,
+    size
+  );
+
+  const isCatgoryFilterUnactive =
+    activeFilters.findIndex(e => e.name === "category") < 0;
+
+  const isSizeInputVisible =
+    category.options.findIndex(e => e.isChecked && e.option === "buty") > -1 ||
+    isCatgoryFilterUnactive;
+
+  const isSizeSelectorVisible =
+    isCatgoryFilterUnactive ||
+    category.options.filter(e => e.option !== "buty" && e.isChecked).length > 0;
 
   const onSearchMenuButtonClick = (e: any) => {
     const { name } = e.target;
@@ -31,26 +57,59 @@ const SearchMenu = ({ className }: IProps) => {
   const onSelectorChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name } = e.target;
     const { option } = e.target.dataset;
-    setForm({
+    let isChecked: boolean;
+    const newForm = {
       ...form,
       [name]: {
         ...form[name],
-        options: form[name].options.map(e => ({
-          option: e.option,
-          isChecked: e.option === option ? !e.isChecked : e.isChecked
-        }))
+        options: form[name].options.map(e => {
+          if (e.option === option) {
+            isChecked = !e.isChecked;
+          }
+          return {
+            option: e.option,
+            isChecked: e.option === option ? !e.isChecked : e.isChecked
+          };
+        })
       }
-    });
+    };
+
+    if (name === "category") {
+      if (
+        (option === "buty" && !isChecked) ||
+        (isChecked && option !== "buty" && isCatgoryFilterUnactive)
+      ) {
+        newForm.size.value = initialFormState.size.value;
+      }
+      if (isChecked && option === "buty" && isCatgoryFilterUnactive) {
+        newForm.size.options = initialFormState.size.options;
+      }
+      //
+    }
+    setForm(newForm);
   };
 
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    const { property } = e.target.dataset;
     setForm({
       ...form,
       [name]: {
         ...form[name],
-        [property]: value
+        value
+      }
+    });
+  };
+
+  const onPriceChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setForm({
+      ...form,
+      price: {
+        ...price,
+        [name]: {
+          ...price[name],
+          value
+        }
       }
     });
   };
@@ -63,17 +122,6 @@ const SearchMenu = ({ className }: IProps) => {
     });
   };
 
-  console.log(activeFilters);
-
-  const isSizeInputVisible =
-    category.options.findIndex(e => e.isChecked && e.option === "buty") > -1 ||
-    activeFilters.selectors.category.length === 0;
-
-  const isSizeSelectorVisible =
-    activeFilters.selectors.category.length === 0 ||
-    activeFilters.selectors.category.filter((e: string) => e !== "buty")
-      .length > 0;
-
   return (
     <div className={className}>
       <ItemsContainer>
@@ -83,6 +131,7 @@ const SearchMenu = ({ className }: IProps) => {
             item={item}
             onSearchMenuButtonClick={onSearchMenuButtonClick}
             onInputChange={onInputChange}
+            onPriceChange={onPriceChange}
             onCleanFiltersClick={onCleanFiltersClick}
           />
         ))}
@@ -105,7 +154,24 @@ const SearchMenu = ({ className }: IProps) => {
           />
         ))}
       </ItemsContainer>
-      <div>
+      {activeFilters.length > 0 && (
+        <div>
+          <SmallTitle>Aktywne filtry</SmallTitle>
+          {activeFilters.map(e => (
+            <ActiveFilter key={e.name}>
+              <RemoveActiveFilterButton
+                onClick={() =>
+                  onCleanFiltersClick({ target: { name: e.name } })
+                }
+              >
+                <ReactSVG src="/svg/close.svg" />
+              </RemoveActiveFilterButton>
+              {e.label}: {e.selectedFilters.join(" | ")}
+            </ActiveFilter>
+          ))}
+        </div>
+      )}
+      <SearchContainer>
         <Button>Szukaj przedmiotów</Button>
         <label>
           Sortuj od
@@ -113,7 +179,7 @@ const SearchMenu = ({ className }: IProps) => {
             <option>od najniższej ceny</option>
           </select>
         </label>
-      </div>
+      </SearchContainer>
     </div>
   );
 };

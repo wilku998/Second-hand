@@ -64,8 +64,8 @@ export default {
   price: {
     name: "price",
     isActive: false,
-    valueFrom: "0",
-    valueTo: "9999",
+    priceFrom: {value: "0", label: "Cena od"},
+    priceTo: {value: "9999", label: "Cena do"},
     isVisible: false,
     label: "Cena",
     type: "number"

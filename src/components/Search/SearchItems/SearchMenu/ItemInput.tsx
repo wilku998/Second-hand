@@ -13,6 +13,7 @@ interface IProps {
   item: IInput;
   onSearchMenuButtonClick: (e: any) => void;
   onInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onPriceChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onCleanFiltersClick: (e: any) => void;
 }
 
@@ -20,7 +21,8 @@ const ItemInput = ({
   item,
   onSearchMenuButtonClick,
   onInputChange,
-  onCleanFiltersClick
+  onCleanFiltersClick,
+  onPriceChange
 }: IProps) => {
   const {
     name,
@@ -28,8 +30,6 @@ const ItemInput = ({
     label,
     type,
     value,
-    valueFrom,
-    valueTo,
     placeholder
   } = item;
   return (
@@ -41,26 +41,17 @@ const ItemInput = ({
         <InputContainer>
           {name === "price" ? (
             <Fragment>
-              <Label>
-                <span>Cena od</span>
-                <Input
-                  type={type}
-                  onChange={onInputChange}
-                  name={name}
-                  value={valueFrom}
-                  data-property="valueFrom"
-                />
-              </Label>
-              <Label>
-                <span>Cena do</span>
-                <Input
-                  type={type}
-                  onChange={onInputChange}
-                  name={name}
-                  value={valueTo}
-                  data-property="valueTo"
-                />
-              </Label>
+              {["priceFrom", "priceTo"].map((key: "priceFrom" | "priceTo") => (
+                <Label key={item[key].label}>
+                  <span>{item[key].label}</span>
+                  <Input
+                    type={type}
+                    onChange={onPriceChange}
+                    name={key}
+                    value={item[key].value}
+                  />
+                </Label>
+              ))}
             </Fragment>
           ) : (
             <Input
@@ -68,7 +59,6 @@ const ItemInput = ({
               onChange={onInputChange}
               name={name}
               value={value}
-              data-property="value"
               placeholder={placeholder}
             />
           )}

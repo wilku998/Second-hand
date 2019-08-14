@@ -62,7 +62,6 @@ const ItemSmall = ({ className, item }: IProps) => {
         <Title>{name}</Title>
         <span>
           Rozmiar: {size}
-          {!isNaN(size) && "EU"}
         </span>
         <span>Cena: {price}PLN</span>
       </ItemDescription>

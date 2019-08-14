@@ -45,7 +45,6 @@ const ItemSize = ({
                 onChange={onInputChange}
                 name={name}
                 value={value}
-                data-property="value"
                 placeholder={placeholder}
               />
             </Label>

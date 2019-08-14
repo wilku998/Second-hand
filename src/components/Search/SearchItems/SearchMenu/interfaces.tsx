@@ -1,3 +1,10 @@
+export interface IActiveFilters {
+  activeFilters: Array<{
+    selectedFilters: Array<string>;
+    label: string;
+    name: string;
+  }>;
+}
 export interface ISelector {
   isVisible: boolean;
   label: string;
@@ -12,8 +19,8 @@ export interface ISelector {
 export interface IInput {
   name: string;
   isActive: boolean;
-  valueFrom?: string;
-  valueTo?: string;
+  priceFrom?: { value: string; label: string };
+  priceTo?: { value: string; label: string };
   value?: string;
   isVisible: boolean;
   label: string;
