@@ -130,7 +130,7 @@ const SearchMenu = ({ className }: IProps) => {
   };
 
   return (
-    <div className={className}>
+    <nav className={className}>
       <ItemsContainer>
         {inputs.map(item => (
           <ItemInput
@@ -187,7 +187,7 @@ const SearchMenu = ({ className }: IProps) => {
           </select>
         </label>
       </SearchContainer>
-    </div>
+    </nav>
   );
 };
 

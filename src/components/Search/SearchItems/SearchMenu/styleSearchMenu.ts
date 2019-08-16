@@ -1,5 +1,4 @@
 import { FunctionComponent } from "react";
-import { IProps } from "./SearchMenu";
 import styled from "styled-components";
 import Button_2 from "../../../Abstracts/Button_2";
 import InvisibleButton from "../../../Abstracts/InvisibleButton";

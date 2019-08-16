@@ -13,7 +13,7 @@ import OwnProfile from "../components/Profile/OwnProfile";
 import EditItem from "../components/Item/CreateItem/EditItem";
 import EditProfile from "../components/EditProfile/EditProfile";
 import SearchItems from "../components/Search/SearchItems/SearchItems";
-import SearchUsers from "../components/Search/SearchUsers";
+import SearchUsers from "../components/Search/SearchUsers/SearchUsers";
 
 interface IProps {
   history: any;

@@ -6,7 +6,7 @@ export interface ISearchStore {
   searchedItems: Array<IItem>;
   searchedUsers: Array<IUser>;
   getSearchedItems: Array<IItem>;
-  getSearchedUsers: Array<IUser>;
+  getSearchedUsers: Array<{ user: IUser; ownItems: IItem[] }>;
 }
 export default class SearchStore {
   constructor() {

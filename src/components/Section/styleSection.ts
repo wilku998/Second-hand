@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const Section = styled.section`
-  max-width: ${({ theme }) => theme.rowWidth};
+  width: ${({ theme }) => theme.rowWidth};
   margin-bottom: 4rem;
   &:not(:first-of-type){
     margin-top: 4rem;
@@ -26,4 +26,5 @@ export const Info = styled.span`
   grid-column: 1/5;
   text-align: center;
   margin-top: 4rem;
+  display: block;
 `

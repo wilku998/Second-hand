@@ -194,7 +194,10 @@ router.get("/api/users", async (req, res) => {
       }
     : {};
   try {
+    console.log(match)
     const foundedUsers = await User.find(match);
+    console.log(foundedUsers)
+
     Promise.all(
       foundedUsers.map(async user => {
         return await user.populate("ownItems").execPopulate();

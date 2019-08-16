@@ -55,7 +55,7 @@ const Navigation = ({ className, userStore }: IProps) => {
         history.push("/search/items");
         break;
       case "Użytkownicy":
-        searched = await getUsersRequest();
+        searched = await getUsersRequest(searchQuery);
         searchStore.searchedUsers = searched;
         history.push("/search/users");
         break;

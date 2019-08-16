@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { inject, observer } from "mobx-react";
 import UserLabel from "./UserLabel/UserLabel";
 import IUser from "../../../interfaces/IUser";
@@ -13,7 +13,7 @@ import checkIfIsFollowed from "../../../functions/checkIfIsFollowed";
 export interface IUserProps {
   users: Array<{ user: IUser; ownItems: Array<IItem> }>;
   title?: string;
-  userStore: IUserStore;
+  userStore?: IUserStore;
 }
 const UsersSection = ({ users, title, userStore }: IUserProps) => {
   const ownItems = userStore.getOwnItems;
@@ -23,28 +23,42 @@ const UsersSection = ({ users, title, userStore }: IUserProps) => {
   return (
     <div>
       {title && <Title>{title}</Title>}
-      {users.map(user => (
-        <Section key={user.user._id}>
-          <UserLabel
-            isFollowed={
-              ownProfile ? checkIfIsFollowed(userStore, user.user._id) : false
-            }
-            isOwnProfile={ownProfile ? user.user._id === ownProfile._id : false}
-            user={user.user}
-          />
-          {user.ownItems ? (
-            <ItemsContainer>
-              {prepareItemProperties(user.ownItems, ownItems, likedItems).map(
-                item => (
-                  <Item item={item} key={item._id} />
-                )
+      {users.length > 0 ? (
+        <Fragment>
+          {users.map(user => (
+            <Section key={user.user._id}>
+              <UserLabel
+                isFollowed={
+                  ownProfile
+                    ? checkIfIsFollowed(userStore, user.user._id)
+                    : false
+                }
+                isOwnProfile={
+                  ownProfile ? user.user._id === ownProfile._id : false
+                }
+                user={user.user}
+              />
+              {user.ownItems ? (
+                <ItemsContainer>
+                  {prepareItemProperties(
+                    user.ownItems,
+                    ownItems,
+                    likedItems
+                  ).map(item => (
+                    <Item item={item} key={item._id} />
+                  ))}
+                </ItemsContainer>
+              ) : (
+                <Info>
+                  Użytkownik nie posiada żadnych przedmiotów na sprzedaż.
+                </Info>
               )}
-            </ItemsContainer>
-          ) : (
-            <Info>Użytkownik nie posiada żadnych przedmiotów na sprzedaż.</Info>
-          )}
-        </Section>
-      ))}
+            </Section>
+          ))}
+        </Fragment>
+      ) : (
+        <Info>Nie znaleziono użytkowinków</Info>
+      )}
     </div>
   );
 };

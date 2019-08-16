@@ -115,4 +115,10 @@ export const unfollowUserRequest = async (userID: string) => {
 export const getUserRequest = async (id: string) =>
   await fetchData(id, "/api/users/");
 
-export const getUsersRequest = async () => await fetchData("", "/api/users");
+export const getUsersRequest = async (query: string) => {
+  const users = await fetchData(`?name=${query}`, "/api/users");
+  if (!users) {
+    return [];
+  }
+  return users;
+};
