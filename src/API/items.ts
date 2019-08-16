@@ -1,10 +1,10 @@
 import IItem from "../interfaces/IItem";
 import ajax from "./ajax";
-import { parseResponse } from "./functions";
 import { userStore } from "../app";
 import fetchData from "./fetchData";
-import { Iimages, IUpdate } from "../components/Item/CreateItem/interfaces";
+import { IUpdate } from "../components/Item/CreateItem/interfaces";
 import { addImagesRequest, removeImageRequest } from "./images";
+import { ISearchItemsQuery } from "../interfaces/ISearchItemsQuery";
 
 export const addItemRequest = async (item: IItem, images: Array<string>) => {
   try {
@@ -26,16 +26,18 @@ export const addItemRequest = async (item: IItem, images: Array<string>) => {
 export const getItemRequest = async (id: string) =>
   await fetchData(id, "/api/items/");
 
-export const getItemsRequest = async (query?: any) => {
+export const getItemsRequest = async (query?: ISearchItemsQuery["query"]) => {
   if (query) {
-    var queryString = Object.keys(query)
-      .map(key => `${key}=${query[key]}`)
-      .join("&");
+    var queryString = query.map(e => `${e.name}=${e.selectedFilters.join("|")}`).join("&");
   }
+  console.log(queryString)
   const items = await fetchData(
     queryString ? "?" + queryString : "",
     "/api/items"
   );
+  if(!items){
+    return []
+  }
   return items;
 };
 
@@ -57,8 +59,7 @@ export const editItemRequest = async (
     update.images = [...initialImages, ...newImagesURLs].filter(
       e => !imagesToRemove.includes(e)
     );
-    const response = await ajax("PATCH", `/api/items/${_id}`, { update }, 200);
-    userStore.updateItem(_id, update)
-  } catch (e) {
-  }
+    await ajax("PATCH", `/api/items/${_id}`, { update }, 200);
+    userStore.updateItem(_id, update);
+  } catch (e) {}
 };

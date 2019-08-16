@@ -100,6 +100,7 @@ const ComponentTemplate = ({
     const property:
     IItemKeys["keys"] = e.target.name;
     const value = e.target.value;
+    console.log(value)
     setItemForm({
       ...itemForm,
       size:

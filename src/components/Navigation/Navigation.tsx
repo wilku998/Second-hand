@@ -50,7 +50,7 @@ const Navigation = ({ className, userStore }: IProps) => {
     let searched;
     switch (searchCat) {
       case "Przedmioty":
-        searched = await getItemsRequest();
+        searched = await getItemsRequest([{name: "name", selectedFilters: [searchQuery]}]);
         searchStore.searchedItems = searched;
         history.push("/search/items");
         break;

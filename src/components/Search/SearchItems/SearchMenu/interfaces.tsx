@@ -1,10 +1,4 @@
-export interface IActiveFilters {
-  activeFilters: Array<{
-    selectedFilters: Array<string>;
-    label: string;
-    name: string;
-  }>;
-}
+
 export interface ISelector {
   isVisible: boolean;
   label: string;

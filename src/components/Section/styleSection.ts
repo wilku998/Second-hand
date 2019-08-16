@@ -21,3 +21,9 @@ export const ItemsContainer = styled.div`
   align-items: flex-start;
   width: 100%;
 `;
+
+export const Info = styled.span`
+  grid-column: 1/5;
+  text-align: center;
+  margin-top: 4rem;
+`

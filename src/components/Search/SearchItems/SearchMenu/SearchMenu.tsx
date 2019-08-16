@@ -12,8 +12,10 @@ import ItemInput from "./ItemInput";
 import ItemSelector from "./ItemSelector";
 import ItemSize from "./ItemSize";
 import { createActiveFiltersObject } from "./functions";
-import { IActiveFilters } from "./interfaces";
 import ReactSVG from "react-svg";
+import { getItemsRequest } from "../../../../API/items";
+import { ISearchItemsQuery } from "../../../../interfaces/ISearchItemsQuery";
+import { searchStore } from "../../../../app";
 
 export interface IProps {
   className?: string;
@@ -24,7 +26,7 @@ const SearchMenu = ({ className }: IProps) => {
   const { category, condition, gender, price, name, size } = form;
   const selectors = [gender, category, condition];
   const inputs = [price, name];
-  const activeFilters: IActiveFilters["activeFilters"] = createActiveFiltersObject(
+  const activeFilters: ISearchItemsQuery["query"] = createActiveFiltersObject(
     selectors,
     name,
     price,
@@ -122,6 +124,11 @@ const SearchMenu = ({ className }: IProps) => {
     });
   };
 
+  const onSearchClick = async () => {
+    const items = await getItemsRequest(activeFilters);
+    searchStore.searchedItems = items;
+  };
+
   return (
     <div className={className}>
       <ItemsContainer>
@@ -172,7 +179,7 @@ const SearchMenu = ({ className }: IProps) => {
         </div>
       )}
       <SearchContainer>
-        <Button>Szukaj przedmiotów</Button>
+        <Button onClick={onSearchClick}>Szukaj przedmiotów</Button>
         <label>
           Sortuj od
           <select>

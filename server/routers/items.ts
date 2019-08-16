@@ -1,9 +1,10 @@
+const toRegexRange = require("to-regex-range");
 import express from "express";
 import Item from "../models/item";
 import AuthMiddleware from "../middlwares/auth";
 import { IAuthRequest, IMatch } from "./interfaces";
 import { createRegexObj } from "./functions";
-
+import console = require("console");
 const router = express.Router();
 
 router.post("/api/items", AuthMiddleware, async (req: IAuthRequest, res) => {
@@ -17,22 +18,37 @@ router.post("/api/items", AuthMiddleware, async (req: IAuthRequest, res) => {
 });
 
 router.get("/api/items", async (req, res) => {
-  let match: IMatch = {};
+  const { priceFrom, priceTo, name } = req.query;
+  let match: IMatch = {
+    price: new RegExp(
+      toRegexRange(priceFrom ? priceFrom : 0, priceTo ? priceTo : 9999)
+    )
+  };
 
   Object.keys(req.query).forEach(
-    (key: "size" | "gender" | "category" | "name" | "owner") => {
-      if (key === "name") {
-        match = {
-          ...match,
-          $or: [
-            { itemModel: createRegexObj(req.query.name) },
-            { brand: createRegexObj(req.query.name) }
-          ]
-        };
-      }else if(key ==="owner"){
-        match.owner = req.query.owner
-      } else {
-        match[key] = createRegexObj(req.query[key]);
+    (
+      key:
+        | "size"
+        | "gender"
+        | "category"
+        | "name"
+        | "owner"
+        | "priceFrom"
+        | "priceTo"
+        | "condition"
+    ) => {
+      if (key !== "priceFrom" && key !== "priceTo") {
+        if (key === "name") {
+          match = {
+            ...match,
+            $or: [
+              { itemModel: createRegexObj(name) },
+              { brand: createRegexObj(name) }
+            ]
+          };
+        } else {
+          match[key] = createRegexObj(req.query[key]);
+        }
       }
     }
   );
@@ -58,13 +74,20 @@ router.get("/api/items/:id", async (req, res) => {
   }
 });
 
-router.patch("/api/items/:id", AuthMiddleware, async (req: IAuthRequest, res) => {
-  try{
-    const updatedItem = await Item.findByIdAndUpdate(req.params.id, req.body.update)
-    res.send(updatedItem)
-  }catch(e){
-    res.status(404).send()
+router.patch(
+  "/api/items/:id",
+  AuthMiddleware,
+  async (req: IAuthRequest, res) => {
+    try {
+      const updatedItem = await Item.findByIdAndUpdate(
+        req.params.id,
+        req.body.update
+      );
+      res.send(updatedItem);
+    } catch (e) {
+      res.status(404).send();
+    }
   }
-});
+);
 
 export default router;

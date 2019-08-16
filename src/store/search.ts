@@ -1,4 +1,4 @@
-import { observable, computed, toJS } from "mobx";
+import { observable, computed, toJS, autorun } from "mobx";
 import IItem from "../interfaces/IItem";
 import IUser from "../interfaces/IUser";
 
@@ -9,6 +9,11 @@ export interface ISearchStore {
   getSearchedUsers: Array<IUser>;
 }
 export default class SearchStore {
+  constructor() {
+    autorun(() => {
+      console.log(this.getSearchedItems);
+    });
+  }
   @observable searchedItems: Array<IItem> = [];
   @observable searchedUsers: Array<IUser> = [];
 

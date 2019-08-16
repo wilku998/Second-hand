@@ -17,7 +17,7 @@ export default interface IItem {
     | "bielizna"
     | "biżuteria"
     | "inne";
-  price: number;
+  price: string;
   size: string;
   condition: "nowy" | "używany";
   itemModel?: string;

@@ -7,7 +7,6 @@ export default (value: string, property: string, secondProperty?: string) => {
     }
     case "price": {
       const number = parseFloat(value);
-      console.log(number >= 1 && number <= 10000)
       return number >= 1 && number <= 10000;
     }
     case "size": {
