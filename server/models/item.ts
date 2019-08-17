@@ -45,7 +45,7 @@ const itemSchema = new Schema({
     ref: "User"
   },
   likedBy: [{ user: { type: mongoose.Types.ObjectId, ref: "User" } }]
-});
+}, {timestamps: true});
 
 // itemSchema.methods.toJSON = function() {
 //   const item = this;

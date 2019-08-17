@@ -19,9 +19,12 @@ import { searchStore } from "../../../../app";
 
 export interface IProps {
   className?: string;
+  sortBy: string;
+  sortByOptions: Array<string>;
+  onSortByChange: (e: ChangeEvent<HTMLSelectElement>) => void;
 }
 
-const SearchMenu = ({ className }: IProps) => {
+const SearchMenu = ({ className, sortBy, sortByOptions, onSortByChange }: IProps) => {
   const [form, setForm] = useState(initialFormState);
   const { category, condition, gender, price, name, size } = form;
   const selectors = [gender, category, condition];
@@ -182,8 +185,8 @@ const SearchMenu = ({ className }: IProps) => {
         <Button onClick={onSearchClick}>Szukaj przedmiotów</Button>
         <label>
           Sortuj od
-          <select>
-            <option>od najniższej ceny</option>
+          <select value={sortBy} onChange={onSortByChange}>
+            {sortByOptions.map(e => <option key={e} value={e}>{e}</option>)}
           </select>
         </label>
       </SearchContainer>

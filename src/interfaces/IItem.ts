@@ -30,4 +30,6 @@ export default interface IItem {
     user: string;
   }>;
   gender: "mężczyźni" | "kobiety" | "dzieci";
+  createdAt: string;
+  updatedAt: string;
 }

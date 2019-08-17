@@ -11,7 +11,7 @@ export interface ISearchStore {
 export default class SearchStore {
   constructor() {
     autorun(() => {
-      console.log(this.getSearchedItems);
+      // console.log(this.getSearchedItems);
     });
   }
   @observable searchedItems: Array<IItem> = [];
@@ -20,6 +20,7 @@ export default class SearchStore {
   @computed get getSearchedUsers() {
     return toJS(this.searchedUsers);
   }
+
   @computed get getSearchedItems() {
     return toJS(this.searchedItems);
   }

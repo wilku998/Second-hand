@@ -30,7 +30,7 @@ export const getItemsRequest = async (query?: ISearchItemsQuery["query"]) => {
   if (query) {
     var queryString = query.map(e => `${e.name}=${e.selectedFilters.join("|")}`).join("&");
   }
-  console.log(queryString)
+
   const items = await fetchData(
     queryString ? "?" + queryString : "",
     "/api/items"

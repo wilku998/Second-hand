@@ -7,7 +7,7 @@ export default {
     errorMessage: "Email jest nieprawidłowy"
   },
   name: {
-    value: "Bartosz Wilk5",
+    value: "Bartosz Wilk",
     valid: true,
     label: "Imię",
     type: "text",
