@@ -4,6 +4,8 @@ import { ISearchStore } from "../../../store/search";
 import ItemsSection from "../../Section/ItemsSection/ItemsSection";
 import SearchMenu from "./SearchMenu/SearchMenu";
 import { StyledSearch } from "../styleSearch";
+import useSort from "./hooks/useSort";
+import sort from "./functions/sort";
 
 interface IProps {
   searchStore?: ISearchStore;
@@ -13,33 +15,12 @@ interface IProps {
 const SearchItems = ({ searchStore, className }: IProps) => {
   const items = searchStore.getSearchedItems;
   const sortByOptions = [
-    "Od najniższej ceny",
-    "Od najwyższej ceny",
     "Data dodania (od najstarszych)",
-    "Data dodania (od najświeższych)"
+    "Data dodania (od najświeższych)",
+    "Od najniższej ceny",
+    "Od najwyższej ceny"
   ];
-  const [sortBy, setSortBy] = useState(sortByOptions[0]);
-
-  const onSortByChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    setSortBy(e.target.value);
-  };
-
-  const sortItems = () => {
-    switch (sortBy) {
-      case sortByOptions[0]:
-        return items.slice().sort((a, b) =>
-          parseInt(a.price) - parseInt(b.price)
-        );
-      case sortByOptions[1]:
-        return items.slice().sort((a, b) =>
-          parseInt(b.price) - parseInt(a.price)
-        );
-      case sortByOptions[2]:
-        return items
-      case sortByOptions[3]:
-        return items.slice().reverse();
-    }
-  }
+  const { sortBy, onSortByChange } = useSort(sortByOptions);
 
   return (
     <StyledSearch className={className}>
@@ -48,7 +29,7 @@ const SearchItems = ({ searchStore, className }: IProps) => {
         sortBy={sortBy}
         onSortByChange={onSortByChange}
       />
-      <ItemsSection items={sortItems()} />
+      <ItemsSection items={sort(sortBy, sortByOptions, items)} />
     </StyledSearch>
   );
 };

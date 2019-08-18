@@ -6,14 +6,21 @@ import { Button } from "../SearchItems/SearchMenu/styleSearchMenu";
 import { SearchMenu, SearchContainer } from "./styleSearchUsers";
 import UsersSection from "../../Section/UsersSection/UsersSection";
 import { getUsersRequest } from "../../../API/users";
+import useSort from "../SearchItems/hooks/useSort";
+import sort from "../SearchItems/functions/sort";
 
 interface IProps {
   searchStore: ISearchStore;
 }
 
 const SearchUsers = ({ searchStore }: IProps) => {
-  const [query, setQuery] = useState("");
   const users = searchStore.getSearchedUsers;
+  const [query, setQuery] = useState("");
+  const sortByOptions = [
+    "Data dodania (od najstarszych)",
+    "Data dodania (od najświeższych)"
+  ];
+  const {sortBy, onSortByChange} = useSort(sortByOptions);
 
   const onSearchClick = async () => {
     const users = await getUsersRequest(query);
@@ -36,12 +43,12 @@ const SearchUsers = ({ searchStore }: IProps) => {
         </SearchContainer>
         <label>
           Sortuj od
-          <select>
-            <option>od najniższej ceny</option>
+          <select value={sortBy} onChange={onSortByChange}>
+            {sortByOptions.map(e => <option key={e} value={e}>{e}</option>)}
           </select>
         </label>
       </SearchMenu>
-      <UsersSection users={users} />
+      <UsersSection users={sort(sortBy, sortByOptions, users)} />
     </StyledSearch>
   );
 };

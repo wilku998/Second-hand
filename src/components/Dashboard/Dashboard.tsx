@@ -13,7 +13,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       const items = await getItemsRequest();
-      const users = await getUsersRequest();
+      const users = await getUsersRequest('');
       if(items){
         setItems(items)
       }
