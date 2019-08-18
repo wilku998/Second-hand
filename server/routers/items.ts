@@ -18,7 +18,7 @@ router.post("/api/items", AuthMiddleware, async (req: IAuthRequest, res) => {
 });
 
 router.get("/api/items", async (req, res) => {
-  const { priceFrom, priceTo, name } = req.query;
+  const { priceFrom, priceTo, name, owner } = req.query;
   let match: IMatch = {
     price: new RegExp(
       toRegexRange(priceFrom ? priceFrom : 0, priceTo ? priceTo : 9999)
@@ -46,13 +46,15 @@ router.get("/api/items", async (req, res) => {
               { brand: createRegexObj(name) }
             ]
           };
+        } else if (key === "owner") {
+          match.owner = owner;
         } else {
           match[key] = createRegexObj(req.query[key]);
         }
       }
     }
   );
-
+  console.log(match);
   try {
     const items = await Item.find(match);
     res.send(items);

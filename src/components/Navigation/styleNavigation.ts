@@ -1,8 +1,6 @@
 import styled from "styled-components";
-import { FunctionComponent } from "react";
-import { IProps } from "./Navigation";
 
-export default (Navigation: FunctionComponent<IProps>) => styled(Navigation)`
+export const StyledNavigation = styled.nav`
   position: fixed;
   top: 0;
   left: 0;

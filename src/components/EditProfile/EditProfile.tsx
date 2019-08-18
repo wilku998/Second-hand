@@ -1,14 +1,15 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { useState } from "react";
 import Modal from "react-modal";
 import { inject, observer } from "mobx-react";
 import { IViewStore } from "../../store/view";
 import { IUserStore } from "../../store/user";
-import styles, { Button } from "./styleEditProfile";
+import { Button } from "./styleEditProfile";
 import { Form, Label, FormInput } from "../Abstracts/Form";
 import useUserForm from "../../hooks/useUserForm";
 import initialFormStateTemplate from "../Login/initialState";
 import { updateUserRequest } from "../../API/users";
 import { IUserUpdate } from "./interfaces";
+import reactModalStyles from "../../styles/reactModalStyles";
 
 Modal.setAppElement("#root");
 
@@ -41,7 +42,6 @@ const EditProfile = ({ viewStore, userStore }: IProps) => {
   const onSubmit = async (e: any) => {
     e.preventDefault();
     const invalidProperty = inputs.find(e => !e.valid);
-    console.log(invalidProperty.name);
     if (
       invalidProperty &&
       (invalidProperty.name === "password" ||
@@ -75,7 +75,7 @@ const EditProfile = ({ viewStore, userStore }: IProps) => {
   };
 
   return (
-    <Modal style={styles} isOpen={isOpen} onRequestClose={onRequestClose}>
+    <Modal style={reactModalStyles} isOpen={isOpen} onRequestClose={onRequestClose}>
       <Form onSubmit={onSubmit}>
         {inputs.map(e => (
           <Label key={e.label}>

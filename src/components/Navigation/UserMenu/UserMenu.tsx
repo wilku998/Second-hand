@@ -5,14 +5,15 @@ import { logoutRequest } from "../../../API/users";
 import style, { Label, List } from "./styleUserMenu";
 import InvisibleButton from "../../Abstracts/InvisibleButton";
 import CollapseIcon from "../../Abstracts/CollapseIcon";
+import { viewStore } from "../../../app";
+import IUser from "../../../interfaces/IUser";
 
 export interface IProps {
   className?: string;
-  userStore: any;
+  user: IUser;
 }
 
-const UserMenu = ({ userStore, className }: IProps) => {
-  const { user } = userStore;
+const UserMenu = ({ user, className }: IProps) => {
   const componentRef = useRef();
   const [listVisible, setListVisible] = useState(false);
   const [listWidth, setListWidth] = useState(0);
@@ -27,10 +28,7 @@ const UserMenu = ({ userStore, className }: IProps) => {
       <Label onClick={onLabelClick}>
         <Avatar src={user.avatar} size="small" />
         <span>{user.name}</span>
-        <CollapseIcon
-          width="1rem"
-          listvisible={listVisible.toString()}
-        />
+        <CollapseIcon width="1rem" listvisible={listVisible.toString()} />
         {listVisible && (
           <List width={listWidth}>
             <li>
@@ -39,6 +37,16 @@ const UserMenu = ({ userStore, className }: IProps) => {
             <li>Wiadomości</li>
             <li>
               <Link to="/items/create">Dodaj przedmiot</Link>
+            </li>
+            <li>
+              <InvisibleButton onClick={viewStore.toggleEditProfile}>
+                Edytuj profil
+              </InvisibleButton>
+            </li>
+            <li>
+              <InvisibleButton onClick={viewStore.toggleRemoveProfile}>
+                Usuń profil
+              </InvisibleButton>
             </li>
             <li>
               <InvisibleButton onClick={logoutRequest}>

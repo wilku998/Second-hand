@@ -205,7 +205,7 @@ const ComponentTemplate = ({
           {inputs.map(e => (
             <Label key={e.name} isColumn={e.isOptional}>
               <span>
-                {e.label} {e.name === "size" && "EU"}{" "}
+                {e.label} {e.name === "size" ? "EU" : ""}
                 {e.isOptional && <Optional>*niewymagane</Optional>}
               </span>
               <FormInput

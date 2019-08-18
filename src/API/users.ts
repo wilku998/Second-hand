@@ -50,13 +50,17 @@ export const logoutRequest = async () => {
 
 export const updateUserRequest = async (update: any) => {
   try {
-    const updatedUser: IUser = await ajax(
+    await ajax(
       "PATCH",
       "/api/users/me",
       update,
       200
     );
-    userStore.user = updatedUser;
+    const user = userStore.getUser
+    userStore.user = {
+      ...user,
+      ...update
+    };
   } catch (e) {
     if (e.error.code === 11000) {
       return "Email jest już zajęty";

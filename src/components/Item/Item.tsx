@@ -18,7 +18,6 @@ import style, {
   ButtonSeeAll,
   SellerOtherItems,
   ItemInfo,
-  ButtonSeeWhoLiked,
   LikeButton
 } from "./styleItem";
 import Avatar from "../Abstracts/Avatar";
@@ -92,9 +91,10 @@ const Item = ({ className, match, userStore }: IProps) => {
       const fetchData = async () => {
         const foundedItem = await fetchItem(itemID);
         if (foundedItem) {
-          const otherItems: Array<IItem> = await getItemsRequest({
-            owner: foundedItem.owner._id
-          });
+          const otherItems: Array<IItem> = await getItemsRequest([{
+            selectedFilters: [foundedItem.owner._id],
+            name: "owner"
+          }]);
           if (otherItems) {
             setSellerOtherItems(otherItems.filter(e => e._id !== itemID));
           }

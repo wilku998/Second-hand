@@ -1,8 +1,8 @@
 import React, { useState, ChangeEvent } from "react";
 import ReactSVG from "react-svg";
 import { Link } from "react-router-dom";
-
-import style, {
+import { inject, observer } from "mobx-react";
+import {
   Content,
   Menu,
   SearchButton,
@@ -10,7 +10,8 @@ import style, {
   SearchInput,
   SearchCatButton,
   SearchCatButtonList,
-  SearchCat
+  SearchCat,
+  StyledNavigation
 } from "./styleNavigation";
 import Logo from "../Abstracts/Logo";
 import UserMenu from "./UserMenu/UserMenu";
@@ -21,12 +22,12 @@ import { getItemsRequest } from "../../API/items";
 import { searchStore, history } from "../../app";
 
 export interface IProps {
-  className?: string;
-  userStore: IUserStore;
+  userStore?: IUserStore;
 }
 
-const Navigation = ({ className, userStore }: IProps) => {
+const Navigation = ({ userStore }: IProps) => {
   const isAuth = userStore.isAuth;
+  const user = userStore.getUser;
   const [searchQuery, setSearchQuery] = useState("");
   const [searchCat, setSearchCat] = useState("Przedmioty");
   const [searchCatListVisible, setSearchCatListVisible] = useState(false);
@@ -63,7 +64,7 @@ const Navigation = ({ className, userStore }: IProps) => {
   };
 
   return (
-    <nav className={className}>
+    <StyledNavigation>
       <Content>
         <Link to="/">
           <Logo size="small" squareColor="light" />
@@ -112,13 +113,13 @@ const Navigation = ({ className, userStore }: IProps) => {
             {!isAuth ? (
               <Link to="/login">Zaloguj się</Link>
             ) : (
-              <UserMenu userStore={userStore} />
+              <UserMenu user={user} />
             )}
           </li>
         </Menu>
       </Content>
-    </nav>
+    </StyledNavigation>
   );
 };
 
-export default style(Navigation);
+export default inject("userStore")(observer(Navigation));

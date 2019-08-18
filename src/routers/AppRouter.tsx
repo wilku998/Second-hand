@@ -14,6 +14,7 @@ import EditItem from "../components/Item/CreateItem/EditItem";
 import EditProfile from "../components/EditProfile/EditProfile";
 import SearchItems from "../components/Search/SearchItems/SearchItems";
 import SearchUsers from "../components/Search/SearchUsers/SearchUsers";
+import RemoveProfile from "../components/RemoveProfile/RemoveProfile";
 
 interface IProps {
   history: any;
@@ -24,8 +25,9 @@ const AppRouter = ({ history, userStore }: IProps) => {
   const isAuth = userStore.isAuth;
   return (
     <Router history={history}>
-      <Navigation userStore={userStore} />
+      <Navigation />
       {isAuth && <EditProfile />}
+      {isAuth && <RemoveProfile />}
       <Switch>
         <Route path="/" exact component={Dashboard} />
         <Route path="/search/items" component={SearchItems} />

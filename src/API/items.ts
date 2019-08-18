@@ -28,6 +28,7 @@ export const getItemRequest = async (id: string) =>
 
 export const getItemsRequest = async (query?: ISearchItemsQuery["query"]) => {
   if (query) {
+    console.log(query)
     var queryString = query.map(e => `${e.name}=${e.selectedFilters.join("|")}`).join("&");
   }
 
