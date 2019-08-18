@@ -1,12 +1,12 @@
 import express from "express";
 import sharp from "sharp";
+import bcrypt from "bcryptjs";
 import User from "../models/user";
 import { IAuthRequest, IUserRequest } from "./interfaces";
 import AuthMiddleware from "../middlwares/auth";
 import FindUserMiddleware from "../middlwares/findUser";
-import { uploadImage, createRegexObj } from "./functions";
+import { uploadImage, createRegexObj, parseFollows, parseLikedItems, parseUser } from "./functions";
 import Item from "../models/item";
-import mongoose from "mongoose";
 
 const router = express.Router();
 
@@ -28,10 +28,20 @@ router.post("/api/users/login", async (req, res) => {
     const user: any = await User.findByCredenctials(email, password);
     const token = await user.generateAuthToken();
     res.cookie("jwtToken", token, { maxAge: 108000000, httpOnly: true });
-    await user.populate("ownItems").execPopulate();
-    res.send({ user, ownItems: user.ownItems });
+    const parsedUser = await parseUser(user)
+    res.send(parsedUser);
   } catch (e) {
-    res.status(400).send();
+    res.status(400).send(e);
+  }
+});
+
+router.get("/api/users/me", AuthMiddleware, async (req: IAuthRequest, res) => {
+  try {
+    const { user } = req;
+    const parsedUser = await parseUser(user)
+    res.send(parsedUser);
+  } catch (e) {
+    res.status(500).send();
   }
 });
 
@@ -70,17 +80,6 @@ router.post(
   }
 );
 
-router.get("/api/users/me", AuthMiddleware, async (req: IAuthRequest, res) => {
-  try {
-    const { user } = req;
-    await user.populate("ownItems").execPopulate();
-    await user.populate("likedItems.item").execPopulate();
-    res.send({ user, ownItems: user.ownItems });
-  } catch (e) {
-    res.status(500).send();
-  }
-});
-
 interface IUpdateRequest extends IAuthRequest {
   update: any;
 }
@@ -95,8 +94,7 @@ router.patch(
         user[key] = req.body[key];
       });
       await user.save();
-      await user.populate("likedItems.item").execPopulate();
-      res.send(user);
+      res.send();
     } catch (e) {
       res.status(400).send(e);
     }
@@ -115,7 +113,7 @@ router.patch(
       item.likedBy = [...item.likedBy, { user: user._id }];
       await item.save();
       await user.populate("likedItems.item").execPopulate();
-      res.send(user.likedItems);
+      res.send(parseLikedItems(user.likedItems));
     } catch (e) {
       res.status(400).send(e);
     }
@@ -134,10 +132,12 @@ router.delete(
       });
       await user.save();
       const item = await Item.findById(likedID);
-      item.likedBy = item.likedBy.filter(e => e.user.toString() !== user._id.toString());
+      item.likedBy = item.likedBy.filter(
+        e => e.user.toString() !== user._id.toString()
+      );
       await item.save();
       await user.populate("likedItems.item").execPopulate();
-      res.send(user.likedItems);
+      res.send(parseLikedItems(user.likedItems));
     } catch (e) {
       res.status(400).send(e);
     }
@@ -154,10 +154,13 @@ router.patch(
       user.follows.push({ user: userID });
       await user.save();
       const followedUser = await User.findById(userID);
-      followedUser.followedBy = [...followedUser.followedBy, { user: user._id }];
+      followedUser.followedBy = [
+        ...followedUser.followedBy,
+        { user: user._id }
+      ];
       await followedUser.save();
       await user.populate("follows.user").execPopulate();
-      res.send(user.follows);
+      res.send(parseFollows(user.follows));
     } catch (e) {
       res.status(400).send(e);
     }
@@ -176,10 +179,12 @@ router.delete(
       });
       await user.save();
       const unfollowedUser = await User.findById(userID);
-      unfollowedUser.followedBy = unfollowedUser.followedBy.filter(e => e.user.toString() !== user._id.toString());
+      unfollowedUser.followedBy = unfollowedUser.followedBy.filter(
+        e => e.user.toString() !== user._id.toString()
+      );
       await unfollowedUser.save();
       await user.populate("follows.user").execPopulate();
-      res.send(user.follows);
+      res.send(parseFollows(user.follows));
     } catch (e) {
       res.status(400).send(e);
     }
@@ -194,9 +199,7 @@ router.get("/api/users", async (req, res) => {
       }
     : {};
   try {
-    console.log(match)
     const foundedUsers = await User.find(match);
-    console.log(foundedUsers)
 
     Promise.all(
       foundedUsers.map(async user => {
@@ -217,9 +220,8 @@ router.get(
   async (req: IUserRequest, res) => {
     try {
       const { user } = req;
-      await user.populate("ownItems").execPopulate();
-      await user.populate("likedItems.item").execPopulate();
-      res.send({ user, ownItems: user.ownItems });
+      const parsedUser = await parseUser(user)
+      res.send(parsedUser);
     } catch (e) {
       res.status(400).send();
     }
@@ -231,10 +233,17 @@ router.delete(
   AuthMiddleware,
   async (req: IAuthRequest, res) => {
     try {
+      const { password } = req.body;
+      const { user } = req;
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        throw new Error();
+      }
+      await Item.deleteMany({ owner: user._id });
       await User.findOneAndDelete({ _id: req.user._id });
       res.send();
     } catch (e) {
-      res.status(400).send();
+      res.status(400).send({ message: "Podane hasło jest nieprawidłowe." });
     }
   }
 );

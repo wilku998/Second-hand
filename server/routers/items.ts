@@ -4,7 +4,6 @@ import Item from "../models/item";
 import AuthMiddleware from "../middlwares/auth";
 import { IAuthRequest, IMatch } from "./interfaces";
 import { createRegexObj } from "./functions";
-import console = require("console");
 const router = express.Router();
 
 router.post("/api/items", AuthMiddleware, async (req: IAuthRequest, res) => {
@@ -54,7 +53,6 @@ router.get("/api/items", async (req, res) => {
       }
     }
   );
-  console.log(match);
   try {
     const items = await Item.find(match);
     res.send(items);

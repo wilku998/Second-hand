@@ -13,7 +13,7 @@ export default (items: Array<IItem>, ownItems: Array<IItem>, likedItems: IUser["
       return {
         ...item,
         isOwn,
-        isLiked: likedItems.findIndex(e => e.item._id === item._id) > -1
+        isLiked: likedItems.findIndex(e => e._id === item._id) > -1
       };
     }
   });

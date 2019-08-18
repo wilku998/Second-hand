@@ -32,12 +32,24 @@ export const registerRequest = async (data: {
   }
 };
 
+export const removeProfileRequest = async (password: string) => {
+  try {
+    const response: any = await ajax("DELETE", "/api/users/me", { password }, 200);
+    userStore.user = undefined;
+    userStore.ownItems = [];
+  } catch (e) {
+    return e.error.message
+  }
+};
+
 export const getProfileRequest = async () => {
   try {
     const response = await fetch("/api/users/me");
     const data = await response.json();
     setUserStore(data);
-  } catch (e) {}
+  } catch (e) {
+    console.log(e)
+  }
 };
 
 export const logoutRequest = async () => {
@@ -50,13 +62,8 @@ export const logoutRequest = async () => {
 
 export const updateUserRequest = async (update: any) => {
   try {
-    await ajax(
-      "PATCH",
-      "/api/users/me",
-      update,
-      200
-    );
-    const user = userStore.getUser
+    await ajax("PATCH", "/api/users/me", update, 200);
+    const user = userStore.getUser;
     userStore.user = {
       ...user,
       ...update

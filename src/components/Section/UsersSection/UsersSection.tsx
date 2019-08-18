@@ -2,7 +2,6 @@ import React, { Fragment } from "react";
 import { inject, observer } from "mobx-react";
 import UserLabel from "./UserLabel/UserLabel";
 import IUser from "../../../interfaces/IUser";
-import Avatar from "../../Abstracts/Avatar";
 import IItem from "../../../interfaces/IItem";
 import { Title, ItemsContainer, Section, Info } from "../styleSection";
 import Item from "../ItemsSection/ItemSmall/ItemSmall";

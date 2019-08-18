@@ -11,10 +11,10 @@ import CreateItem from "../components/Item/CreateItem/CreateItem";
 import ForeignProfile from "../components/Profile/ForeignProfile";
 import OwnProfile from "../components/Profile/OwnProfile";
 import EditItem from "../components/Item/CreateItem/EditItem";
-import EditProfile from "../components/EditProfile/EditProfile";
+import EditProfile from "../components/popups/EditProfile/EditProfile";
 import SearchItems from "../components/Search/SearchItems/SearchItems";
 import SearchUsers from "../components/Search/SearchUsers/SearchUsers";
-import RemoveProfile from "../components/RemoveProfile/RemoveProfile";
+import RemoveProfile from "../components/popups/RemoveProfile/RemoveProfile";
 
 interface IProps {
   history: any;
