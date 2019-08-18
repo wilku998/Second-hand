@@ -33,6 +33,8 @@ export interface IProps {
   initialForm: IForm;
   initialImages: Iimages["images"];
   onSubmitRequest: (item: IItem, images: Iimages["images"]) => void;
+  isEdit: boolean;
+  onRemoveItemClick?: () => void;
 }
 
 const ComponentTemplate = ({
@@ -40,7 +42,9 @@ const ComponentTemplate = ({
   userStore,
   initialForm,
   initialImages,
-  onSubmitRequest
+  onSubmitRequest,
+  isEdit,
+  onRemoveItemClick
 }: IProps) => {
   const user = userStore.getUser;
   const [itemForm, setItemForm] = useState(initialForm);
@@ -231,7 +235,8 @@ const ComponentTemplate = ({
             />
           </Label>
           {error !== "" && <ErrorMessage>{error}</ErrorMessage>}
-          <ButtonSeeAll>Dodaj przedmiot</ButtonSeeAll>
+          <ButtonSeeAll>{isEdit ? "Edytuj" : "Dodaj"} przedmiot</ButtonSeeAll>
+          {isEdit && <ButtonSeeAll type="button" onClick={onRemoveItemClick}>Usuń przedmiot</ButtonSeeAll>}
         </ItemForm>
       </div>
     </Container>

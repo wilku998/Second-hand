@@ -16,7 +16,3 @@ export const ErrorMessage = styled.span`
         color: ${theme.colorRed};
     `}
 `;
-
-export const Button = styled(Button_2)`
-  margin-top: .75rem;
-`;

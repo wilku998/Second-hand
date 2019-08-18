@@ -11,7 +11,7 @@ export const addItemRequest = async (item: IItem, images: Array<string>) => {
     const imagesResponse: any = await addImagesRequest(images);
 
     const imagesURLs = imagesResponse.map((e: string) => `/api/images/${e}`);
-    const response = await ajax(
+    const response: IItem = await ajax(
       "POST",
       "/api/items",
       { ...item, images: imagesURLs },
@@ -28,15 +28,17 @@ export const getItemRequest = async (id: string) =>
 
 export const getItemsRequest = async (query?: ISearchItemsQuery["query"]) => {
   if (query) {
-    var queryString = query.map(e => `${e.name}=${e.selectedFilters.join("|")}`).join("&");
+    var queryString = query
+      .map(e => `${e.name}=${e.selectedFilters.join("|")}`)
+      .join("&");
   }
 
   const items = await fetchData(
     queryString ? "?" + queryString : "",
     "/api/items"
   );
-  if(!items){
-    return []
+  if (!items) {
+    return [];
   }
   return items;
 };
@@ -62,4 +64,9 @@ export const editItemRequest = async (
     await ajax("PATCH", `/api/items/${_id}`, { update }, 200);
     userStore.updateItem(_id, update);
   } catch (e) {}
+};
+
+export const removeItemRequest = async (id: string) => {
+  await ajax("DELETE", `/api/items/${id}`, {}, 200);
+  userStore.ownItems = userStore.getOwnItems.filter(e => e._id !== id);
 };

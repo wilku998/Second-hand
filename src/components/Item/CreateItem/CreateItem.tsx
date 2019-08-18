@@ -13,5 +13,5 @@ export default () => {
     );
   };
 
-  return <ComponentTemplate onSubmitRequest={onSubmitRequest} initialImages={[]} initialForm={formTemplate} />;
+  return <ComponentTemplate isEdit={false} onSubmitRequest={onSubmitRequest} initialImages={[]} initialForm={formTemplate} />;
 };

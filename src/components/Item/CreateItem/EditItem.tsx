@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { Redirect } from "react-router";
 import formTemplate from "./formTemplate";
 import ComponentTemplate from "./ComponentTemplate";
@@ -7,13 +7,17 @@ import { inject, observer } from "mobx-react";
 import { Iimages, IUpdate, IItemKeys } from "./interfaces";
 import { editItemRequest } from "../../../API/items";
 import { IUserStore } from "../../../store/user";
+import { history } from "../../../app";
+import RemoveProfile from "../../popups/RemoveItem/RemoveItem";
 
 interface IProps {
   userStore: IUserStore;
   match: any;
 }
-// http://localhost:3000/items/edit/5d4468f8c1becb261cbcd95f
+
 const EditItem = ({ userStore, match }: IProps) => {
+  const [removeItemIsOpen, setRemoveItemIsOpen] = useState(true);
+
   const ownItems = userStore.getOwnItems;
   const editItemID = match.params.id;
   const item: IItem = ownItems.find((e: IItem) => e._id === editItemID);
@@ -23,7 +27,10 @@ const EditItem = ({ userStore, match }: IProps) => {
       if (key !== "images") {
         itemEditForm[key] = {
           ...itemEditForm[key],
-          value: item[key],
+          value:
+            key === "size" && item.category === "buty"
+              ? parseInt(item[key])
+              : item[key],
           valid: true
         };
       }
@@ -79,14 +86,27 @@ const EditItem = ({ userStore, match }: IProps) => {
     );
   };
 
+  const toggleRemoveItemIsOpen = () => {
+    setRemoveItemIsOpen(!removeItemIsOpen);
+  };
+
   return (
     <Fragment>
       {item ? (
-        <ComponentTemplate
-          initialImages={initialImages}
-          initialForm={itemEditForm}
-          onSubmitRequest={onSubmitRequest}
-        />
+        <Fragment>
+          <ComponentTemplate
+            initialImages={initialImages}
+            initialForm={itemEditForm}
+            onSubmitRequest={onSubmitRequest}
+            isEdit={true}
+            onRemoveItemClick={toggleRemoveItemIsOpen}
+          />
+          <RemoveProfile
+            itemID={item._id}
+            isOpen={removeItemIsOpen}
+            onRequestClose={toggleRemoveItemIsOpen}
+          />
+        </Fragment>
       ) : (
         <Redirect to="/" />
       )}
@@ -94,4 +114,4 @@ const EditItem = ({ userStore, match }: IProps) => {
   );
 };
 
-export default inject("userStore")(observer(EditItem));
+export default inject("userStore", "viewStore")(observer(EditItem));

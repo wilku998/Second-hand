@@ -8,7 +8,8 @@ import useUserForm from "../../../hooks/useUserForm";
 import initialFormStateTemplate from "../../Login/initialState";
 import { updateUserRequest } from "../../../API/users";
 import { IUserUpdate } from "./interfaces";
-import styles, { ErrorMessage, Button } from "../styles";
+import styles, { ErrorMessage } from "../styles";
+import Button_2 from "../../Abstracts/Button_2";
 
 Modal.setAppElement("#root");
 
@@ -93,7 +94,8 @@ const EditProfile = ({ viewStore, userStore }: IProps) => {
           </Label>
         ))}
         {error && <ErrorMessage>{error}</ErrorMessage>}
-        <Button>Potwierdź</Button>
+        <Button_2>Potwierdź</Button_2>
+        <Button_2 role="button" onClick={onRequestClose}>Wróć się</Button_2>
       </Form>
     </Modal>
   );

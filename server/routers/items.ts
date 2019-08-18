@@ -90,4 +90,17 @@ router.patch(
   }
 );
 
+router.delete(
+  "/api/items/:id",
+  AuthMiddleware,
+  async (req: IAuthRequest, res) => {
+    try {
+      const { id } = req.params;
+      await Item.findByIdAndRemove(id);
+      res.send();
+    } catch (e) {
+      res.status(400).send();
+    }
+  }
+);
 export default router;

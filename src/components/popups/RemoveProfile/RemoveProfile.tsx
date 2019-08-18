@@ -3,8 +3,9 @@ import Modal from "react-modal";
 import { inject, observer } from "mobx-react";
 import { IViewStore } from "../../../store/view";
 import { Form, Label } from "../../Abstracts/Form";
-import styles, { ErrorMessage, Button } from "../styles";
 import { removeProfileRequest } from "../../../API/users";
+import styles, { ErrorMessage } from "../styles";
+import Button_2 from "../../Abstracts/Button_2";
 
 interface IProps {
   viewStore?: IViewStore;
@@ -40,6 +41,7 @@ const RemoveProfile = ({ viewStore }: IProps) => {
   return (
     <Modal style={styles} isOpen={isOpen} onRequestClose={onRequestClose}>
       <Form onSubmit={onSubmit}>
+        <span>Jesteś pewien, że chcesz usunąć swój profil?</span>
         {inputs.map(e => (
           <Label key={e.name}>
             {e.label}
@@ -52,7 +54,10 @@ const RemoveProfile = ({ viewStore }: IProps) => {
           </Label>
         ))}
         {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-        <Button>Usuń konto</Button>
+        <Button_2>Usuń konto</Button_2>
+        <Button_2 role="button" onClick={onRequestClose}>
+          Wróć się
+        </Button_2>
       </Form>
     </Modal>
   );
