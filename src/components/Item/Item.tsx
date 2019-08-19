@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { inject, observer } from "mobx-react";
 import { Link } from "react-router-dom";
-import { history } from "../../app";
+import { history, viewStore } from "../../app";
 import style, {
   Container,
   Content,
@@ -18,7 +18,8 @@ import style, {
   ButtonSeeAll,
   SellerOtherItems,
   ItemInfo,
-  LikeButton
+  LikeButton,
+  ImageButton
 } from "./styleItem";
 import Avatar from "../Abstracts/Avatar";
 import { FakeImage } from "../Abstracts/FakeImage";
@@ -58,7 +59,8 @@ const Item = ({ className, match, userStore }: IProps) => {
       likedBy,
       _id
     } = item;
-  }
+    var title = `${category} ${brand} ${itemModel ? itemModel : ""}`;
+  };
 
   const onSeeAllClick = () => {
     history.push(`/users/${item.owner._id}`);
@@ -72,15 +74,25 @@ const Item = ({ className, match, userStore }: IProps) => {
     }
     fetchItem(_id);
   };
-  
+
   const fetchItem = async (id: string) => {
     const foundedItem: IItem = await getItemRequest(id);
     if (foundedItem) {
-      console.log({foundedItem})
       setIsLiked(foundedItem.likedBy.findIndex(e => e.user === userID) > -1);
       setItem(foundedItem);
     }
     return foundedItem;
+  };
+
+  const onPhotoClick = (e: any) => {
+    const { name } = e.target;
+    const index = images.findIndex(e => e === name);
+    viewStore.galleryData = {
+      isOpen: true,
+      defaultPosition: index,
+      images,
+      title
+    };
   };
 
   useEffect(() => {
@@ -91,10 +103,12 @@ const Item = ({ className, match, userStore }: IProps) => {
       const fetchData = async () => {
         const foundedItem = await fetchItem(itemID);
         if (foundedItem) {
-          const otherItems: Array<IItem> = await getItemsRequest([{
-            selectedFilters: [foundedItem.owner._id],
-            name: "owner"
-          }]);
+          const otherItems: Array<IItem> = await getItemsRequest([
+            {
+              selectedFilters: [foundedItem.owner._id],
+              name: "owner"
+            }
+          ]);
           if (otherItems) {
             setSellerOtherItems(otherItems.filter(e => e._id !== itemID));
           }
@@ -142,6 +156,7 @@ const Item = ({ className, match, userStore }: IProps) => {
           <MainImageContainer>
             <FakeImage />
             <MainImage src={images[0]} />
+            <ImageButton onClick={onPhotoClick} name={images[0]} />
           </MainImageContainer>
           <Content>
             <Title>
@@ -150,7 +165,7 @@ const Item = ({ className, match, userStore }: IProps) => {
                   src={isLiked ? "/svg/heartbreak.svg" : "/svg/heart.svg"}
                 />
               </LikeButton>
-              {category} {brand} {itemModel ? itemModel : ""}
+              {title}
             </Title>
             <ItemInfo>
               <span>Stan: {condition}</span>
@@ -169,6 +184,7 @@ const Item = ({ className, match, userStore }: IProps) => {
                 <GridContainer>
                   {images.slice(1).map(otherImage => (
                     <Image key={otherImage}>
+                      <ImageButton onClick={onPhotoClick} name={otherImage} />
                       <img src={otherImage} />
                     </Image>
                   ))}

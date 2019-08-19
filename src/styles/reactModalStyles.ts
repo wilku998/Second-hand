@@ -5,7 +5,7 @@ export default {
       left: 0,
       right: 0,
       bottom: 0,
-      padding: "2rem"
+      padding: 0
     },
     overlay: {
       zIndex: 1000,

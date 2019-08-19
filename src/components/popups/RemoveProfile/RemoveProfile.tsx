@@ -4,8 +4,9 @@ import { inject, observer } from "mobx-react";
 import { IViewStore } from "../../../store/view";
 import { Form, Label } from "../../Abstracts/Form";
 import { removeProfileRequest } from "../../../API/users";
-import styles, { ErrorMessage } from "../styles";
+import { ErrorMessage, Content } from "../styles";
 import Button_2 from "../../Abstracts/Button_2";
+import reactModalStyles from "../../../styles/reactModalStyles";
 
 interface IProps {
   viewStore?: IViewStore;
@@ -39,26 +40,32 @@ const RemoveProfile = ({ viewStore }: IProps) => {
     }
   };
   return (
-    <Modal style={styles} isOpen={isOpen} onRequestClose={onRequestClose}>
-      <Form onSubmit={onSubmit}>
-        <span>Jesteś pewien, że chcesz usunąć swój profil?</span>
-        {inputs.map(e => (
-          <Label key={e.name}>
-            {e.label}
-            <input
-              type="password"
-              value={e.value}
-              name={e.name}
-              onChange={onFormChange}
-            />
-          </Label>
-        ))}
-        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-        <Button_2>Usuń konto</Button_2>
-        <Button_2 role="button" onClick={onRequestClose}>
-          Wróć się
-        </Button_2>
-      </Form>
+    <Modal
+      style={reactModalStyles}
+      isOpen={isOpen}
+      onRequestClose={onRequestClose}
+    >
+      <Content>
+        <Form onSubmit={onSubmit}>
+          <span>Jesteś pewien, że chcesz usunąć swój profil?</span>
+          {inputs.map(e => (
+            <Label key={e.name}>
+              {e.label}
+              <input
+                type="password"
+                value={e.value}
+                name={e.name}
+                onChange={onFormChange}
+              />
+            </Label>
+          ))}
+          {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+          <Button_2>Usuń konto</Button_2>
+          <Button_2 role="button" onClick={onRequestClose}>
+            Wróć się
+          </Button_2>
+        </Form>
+      </Content>
     </Modal>
   );
 };

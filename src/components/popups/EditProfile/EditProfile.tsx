@@ -8,8 +8,9 @@ import useUserForm from "../../../hooks/useUserForm";
 import initialFormStateTemplate from "../../Login/initialState";
 import { updateUserRequest } from "../../../API/users";
 import { IUserUpdate } from "./interfaces";
-import styles, { ErrorMessage } from "../styles";
+import { ErrorMessage, Content } from "../styles";
 import Button_2 from "../../Abstracts/Button_2";
+import reactModalStyles from "../../../styles/reactModalStyles";
 
 Modal.setAppElement("#root");
 
@@ -76,27 +77,31 @@ const EditProfile = ({ viewStore, userStore }: IProps) => {
 
   return (
     <Modal
-      style={styles}
+      style={reactModalStyles}
       isOpen={isOpen}
       onRequestClose={onRequestClose}
     >
-      <Form onSubmit={onSubmit}>
-        {inputs.map(e => (
-          <Label key={e.label}>
-            {e.label}
-            <FormInput
-              value={e.value}
-              valid={e.valid}
-              name={e.name}
-              type={e.type}
-              onChange={onFormChange}
-            />
-          </Label>
-        ))}
-        {error && <ErrorMessage>{error}</ErrorMessage>}
-        <Button_2>Potwierdź</Button_2>
-        <Button_2 role="button" onClick={onRequestClose}>Wróć się</Button_2>
-      </Form>
+      <Content>
+        <Form onSubmit={onSubmit}>
+          {inputs.map(e => (
+            <Label key={e.label}>
+              {e.label}
+              <FormInput
+                value={e.value}
+                valid={e.valid}
+                name={e.name}
+                type={e.type}
+                onChange={onFormChange}
+              />
+            </Label>
+          ))}
+          {error && <ErrorMessage>{error}</ErrorMessage>}
+          <Button_2>Potwierdź</Button_2>
+          <Button_2 role="button" onClick={onRequestClose}>
+            Wróć się
+          </Button_2>
+        </Form>
+      </Content>
     </Modal>
   );
 };
