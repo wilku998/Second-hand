@@ -10,6 +10,7 @@ import IItem from "../../interfaces/IItem";
 import { observer, inject } from "mobx-react";
 import { IUserStore } from "../../store/user";
 import checkIfIsFollowed from "../../functions/checkIfIsFollowed";
+import { history } from "../../app";
 
 export interface IProps {
   match: any;
@@ -33,7 +34,9 @@ const ForeignProfile = ({ match, userStore }: IProps) => {
   };
 
   const buttons = [
-    { text: "Wyślij wiadomość", onClick: () => {} },
+    { text: "Wyślij wiadomość", onClick: () => {
+      history.push(`/messenger/${userID}`)
+    } },
     {
       text: isFollowed ? "Przestań obserwować" : "Obserwuj",
       onClick: async () => {

@@ -16,6 +16,7 @@ import SearchItems from "../components/Search/SearchItems/SearchItems";
 import SearchUsers from "../components/Search/SearchUsers/SearchUsers";
 import RemoveProfile from "../components/popups/RemoveProfile/RemoveProfile";
 import Gallery from "../components/Gallery/Gallery";
+import Messenger from "../components/Messenger/Messenger";
 
 interface IProps {
   history: any;
@@ -34,6 +35,11 @@ const AppRouter = ({ history, userStore }: IProps) => {
         <Route path="/" exact component={Dashboard} />
         <Route path="/search/items" component={SearchItems} />
         <Route path="/search/users" component={SearchUsers} />
+        <PrivateRoute
+          path="/messenger/:id"
+          isAuth={isAuth}
+          component={Messenger}
+        />
         <PrivateRoute
           path="/users/myProfile"
           isAuth={isAuth}

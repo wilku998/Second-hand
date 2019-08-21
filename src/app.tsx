@@ -1,10 +1,10 @@
 import "normalize.css";
+import io from 'socket.io-client';
 import * as React from "react";
 import { render } from "react-dom";
 import { ThemeProvider } from "styled-components";
 import { createBrowserHistory } from "history";
 import { Provider } from "mobx-react";
-import MobxReactDevtools from "mobx-react-devtools";
 import theme from "./styles/theme";
 import GlobalStyles from "./styles/GlobalStyles";
 import AppRouter from "./routers/AppRouter";
@@ -12,7 +12,8 @@ import { getProfileRequest } from "./API/users";
 import UserStore from "./store/user";
 import ViewStore from "./store/view";
 import SearchStore from "./store/search";
-import toRegexRange from "to-regex-range";
+ 
+export const socket = io();
 
 export const userStore = new UserStore();
 export const viewStore = new ViewStore();

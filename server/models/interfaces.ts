@@ -8,12 +8,12 @@ export interface IUser extends Document {
   generateAuthToken: () => string;
   tokens: Array<{
     token: string;
-    _id?: string;
+    _id?: mongoose.Types.ObjectId;
   }>;
-  ownItems: Array<{item: mongoose.Types.ObjectId}>;
-  followedBy: Array<{user: mongoose.Types.ObjectId}>;
-  follows: Array<{user: mongoose.Types.ObjectId}>;
-  likedItems: Array<{item: mongoose.Types.ObjectId}>;
+  ownItems: Array<{ item: mongoose.Types.ObjectId }>;
+  followedBy: Array<{ user: mongoose.Types.ObjectId }>;
+  follows: Array<{ user: mongoose.Types.ObjectId }>;
+  likedItems: Array<{ item: mongoose.Types.ObjectId }>;
 }
 
 export interface IUserModel extends Model<IUser> {
@@ -44,10 +44,10 @@ export interface IItem extends Document {
   itemModel?: string;
   description?: string;
   images: Array<string>;
-  _id: string;
+  _id: mongoose.Types.ObjectId;
   owner: mongoose.Types.ObjectId;
   gender: "mężczyźni" | "kobiety" | "dzieci";
-  likedBy: Array<{user: mongoose.Types.ObjectId}>;
+  likedBy: Array<{ user: mongoose.Types.ObjectId }>;
 }
 
 export interface IItemModel extends Model<IItem> {}
@@ -57,3 +57,14 @@ export interface IImage extends Document {
 }
 
 export interface IImageModel extends Model<IImage> {}
+
+export interface IMessangerRoom extends Document {
+  roomName: string;
+  messages: Array<{
+    message: string,
+    sendedAt: string,
+    sender: string
+  }>
+}
+
+export interface IMessangerRoomModel extends Model<IMessangerRoom> {}

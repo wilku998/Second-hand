@@ -95,6 +95,10 @@ const Item = ({ className, match, userStore }: IProps) => {
     };
   };
 
+  const sendMessage = () => {
+      history.push(`/messenger/${item.owner._id}`)
+  };
+
   useEffect(() => {
     const isOwn = ownItems.findIndex(e => e._id === itemID) > -1;
     if (isOwn) {
@@ -177,7 +181,7 @@ const Item = ({ className, match, userStore }: IProps) => {
               </span>
               {description && <Description>{description}</Description>}
             </ItemInfo>
-            <ButtonMessage>Napisz wiadomość do sprzedawcy</ButtonMessage>
+            <ButtonMessage onClick={sendMessage}>Napisz wiadomość do sprzedawcy</ButtonMessage>
             {images.length > 1 ? (
               <div>
                 <Info>Inne zdjęcia przedmiotu</Info>

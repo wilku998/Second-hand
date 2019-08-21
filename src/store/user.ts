@@ -15,7 +15,7 @@ export interface IUserStore {
 export default class UserStore {
   constructor() {
     autorun(() => {
-      console.log(this.getUser);
+      // console.log(this.getUser);
       // console.log(this.getOwnItems);
     });
   }

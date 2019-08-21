@@ -27,7 +27,7 @@ const defaultGalleryData: IViewStore["galleryData"] = {
 export default class ViewStore {
   constructor() {
     autorun(() => {
-      console.log(this.getGalleryData);
+      // console.log(this.getGalleryData);
     });
   }
 
