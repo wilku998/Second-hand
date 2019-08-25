@@ -1,19 +1,40 @@
 import ajax from "./ajax";
 import { userStore } from "../app";
-import { parseResponse, setUserStore, onlyAuthRequest } from "./functions";
+import {
+  parseResponse,
+  setUserStore,
+  onlyAuthRequest,
+  clearUserAndInterlocutorsStores
+} from "./functions";
 import fetchData from "./fetchData";
 import IUser from "../interfaces/IUser";
+import { getInterlocutorsRequest } from "./messangerRooms";
 
 export const loginRequest = async (data: {
   email: string;
   password: string;
 }) => {
   try {
-    const response: any = await ajax("POST", "/api/users/login", data, 200);
+    const response: any = await ajax(
+      "POST",
+      "/api/users/login",
+      data,
+      200
+    );
     setUserStore(response);
   } catch (e) {
     console.log(e);
     return "Podane dane są nieprawidłowe";
+  }
+};
+
+export const getProfileRequest = async () => {
+  try {
+    const response = await fetch("/api/users/me");
+    const data = await response.json();
+    setUserStore(data);
+  } catch (e) {
+    console.log(e);
   }
 };
 
@@ -34,29 +55,17 @@ export const registerRequest = async (data: {
 
 export const removeProfileRequest = async (password: string) => {
   try {
-    const response: any = await ajax("DELETE", "/api/users/me", { password }, 200);
-    userStore.user = undefined;
-    userStore.ownItems = [];
+    await ajax("DELETE", "/api/users/me", { password }, 200);
+    clearUserAndInterlocutorsStores();
   } catch (e) {
-    return e.error.message
-  }
-};
-
-export const getProfileRequest = async () => {
-  try {
-    const response = await fetch("/api/users/me");
-    const data = await response.json();
-    setUserStore(data);
-  } catch (e) {
-    console.log(e)
+    return e.error.message;
   }
 };
 
 export const logoutRequest = async () => {
   try {
     await ajax("POST", "/api/users/logout", undefined, 200);
-    userStore.user = undefined;
-    userStore.ownItems = [];
+    clearUserAndInterlocutorsStores();
   } catch (e) {}
 };
 

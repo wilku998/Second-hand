@@ -9,6 +9,10 @@ const messangerRoomSchema = new Schema({
     messages: {
         type: Array,
         default: []
+    },
+    isReaded: {
+        type: Boolean,
+        default: false
     }
 });
 

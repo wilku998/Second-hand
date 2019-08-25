@@ -63,8 +63,9 @@ export interface IMessangerRoom extends Document {
   messages: Array<{
     message: string,
     sendedAt: string,
-    sender: string
-  }>
+    senderID: string
+  }>;
+  isReaded: boolean
 }
 
 export interface IMessangerRoomModel extends Model<IMessangerRoom> {}

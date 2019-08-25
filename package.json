@@ -13,7 +13,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@babel/plugin-proposal-decorators": "^7.4.4",
     "bcryptjs": "^2.4.3",
     "chalk": "^2.4.2",
     "cookie-parser": "^1.4.4",
@@ -29,11 +28,9 @@
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
     "react-modal": "^3.9.1",
-    "react-redux": "^7.1.0",
     "react-router": "^5.0.1",
     "react-router-dom": "^5.0.1",
     "react-svg": "^10.0.9",
-    "redux": "^4.0.1",
     "sharp": "^0.22.1",
     "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0",
@@ -43,6 +40,7 @@
     "validator": "^11.1.0"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.4.4",
     "@babel/core": "^7.3.4",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/preset-env": "^7.3.4",

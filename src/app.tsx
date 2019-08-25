@@ -1,5 +1,5 @@
 import "normalize.css";
-import io from 'socket.io-client';
+import io from "socket.io-client";
 import * as React from "react";
 import { render } from "react-dom";
 import { ThemeProvider } from "styled-components";
@@ -12,17 +12,40 @@ import { getProfileRequest } from "./API/users";
 import UserStore from "./store/user";
 import ViewStore from "./store/view";
 import SearchStore from "./store/search";
- 
+import InterlocutorsStore, { IInterlocutorsStore } from "./store/interlocutors";
+import IMessage from "./interfaces/IMessage";
+
 export const socket = io();
+
+socket.on(
+  "newInterlocutor",
+  (interlocutor: IInterlocutorsStore["interlocutors"][0]) => {
+      console.log("new")
+      socket.emit("join", interlocutor.roomName);
+      interlocutorsStore.interlocutors = [...interlocutorsStore.getInterlocutors, interlocutor]
+  }
+);
+
+socket.on("message", (newMessage: IMessage, roomName: string) => {
+  interlocutorsStore.interlocutors = interlocutorsStore.getInterlocutors.map(
+    e => ({
+      ...e,
+      isReaded: false,
+      lastMessage: e.roomName === roomName ? newMessage : e.lastMessage
+    })
+  );
+});
 
 export const userStore = new UserStore();
 export const viewStore = new ViewStore();
 export const searchStore = new SearchStore();
+export const interlocutorsStore = new InterlocutorsStore();
 
 const stores = {
   userStore,
   viewStore,
-  searchStore
+  searchStore,
+  interlocutorsStore
 };
 
 const start = async () => {
