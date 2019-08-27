@@ -40,6 +40,7 @@ const AppRouter = ({ history, userStore }: IProps) => {
           isAuth={isAuth}
           component={Messenger}
         />
+        <PrivateRoute path="/messenger" isAuth={isAuth} component={Messenger} />
         <PrivateRoute
           path="/users/myProfile"
           isAuth={isAuth}

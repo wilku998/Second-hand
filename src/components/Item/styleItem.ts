@@ -11,20 +11,13 @@ export default (Item: FunctionComponent<IProps>) => styled(Item)`
   ${({ theme }) => `
     background-color: ${theme.colorGreyLight1};
     border: ${theme.lightBorder2};
+    box-shadow: ${theme.lightShadow};
     & > * {
       padding: 2rem;
       &:not(:last-child){
       border-right: ${theme.lightBorder};
       }
     }
-  `}
-`;
-
-export const Container = styled.section`
-  padding: 4rem;
-  display: flex;
-  ${({ theme }) => `
-      min-height: calc(100vh - ${theme.navigationHeight});
   `}
 `;
 

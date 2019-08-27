@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { inject, observer } from "mobx-react";
-import UserLabel from "./UserLabel/UserLabel";
+import UserLabel from "../../UserLabel/UserLabel";
 import IUser from "../../../interfaces/IUser";
 import IItem from "../../../interfaces/IItem";
 import { Title, ItemsContainer, Section, Info } from "../styleSection";
@@ -27,14 +27,7 @@ const UsersSection = ({ users, title, userStore }: IUserProps) => {
           {users.map(user => (
             <Section key={user.user._id}>
               <UserLabel
-                isFollowed={
-                  ownProfile
-                    ? checkIfIsFollowed(userStore, user.user._id)
-                    : false
-                }
-                isOwnProfile={
-                  ownProfile ? user.user._id === ownProfile._id : false
-                }
+                additionalStyles="grid-column: 1/5; margin-bottom: 2rem;"
                 user={user.user}
               />
               {user.ownItems ? (

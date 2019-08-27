@@ -34,7 +34,9 @@ const UserMenu = ({ user, className }: IProps) => {
             <li>
               <Link to="/users/myProfile">Twój profil</Link>
             </li>
-            <li>Wiadomości</li>
+            <li>
+              <Link to="/messenger">Wiadomości</Link>
+            </li>
             <li>
               <Link to="/items/create">Dodaj przedmiot</Link>
             </li>

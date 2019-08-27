@@ -2,9 +2,11 @@ export default {
 	navigationListItemLeftRightPadding: '1rem',
 	navigationHeight: '4.5rem',
 	rowWidth: '109rem',
+	chatHeight: '45rem',
 	darkBorder: '1px solid #666',
 	lightBorder: '1px solid #f0eeee',
 	lightBorder2: '1px solid #e2e2e2',
+	lightShadow: '0 2rem 2rem rgba(0,0,0,.05)',
 	background: '#d1d1d1',
 	colorRed: '#BF2E21',
 	colorRedLight: '#FFC1B4',
@@ -25,7 +27,7 @@ export default {
 	colorGreyDark1: '#333',
 	colorGreyDark2: 'rgb(59, 59, 59)',
 	colorGreyDark3: '#444',
-	colorGreyDark4: '#666',
+	colorGreyDark4: '#555',
 	colorGreyDark5: '#999',
 	colorGreyDark6: 'rgb(173, 173, 173)'
 };

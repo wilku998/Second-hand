@@ -2,7 +2,6 @@ import React, { useState, useEffect, ChangeEvent } from "react";
 import ReactSVG from "react-svg";
 import { inject, observer } from "mobx-react";
 import style, {
-  Container,
   Image,
   SellerProfile,
   Info,
@@ -10,6 +9,7 @@ import style, {
   ButtonSeeAll
 } from "../styleItem";
 import Avatar from "../../Abstracts/Avatar";
+import Container from "../../Abstracts/Container";
 import { Label, FormInput } from "../../Abstracts/Form";
 import {
   Optional,

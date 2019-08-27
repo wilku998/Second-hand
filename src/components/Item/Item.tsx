@@ -3,7 +3,6 @@ import { inject, observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { history, viewStore } from "../../app";
 import style, {
-  Container,
   Content,
   Image,
   Description,
@@ -22,6 +21,7 @@ import style, {
   ImageButton
 } from "./styleItem";
 import Avatar from "../Abstracts/Avatar";
+import Container from "../Abstracts/Container";
 import { FakeImage } from "../Abstracts/FakeImage";
 import { getItemRequest, getItemsRequest } from "../../API/items";
 import IItem from "../../interfaces/IItem";

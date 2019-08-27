@@ -32,7 +32,7 @@ export const getProfileRequest = async () => {
   try {
     const response = await fetch("/api/users/me");
     const data = await response.json();
-    setUserStore(data);
+    await setUserStore(data);
   } catch (e) {
     console.log(e);
   }
