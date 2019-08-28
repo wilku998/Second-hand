@@ -17,7 +17,7 @@ export const Messages = styled.div`
   background-color: white;
   word-break: break-word;
   overflow: auto;
-  ${({theme}) => `
+  ${({ theme }) => `
     flex: 0 0 ${theme.chatHeight};
   `}
 `;
@@ -26,7 +26,9 @@ export const Message = styled.span<{ isOwn: boolean }>`
   color: white;
   padding: 0.3rem 1rem;
   border-radius: 1rem;
-  margin-bottom: 1rem;
+  &:not(:last-child) {
+    margin-bottom: 1rem;
+  }
 
   ${({ theme, isOwn }) => `
         ${
@@ -88,6 +90,14 @@ export const FormContent = styled.div`
 export const SendedBy = styled.span`
   align-self: flex-end;
   font-size: 1rem;
-  margin-top: -.7rem;
+  margin-top: -0.7rem;
   margin-bottom: 1rem;
+`;
+
+export const Info = styled.span`
+  text-align: center;
+  font-size: 1.2rem;
+  &:not(:last-child) {
+    margin-bottom: 1rem;
+  }
 `;

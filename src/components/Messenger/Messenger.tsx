@@ -21,6 +21,14 @@ const Messanger = ({ match, userStore, interlocutorsStore }: IProps) => {
   const interlocutorID = match.params.id;
   const user = userStore.getUser;
   const interlocutors = interlocutorsStore.getInterlocutors;
+  
+  let messsageReaded = false;
+
+  const interlocutorIndex = interlocutors.findIndex(e => e.interlocutor._id === interlocutorID)
+  if(interlocutorIndex > -1){
+    console.log(interlocutors[interlocutorIndex].isReaded)
+    messsageReaded = interlocutors[interlocutorIndex].isReaded
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,7 +55,7 @@ const Messanger = ({ match, userStore, interlocutorsStore }: IProps) => {
         <Interlocutors
           interlocutors={interlocutors.filter(e => e.lastMessage)}
         />
-        <Chat user={user} interlocutor={interlocutor} />
+        <Chat user={user} interlocutor={interlocutor} messsageReaded={messsageReaded} />
       </StyledMessanger>
     </Container>
   );

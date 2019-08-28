@@ -9,6 +9,7 @@ import style, {
   NoMessages
 } from "./styleInterlocutors";
 import Avatar from "../../Abstracts/Avatar";
+import isUnreadedMessage from "../../../functions/isUnreadedMessage";
 
 export interface IProps {
   interlocutors: IInterlocutorsStore["interlocutors"];
@@ -39,7 +40,9 @@ const Interlocutors = ({ interlocutors, className }: IProps) => {
                 <Avatar size="big" src={e.interlocutor.avatar} />
                 {e.interlocutor.name}
               </User>
-              <LastMessage>{limitMessage(e.lastMessage.message)}</LastMessage>
+              <LastMessage isUnreaded={isUnreadedMessage(e)}>
+                {limitMessage(e.lastMessage.message)}
+              </LastMessage>
             </Interlocutor>
           ))
         ) : (

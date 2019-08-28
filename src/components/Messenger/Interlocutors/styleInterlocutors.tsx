@@ -35,14 +35,14 @@ export const Interlocutor = styled(Link)`
   }
 `;
 
-export const LastMessage = styled.p`
+export const LastMessage = styled.p<{isUnreaded: boolean}>`
   display: block;
   line-height: 1;
   font-size: 1.3rem;
   margin-top: 0.5rem;
   word-break: break-word;
-  ${({ theme }) => `
-        color: ${theme.colorGreyDark4};
+  ${({ theme, isUnreaded }) => `
+        color: ${isUnreaded ? theme.colorGreyDark4 : theme.colorGreyDark5};
     `}
 `;
 

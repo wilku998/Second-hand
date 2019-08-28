@@ -3,8 +3,11 @@ import React, {
   useState,
   FormEvent,
   ChangeEvent,
-  Fragment
+  Fragment,
+  useRef,
+  useLayoutEffect
 } from "react";
+import moment from "moment";
 import { observer, inject } from "mobx-react";
 import { socket } from "../../../app";
 import IUser from "../../../interfaces/IUser";
@@ -22,20 +25,30 @@ import {
   SendButton,
   MessageInput,
   FormContent,
-  SendedBy
+  SendedBy,
+  Info
 } from "./styleChat";
 import ReactSVG from "react-svg";
 
 interface IProps {
+  messsageReaded: boolean;
   user: IUser;
   interlocutor: IUser;
   interlocutorsStore?: IInterlocutorsStore;
 }
 
-const Chat = ({ user, interlocutor, interlocutorsStore }: IProps) => {
+moment.locale("pl");
+
+const Chat = ({
+  user,
+  interlocutor,
+  interlocutorsStore,
+  messsageReaded
+}: IProps) => {
   const [messages, setMessages]: [Array<IMessage>, any] = useState([]);
   const [roomName, setRoomName] = useState("");
   const [message, setMessage] = useState("");
+  const messagesRef = useRef();
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -49,7 +62,25 @@ const Chat = ({ user, interlocutor, interlocutorsStore }: IProps) => {
     setMessage(e.target.value);
   };
 
-  useEffect(() => {
+  const dates: number[] = [];
+
+  const shouldRenderDate = (message: IMessage, messageBefore: IMessage) => {
+    const sendedAt = parseInt(message.sendedAt);
+    const lastDate = dates[dates.length - 1];
+    if (
+      sendedAt - lastDate > 3600000 ||
+      !messageBefore ||
+      message.senderID !== messageBefore.senderID
+    ) {
+      dates.push(sendedAt);
+      return true;
+    }
+    return false;
+  };
+
+  const parseDate = (date: string) => moment(parseInt(date)).calendar();
+
+  useLayoutEffect(() => {
     if (interlocutor) {
       const fetchData = async () => {
         const interlocutors = interlocutorsStore.getInterlocutors;
@@ -70,6 +101,8 @@ const Chat = ({ user, interlocutor, interlocutorsStore }: IProps) => {
         if (room) {
           setMessages(room.messages);
           setRoomName(room.roomName);
+          const messagesElement: any = messagesRef.current;
+          messagesElement.scrollTop = messagesElement.scrollHeight - messagesElement.clientHeight
         }
       };
       fetchData();
@@ -117,11 +150,14 @@ const Chat = ({ user, interlocutor, interlocutorsStore }: IProps) => {
 
   return (
     <StyledChat>
-      <Messages>
+      <Messages ref={messagesRef}>
         {interlocutor && (
           <>
-            {messages.map(e => (
+            {messages.map((e, i) => (
               <Fragment key={e.message + e.sendedAt}>
+                {shouldRenderDate(e, messages[i - 1]) && (
+                  <Info>{parseDate(e.sendedAt)}</Info>
+                )}
                 {e.senderID === user._id ? (
                   <Message isOwn={true}>{e.message}</Message>
                 ) : (
@@ -129,6 +165,12 @@ const Chat = ({ user, interlocutor, interlocutorsStore }: IProps) => {
                     <Message isOwn={false}>{e.message}</Message>
                     <SendedBy>Wysłane przez {interlocutor.name}</SendedBy>
                   </>
+                )}
+                {messages.length - 1 === i && (
+                  <Info>
+                    Wiadomość
+                    {messsageReaded ? " przeczytana" : " nieprzeczytana"}
+                  </Info>
                 )}
               </Fragment>
             ))}
