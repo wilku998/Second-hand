@@ -5,7 +5,7 @@ import User from "../models/user";
 import { IAuthRequest, IUserRequest } from "./interfaces";
 import AuthMiddleware from "../middlwares/auth";
 import FindUserMiddleware from "../middlwares/findUser";
-import { uploadImage, createRegexObj, parseFollows, parseLikedItems, parseUser } from "./functions";
+import { uploadImage, createRegexObj, parseUser, parseFollowsAndLikes, getFollowedBy } from "./functions";
 import Item from "../models/item";
 
 const router = express.Router();
@@ -16,7 +16,8 @@ router.post("/api/users", async (req, res) => {
     await user.save();
     const token = await user.generateAuthToken();
     res.cookie("jwtToken", token, { maxAge: 108000000, httpOnly: true });
-    res.status(201).send(user);
+    const parsedUser = await parseUser(user);
+    res.status(201).send(parsedUser);
   } catch (e) {
     res.status(400).send(e);
   }
@@ -28,7 +29,7 @@ router.post("/api/users/login", async (req, res) => {
     const user: any = await User.findByCredenctials(email, password);
     const token = await user.generateAuthToken();
     res.cookie("jwtToken", token, { maxAge: 108000000, httpOnly: true });
-    const parsedUser = await parseUser(user)
+    const parsedUser = await parseUser(user);
     res.send(parsedUser);
   } catch (e) {
     res.status(400).send(e);
@@ -38,7 +39,7 @@ router.post("/api/users/login", async (req, res) => {
 router.get("/api/users/me", AuthMiddleware, async (req: IAuthRequest, res) => {
   try {
     const { user } = req;
-    const parsedUser = await parseUser(user)
+    const parsedUser = await parseUser(user);
     res.send(parsedUser);
   } catch (e) {
     res.status(500).send();
@@ -109,11 +110,7 @@ router.patch(
       const { likedID } = req.body;
       user.likedItems.push({ item: likedID });
       await user.save();
-      const item = await Item.findById(likedID);
-      item.likedBy = [...item.likedBy, { user: user._id }];
-      await item.save();
-      await user.populate("likedItems.item").execPopulate();
-      res.send(parseLikedItems(user.likedItems));
+      res.send();
     } catch (e) {
       res.status(400).send(e);
     }
@@ -131,13 +128,7 @@ router.delete(
         return e.item.toString() !== likedID;
       });
       await user.save();
-      const item = await Item.findById(likedID);
-      item.likedBy = item.likedBy.filter(
-        e => e.user.toString() !== user._id.toString()
-      );
-      await item.save();
-      await user.populate("likedItems.item").execPopulate();
-      res.send(parseLikedItems(user.likedItems));
+      res.send();
     } catch (e) {
       res.status(400).send(e);
     }
@@ -153,14 +144,7 @@ router.patch(
       const { userID } = req.body;
       user.follows.push({ user: userID });
       await user.save();
-      const followedUser = await User.findById(userID);
-      followedUser.followedBy = [
-        ...followedUser.followedBy,
-        { user: user._id }
-      ];
-      await followedUser.save();
-      await user.populate("follows.user").execPopulate();
-      res.send(parseFollows(user.follows));
+      res.send();
     } catch (e) {
       res.status(400).send(e);
     }
@@ -178,13 +162,7 @@ router.delete(
         return e.user.toString() !== userID;
       });
       await user.save();
-      const unfollowedUser = await User.findById(userID);
-      unfollowedUser.followedBy = unfollowedUser.followedBy.filter(
-        e => e.user.toString() !== user._id.toString()
-      );
-      await unfollowedUser.save();
-      await user.populate("follows.user").execPopulate();
-      res.send(parseFollows(user.follows));
+      res.send();
     } catch (e) {
       res.status(400).send(e);
     }
@@ -220,7 +198,7 @@ router.get(
   async (req: IUserRequest, res) => {
     try {
       const { user } = req;
-      const parsedUser = await parseUser(user)
+      const parsedUser = await parseUser(user);
       res.send(parsedUser);
     } catch (e) {
       res.status(400).send();
@@ -248,4 +226,24 @@ router.delete(
   }
 );
 
+router.get("/api/users/followsAndLikes/:id", async (req, res) => {
+  try {
+    const user: any = await User.findById(req.params.id);
+    if (!user) {
+      throw new Error();
+    }
+    await user.populate("follows.user").execPopulate();
+    await user.populate("likedItems.item").execPopulate();
+    const { follows, likedItems } = user;
+    const followedBy = await getFollowedBy(user._id);
+    
+    res.send({
+      likedItems: parseFollowsAndLikes(likedItems, "item"),
+      follows: parseFollowsAndLikes(follows, "user"),
+      followedBy
+    });
+  } catch (e) {
+    res.status(404).send();
+  }
+});
 export default router;

@@ -26,7 +26,6 @@ const Messanger = ({ match, userStore, interlocutorsStore }: IProps) => {
 
   const interlocutorIndex = interlocutors.findIndex(e => e.interlocutor._id === interlocutorID)
   if(interlocutorIndex > -1){
-    console.log(interlocutors[interlocutorIndex].isReaded)
     messsageReaded = interlocutors[interlocutorIndex].isReaded
   };
 

@@ -60,25 +60,28 @@ const Item = ({ className, match, userStore }: IProps) => {
       _id
     } = item;
     var title = `${category} ${brand} ${itemModel ? itemModel : ""}`;
-  };
+  }
 
   const onSeeAllClick = () => {
     history.push(`/users/${item.owner._id}`);
   };
 
+
   const onLikeClick = async () => {
-    if (isLiked) {
-      await unlikeItemRequest(_id);
-    } else {
-      await likeItemRequest(_id);
+    try {
+      if (isLiked) {
+        await unlikeItemRequest(_id, item.owner._id);
+      } else {
+        await likeItemRequest(_id, item.owner._id);
+      }
+      await fetchItem(_id)
+    }catch(e){
     }
-    fetchItem(_id);
   };
 
   const fetchItem = async (id: string) => {
     const foundedItem: IItem = await getItemRequest(id);
     if (foundedItem) {
-      setIsLiked(foundedItem.likedBy.findIndex(e => e.user === userID) > -1);
       setItem(foundedItem);
     }
     return foundedItem;
@@ -96,8 +99,15 @@ const Item = ({ className, match, userStore }: IProps) => {
   };
 
   const sendMessage = () => {
-      history.push(`/messenger/${item.owner._id}`)
+    history.push(`/messenger/${item.owner._id}`);
   };
+
+  useEffect(() => {
+    if (item) {
+      console.log({item})
+      setIsLiked(item.likedBy.findIndex(user => user._id === userID) > -1);
+    }
+  }, [item]);
 
   useEffect(() => {
     const isOwn = ownItems.findIndex(e => e._id === itemID) > -1;
@@ -181,7 +191,9 @@ const Item = ({ className, match, userStore }: IProps) => {
               </span>
               {description && <Description>{description}</Description>}
             </ItemInfo>
-            <ButtonMessage onClick={sendMessage}>Napisz wiadomość do sprzedawcy</ButtonMessage>
+            <ButtonMessage onClick={sendMessage}>
+              Napisz wiadomość do sprzedawcy
+            </ButtonMessage>
             {images.length > 1 ? (
               <div>
                 <Info>Inne zdjęcia przedmiotu</Info>

@@ -17,7 +17,7 @@ export const addItemRequest = async (item: IItem, images: Array<string>) => {
       { ...item, images: imagesURLs },
       201
     );
-    userStore.ownItems = [...userStore.getOwnItems, response];
+    userStore.addItem(response);
   } catch (e) {
     console.log(e);
   }
@@ -67,6 +67,8 @@ export const editItemRequest = async (
 };
 
 export const removeItemRequest = async (id: string) => {
-  await ajax("DELETE", `/api/items/${id}`, {}, 200);
-  userStore.ownItems = userStore.getOwnItems.filter(e => e._id !== id);
+  try {
+    await ajax("DELETE", `/api/items/${id}`, {}, 200);
+    userStore.removeItem(id);
+  } catch (e) {}
 };

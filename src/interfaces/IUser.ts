@@ -5,7 +5,7 @@ export default interface IUser {
   email: string;
   avatar?: string;
   _id: string;
-  follows?: Array<IUser>;
-  followedBy?: Array<IUser>;
-  likedItems?: Array<IItem>;
+  follows?: Array<string>;
+  followedBy?: Array<string>;
+  likedItems?: Array<string>;
 }

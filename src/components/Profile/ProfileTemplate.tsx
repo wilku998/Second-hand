@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import style, {
   UserLabel,
   UserInfo,
@@ -12,6 +12,7 @@ import IUser from "../../interfaces/IUser";
 import IItem from "../../interfaces/IItem";
 import { FakeImage } from "../Abstracts/FakeImage";
 import ItemsSection from "../Section/ItemsSection/ItemsSection";
+import { getFollowsAndLikes } from "../../API/users";
 
 export interface IProps {
   className?: string;
@@ -24,14 +25,33 @@ export interface IProps {
 const ProfileTemplate = ({
   className,
   user,
-  ownItems,
   buttons,
-  isOwnProfile
+  isOwnProfile,
+  ownItems
 }: IProps) => {
   if (user) {
-    var { avatar, name, followedBy, follows, likedItems } = user;
+    var { avatar, name, _id } = user;
   }
+  const [likedItems, setLikedItems]: [IItem[], any] = useState([]);
+  const [follows, setFollows]: [IUser[], any] = useState([]);
+  const [followedBy, setFollowedBy]: [IUser[], any] = useState([]);
 
+  useEffect(() => {
+    if (user) {
+      const fetchData = async () => {
+        const {
+          likedItems: fetchedLikedItems,
+          follows: fetchedFollows,
+          followedBy: fetchedFollowedBy
+        } = await getFollowsAndLikes(_id);
+        setLikedItems(fetchedLikedItems);
+        setFollows(fetchedFollows);
+        setFollowedBy(fetchedFollowedBy);
+      };
+      fetchData();
+    }
+  }, [user]);
+  console.log({likedItems, follows, followedBy})
   return (
     <section className={className}>
       {user ? (
@@ -62,10 +82,7 @@ const ProfileTemplate = ({
             />
           )}
           {likedItems.length > 0 && (
-            <ItemsSection
-              items={likedItems}
-              title="Polubione przedmioty"
-            />
+            <ItemsSection items={likedItems} title="Polubione przedmioty" />
           )}
         </Content>
       ) : (

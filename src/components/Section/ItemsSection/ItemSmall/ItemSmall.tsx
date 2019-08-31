@@ -31,7 +31,8 @@ const ItemSmall = ({ className, item }: IProps) => {
     itemModel,
     _id,
     isOwn,
-    isLiked
+    isLiked,
+    owner
   } = item;
   const name = `${category}  ${brand}  ${itemModel ? itemModel : ""}`;
 
@@ -40,9 +41,9 @@ const ItemSmall = ({ className, item }: IProps) => {
       history.push(`/items/edit/${_id}`);
     } else {
       if(isLiked){
-        await unlikeItemRequest(_id);
+        await unlikeItemRequest(_id, owner._id);
       }else{
-        await likeItemRequest(_id);
+        await likeItemRequest(_id, owner._id);
       }
     }
   };

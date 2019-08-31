@@ -39,7 +39,6 @@ const userSchema = new Schema({
   },
   likedItems: [{ item: { type: mongoose.Types.ObjectId, ref: "Item", required: true } }],
   follows: [{ user: { type: mongoose.Types.ObjectId, ref: "User", required: true } }],
-  followedBy: [{ user: { type: mongoose.Types.ObjectId, ref: "User", required: true } }]
 }, {timestamps: true});
 
 userSchema.pre("save", async function(this: IUser, next: () => void) {

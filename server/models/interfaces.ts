@@ -11,7 +11,6 @@ export interface IUser extends Document {
     _id?: mongoose.Types.ObjectId;
   }>;
   ownItems: Array<{ item: mongoose.Types.ObjectId }>;
-  followedBy: Array<{ user: mongoose.Types.ObjectId }>;
   follows: Array<{ user: mongoose.Types.ObjectId }>;
   likedItems: Array<{ item: mongoose.Types.ObjectId }>;
 }
@@ -47,7 +46,6 @@ export interface IItem extends Document {
   _id: mongoose.Types.ObjectId;
   owner: mongoose.Types.ObjectId;
   gender: "mężczyźni" | "kobiety" | "dzieci";
-  likedBy: Array<{ user: mongoose.Types.ObjectId }>;
 }
 
 export interface IItemModel extends Model<IItem> {}

@@ -19,12 +19,12 @@ export interface IProps {
 
 const ForeignProfile = ({ match, userStore }: IProps) => {
   const userID = match.params.id;
-
+  const ownProfile = userStore.getUser
   const [user, setUser]: [
     { user: IUser; ownItems: Array<IItem> },
     (user: { user: IUser; ownItems: Array<IItem> }) => void
   ] = useState({ user: undefined, ownItems: undefined });
-  const isFollowed = userStore.getUser ? checkIfIsFollowed(userStore, userID) : false
+  const isFollowed = userStore.getUser ? checkIfIsFollowed(ownProfile.follows, userID) : false
 
   const fetchData = async () => {
     const foundedUser = await getUserRequest(userID);

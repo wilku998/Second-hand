@@ -12,17 +12,21 @@ import { getProfileRequest } from "./API/users";
 import UserStore from "./store/user";
 import ViewStore from "./store/view";
 import SearchStore from "./store/search";
-import InterlocutorsStore, { IInterlocutorsStore } from "./store/interlocutors";
+import InterlocutorsStore from "./store/interlocutors";
 import IMessage from "./interfaces/IMessage";
+import IUser from "./interfaces/IUser";
+import { IInterlocutorsStore } from "./store/interlocutors";
 
 export const socket = io();
 
 socket.on(
   "newInterlocutor",
   (interlocutor: IInterlocutorsStore["interlocutors"][0]) => {
-      console.log("new")
-      socket.emit("join", interlocutor.roomName);
-      interlocutorsStore.interlocutors = [...interlocutorsStore.getInterlocutors, interlocutor]
+    socket.emit("join", interlocutor.roomName);
+    interlocutorsStore.interlocutors = [
+      ...interlocutorsStore.getInterlocutors,
+      interlocutor
+    ];
   }
 );
 
@@ -34,6 +38,22 @@ socket.on("message", (newMessage: IMessage, roomName: string) => {
       lastMessage: e.roomName === roomName ? newMessage : e.lastMessage
     })
   );
+});
+
+socket.on("likeItem", ({ itemID, user }: { itemID: string; user: IUser }) => {
+  userStore.ownItemLikedBySomeone(itemID, user);
+});
+
+socket.on("unlikeItem", ({ itemID, user }: { itemID: string; user: IUser }) => {
+  userStore.ownItemUnlikedBySomeone(itemID, user._id);
+});
+
+socket.on("follow", (userID: string) => {
+  userStore.addToArray("followedBy", userID);
+});
+
+socket.on("unfollow", (userID: string) => {
+  userStore.removeFromArray("followedBy", userID);
 });
 
 export const userStore = new UserStore();

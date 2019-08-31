@@ -20,7 +20,7 @@ const UserLabel = ({ user, userStore, additionalStyles }: IProps) => {
     var { _id, name, avatar } = user;
   }
 
-  const isFollowed = ownProfile ? checkIfIsFollowed(userStore, _id) : false;
+  const isFollowed = ownProfile ? checkIfIsFollowed(ownProfile.follows, _id) : false;
   const isOwnProfile = ownProfile ? _id === ownProfile._id : false;
 
   const onProfileButtonClick = () => {

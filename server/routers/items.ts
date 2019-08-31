@@ -3,14 +3,14 @@ import express from "express";
 import Item from "../models/item";
 import AuthMiddleware from "../middlwares/auth";
 import { IAuthRequest, IMatch } from "./interfaces";
-import { createRegexObj } from "./functions";
+import { createRegexObj, parseItem } from "./functions";
 const router = express.Router();
 
 router.post("/api/items", AuthMiddleware, async (req: IAuthRequest, res) => {
   const item = new Item({ ...req.body, owner: req.user._id });
   try {
     await item.save();
-    res.status(201).send(item);
+    res.status(201).send(await parseItem(item));
   } catch (e) {
     res.status(400).send(e);
   }
@@ -55,7 +55,13 @@ router.get("/api/items", async (req, res) => {
   );
   try {
     const items = await Item.find(match);
-    res.send(items);
+    const parsedItems = await Promise.all(
+      items.map(async item => {
+        await item.populate("owner").execPopulate();
+        return await parseItem(item);
+      })
+    );
+    res.send(parsedItems);
   } catch (e) {
     res.status(404).send();
   }
@@ -68,7 +74,7 @@ router.get("/api/items/:id", async (req, res) => {
     if (!item) {
       throw new Error("Unable to find item!");
     }
-    res.send(item);
+    res.send(await parseItem(item));
   } catch (e) {
     res.status(404).send();
   }
@@ -83,7 +89,7 @@ router.patch(
         req.params.id,
         req.body.update
       );
-      res.send(updatedItem);
+      res.send(await parseItem(updatedItem));
     } catch (e) {
       res.status(404).send();
     }

@@ -17,7 +17,7 @@ export interface IInterlocutorsStore{
 export default class InterlocutorsStore {
     constructor() {
         autorun(() => {
-            console.log(this.getInterlocutors);
+            // console.log(this.getInterlocutors);
           });
     }
 

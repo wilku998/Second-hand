@@ -33,34 +33,63 @@ const server = http.createServer(app);
 const io = socketio(server);
 
 const clients: any = [];
+
+const findClients = (userID: string) =>
+  Object.keys(clients).filter(key => userID === clients[key].userID);
+
+const emitToUser = (userID: string, callback: any) => {
+  const socketsToEmit = findClients(userID);
+  if (socketsToEmit.length > 0) {
+    callback(socketsToEmit);
+  }
+};
+
+const emitToUserTemplate = (name: string, userToEmit: string, data: any) => {
+  emitToUser(userToEmit, (socketsToEmit: any) => {
+    socketsToEmit.forEach((socketID: string) => {
+      io.to(socketID).emit(name, data);
+    });
+  });
+};
+
 io.on("connection", (socket: Socket) => {
   clients[socket.id] = { userID: "" };
 
   socket.on("setUserID", (userID: string) => {
     clients[socket.id].userID = userID;
-    console.log(clients);
   });
 
   socket.on("cleanUserID", () => {
     clients[socket.id] = { userID: "" };
-    console.log("clean");
-    console.log(clients);
+  });
+
+  socket.on("sendLikeItem", (itemID, userToEmit, user) => {
+    console.log(itemID, userToEmit, user);
+    emitToUserTemplate("likeItem", userToEmit, { itemID, user });
+  });
+
+  socket.on("sendUnlikeItem", (itemID, userToEmit, user) => {
+    emitToUserTemplate("unlikeItem", userToEmit, { itemID, user });
+  });
+
+  socket.on("sendFollow", (userToEmit, userID) => {
+    emitToUserTemplate("follow", userToEmit, userID);
+  });
+
+  socket.on("sendUnfollow", (userToEmit, userID) => {
+    emitToUserTemplate("unfollow", userToEmit, userID);
   });
 
   socket.on(
     "sendNewRoom",
     async (room: IMessangerRoom, userID: string, interlocutorID: string) => {
-      const socketsToEmit = Object.keys(clients).filter(
-        key => interlocutorID === clients[key].userID
-      );
-      const interlocutor = await createInterlocutor(userID, room)
-      socket.emit("newInterlocutor", interlocutor)
-      socketsToEmit.map(async socketId => {
-        const interlocutor = await createInterlocutor(interlocutorID, room)
-        io.to(`${socketId}`).emit(
-          "newInterlocutor",
-          interlocutor
-        );
+      emitToUser(interlocutorID, async (socketsToEmit: any) => {
+        const interlocutor = await createInterlocutor(userID, room);
+        socket.emit("newInterlocutor", interlocutor);
+        socketsToEmit.map(async (socketId: string) => {
+          const interlocutor = await createInterlocutor(interlocutorID, room);
+          io.to(socketId).emit("newInterlocutor", interlocutor);
+        });
       });
     }
   );
@@ -112,7 +141,6 @@ io.on("connection", (socket: Socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log(clients);
     delete clients[socket.id];
   });
 });

@@ -25,10 +25,7 @@ export default interface IItem {
   images: Array<string>;
   _id: string;
   owner: IUser;
-  likedBy: Array<{
-    _id: string;
-    user: string;
-  }>;
+  likedBy: Array<IUser>;
   gender: "mężczyźni" | "kobiety" | "dzieci";
   createdAt: string;
   updatedAt: string;

@@ -1,5 +1,6 @@
 import mongoose, { Schema, model } from "mongoose";
 import { IItem, IItemModel } from "./interfaces";
+import User from "./user";
 
 const itemSchema = new Schema({
   itemModel: {
@@ -44,15 +45,7 @@ const itemSchema = new Schema({
     required: true,
     ref: "User"
   },
-  likedBy: [{ user: { type: mongoose.Types.ObjectId, ref: "User" } }]
 }, {timestamps: true});
-
-// itemSchema.methods.toJSON = function() {
-//   const item = this;
-//   const itemObject = item.toObject();
-//   itemObject.likedBy = itemObject.likedBy.map((e: any) => e.user);
-//   return itemObject;
-// };
 
 const Item: IItemModel = model<IItem, IItemModel>("Item", itemSchema);
 

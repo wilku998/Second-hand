@@ -1,26 +1,18 @@
 import ajax from "./ajax";
-import { userStore } from "../app";
+import { userStore, socket } from "../app";
 import {
-  parseResponse,
   setUserStore,
   onlyAuthRequest,
   clearUserAndInterlocutorsStores
 } from "./functions";
 import fetchData from "./fetchData";
-import IUser from "../interfaces/IUser";
-import { getInterlocutorsRequest } from "./messangerRooms";
 
 export const loginRequest = async (data: {
   email: string;
   password: string;
 }) => {
   try {
-    const response: any = await ajax(
-      "POST",
-      "/api/users/login",
-      data,
-      200
-    );
+    const response: any = await ajax("POST", "/api/users/login", data, 200);
     setUserStore(response);
   } catch (e) {
     console.log(e);
@@ -45,7 +37,7 @@ export const registerRequest = async (data: {
 }) => {
   try {
     const response: any = await ajax("POST", "/api/users", data, 201);
-    userStore.user = parseResponse(response);
+    await setUserStore(response);
   } catch (e) {
     if (e.error.code === 11000) {
       return "Email jest już zajęty";
@@ -84,53 +76,65 @@ export const updateUserRequest = async (update: any) => {
   }
 };
 
-export const likeItemRequest = async (likedID: string) => {
+const likesRequestTemplate = async (
+  likedID: string,
+  userToEmitID: string,
+  httpMethod: string,
+  userStoreMethod: "addToArray" | "removeFromArray",
+  socketName: string
+) => {
   await onlyAuthRequest(async () => {
-    const newLikedItems: IUser["likedItems"] = await ajax(
-      "PATCH",
-      "/api/users/me/likes",
-      { likedID },
-      200
-    );
-    userStore.user.likedItems = newLikedItems;
+    try {
+      await ajax(httpMethod, "/api/users/me/likes", { likedID }, 200);
+      userStore[userStoreMethod]("likedItems", likedID);
+      socket.emit(socketName, likedID, userToEmitID, userStore.getMinifiedUser);
+    } catch (e) {}
   });
 };
 
-export const unlikeItemRequest = async (likedID: string) => {
+export const likeItemRequest = async (likedID: string, userToEmitID: string) =>
+  await likesRequestTemplate(
+    likedID,
+    userToEmitID,
+    "PATCH",
+    "addToArray",
+    "sendLikeItem"
+  );
+
+export const unlikeItemRequest = async (
+  likedID: string,
+  userToEmitID: string
+) =>
+  await likesRequestTemplate(
+    likedID,
+    userToEmitID,
+    "DELETE",
+    "removeFromArray",
+    "sendUnlikeItem"
+  );
+
+const followsRequestTemplate = async (
+  userID: string,
+  httpMethod: string,
+  userStoreMethod: "addToArray" | "removeFromArray",
+  socketName: string
+) => {
+  const ownProfile = userStore.getMinifiedUser;
+
   await onlyAuthRequest(async () => {
-    const newLikedItems: IUser["likedItems"] = await ajax(
-      "DELETE",
-      "/api/users/me/likes",
-      { likedID },
-      200
-    );
-    userStore.user.likedItems = newLikedItems;
+    try {
+      await ajax(httpMethod, "/api/users/me/follows", { userID }, 200);
+      userStore[userStoreMethod]("follows", userID);
+      socket.emit(socketName, userID, ownProfile._id);
+    } catch (e) {}
   });
 };
 
-export const followUserRequest = async (userID: string) => {
-  await onlyAuthRequest(async () => {
-    const newFollows: IUser["follows"] = await ajax(
-      "PATCH",
-      "/api/users/me/follows",
-      { userID },
-      200
-    );
-    userStore.user.follows = newFollows;
-  });
-};
+export const followUserRequest = async (userID: string) =>
+  followsRequestTemplate(userID, "PATCH", "addToArray", "sendFollow");
 
-export const unfollowUserRequest = async (userID: string) => {
-  await onlyAuthRequest(async () => {
-    const newFollows: IUser["follows"] = await ajax(
-      "DELETE",
-      "/api/users/me/follows",
-      { userID },
-      200
-    );
-    userStore.user.follows = newFollows;
-  });
-};
+export const unfollowUserRequest = async (userID: string) =>
+  followsRequestTemplate(userID, "DELETE", "removeFromArray", "sendUnfollow");
 
 export const getUserRequest = async (id: string) =>
   await fetchData(id, "/api/users/");
@@ -142,3 +146,6 @@ export const getUsersRequest = async (query: string) => {
   }
   return users;
 };
+
+export const getFollowsAndLikes = async (userID: string) =>
+  await fetchData(userID, "/api/users/followsAndLikes/");

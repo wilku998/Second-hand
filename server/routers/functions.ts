@@ -1,5 +1,6 @@
 import multer from "multer";
-import { IUser } from "../models/interfaces";
+import { IUser, IItem } from "../models/interfaces";
+import User from "../models/user";
 
 export const uploadImage = multer({
   limits: {
@@ -18,32 +19,50 @@ export const createRegexObj = (query: string) => ({
   $options: "i"
 });
 
-export const parseFollows = (users: any) =>
-  users
-    .map((e: any) => {
-      return e.user;
-    })
-    .filter((e: any) => e);
-
-export const parseLikedItems = (items: any) =>
+export const parseFollowsAndLikes = (items: any[], property: "item" | "user") =>
   items
+    .filter(e => e[property])
     .map((e: any) => {
-      return e.item;
-    })
-    .filter((e: any) => e);
+      return e[property];
+    });
+
+const getIdOfFollowsAndLiked = (items: any[], property: "item" | "user") =>
+  items
+    .filter(e => e[property])
+    .map((e: any) => {
+      return e[property]._id;
+    });
+
+export const getFollowedBy = async (userID: string) =>
+  await User.find({ "follows.user": userID });
 
 export const parseUser = async (user: IUser) => {
   await user.populate("ownItems").execPopulate();
-  await user.populate("likedItems.item").execPopulate();
   await user.populate("follows.user").execPopulate();
-  await user.populate("followedBy.user").execPopulate();
+  await user.populate("likedItems.item").execPopulate();
+  const followedBy = await getFollowedBy(user._id);
+  const ownItems = await Promise.all(
+    user.ownItems.map(async (item: any) => await parseItem(item))
+  );
+
   return {
     user: {
       ...user.toJSON(),
-      follows: parseFollows(user.follows),
-      followedBy: parseFollows(user.followedBy),
-      likedItems: parseLikedItems(user.likedItems)
+      follows: getIdOfFollowsAndLiked(user.follows, "user"),
+      likedItems: getIdOfFollowsAndLiked(user.likedItems, "item"),
+      followedBy: followedBy.map(e => e._id)
     },
-    ownItems: user.ownItems
+    ownItems
+  };
+};
+
+export const parseItem = async (item: IItem) => {
+  const itemObject = item.toObject();
+  const { avatar, name, _id } = itemObject.owner;
+  const likedBy = await User.find({ "likedItems.item": item._id });
+  return {
+    ...itemObject,
+    likedBy: likedBy.map(({ _id, avatar, name }) => ({ _id, avatar, name })),
+    owner: { avatar, name, _id }
   };
 };

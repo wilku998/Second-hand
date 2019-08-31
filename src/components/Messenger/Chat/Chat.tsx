@@ -110,7 +110,6 @@ const Chat = ({
   }, [interlocutor]);
 
   const onMessageReaded = () => {
-    console.log("messageReaded");
     interlocutorsStore.interlocutors = interlocutorsStore.getInterlocutors.map(
       interlocutor => ({
         ...interlocutor,
@@ -129,7 +128,6 @@ const Chat = ({
   const onMessage = (message: IMessage, messageRoomName: string) => {
     if (roomName === messageRoomName) {
       setMessages([...messages, message]);
-      console.log("message");
     }
   };
 
@@ -140,7 +138,6 @@ const Chat = ({
       messages.length > 0 &&
       messages[messages.length - 1].senderID !== user._id
     ) {
-      console.log("This user readed message");
       socket.emit("sendMessageReaded", roomName);
     }
     return () => {
