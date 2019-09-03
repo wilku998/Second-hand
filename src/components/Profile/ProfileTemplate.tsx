@@ -51,7 +51,7 @@ const ProfileTemplate = ({
       fetchData();
     }
   }, [user]);
-  console.log({likedItems, follows, followedBy})
+
   return (
     <section className={className}>
       {user ? (

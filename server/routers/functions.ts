@@ -1,6 +1,7 @@
 import multer from "multer";
 import { IUser, IItem } from "../models/interfaces";
 import User from "../models/user";
+import { Types } from "mongoose";
 
 export const uploadImage = multer({
   limits: {
@@ -36,7 +37,7 @@ const getIdOfFollowsAndLiked = (items: any[], property: "item" | "user") =>
 export const getFollowedBy = async (userID: string) =>
   await User.find({ "follows.user": userID });
 
-export const parseUser = async (user: IUser) => {
+export const parseUser = async (user: IUser, notificationsDelete?: boolean) => {
   await user.populate("ownItems").execPopulate();
   await user.populate("follows.user").execPopulate();
   await user.populate("likedItems.item").execPopulate();
@@ -45,7 +46,7 @@ export const parseUser = async (user: IUser) => {
     user.ownItems.map(async (item: any) => await parseItem(item))
   );
 
-  return {
+  const parsedUser = {
     user: {
       ...user.toJSON(),
       follows: getIdOfFollowsAndLiked(user.follows, "user"),
@@ -54,11 +55,19 @@ export const parseUser = async (user: IUser) => {
     },
     ownItems
   };
+
+  if(notificationsDelete){
+    delete parsedUser.user.notifications
+    delete parsedUser.user.notificationsReaded
+  }
+
+  return parsedUser
 };
 
 export const parseItem = async (item: IItem) => {
+  await item.populate("owner").execPopulate();
+  const { avatar, name, _id }: any = item.owner;
   const itemObject = item.toObject();
-  const { avatar, name, _id } = itemObject.owner;
   const likedBy = await User.find({ "likedItems.item": item._id });
   return {
     ...itemObject,

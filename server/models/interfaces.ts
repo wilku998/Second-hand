@@ -1,5 +1,20 @@
 import mongoose, { Document, Model } from "mongoose";
 
+export interface INotification {
+  _id: mongoose.Types.ObjectId;
+  kind:
+    | "follow"
+    | "ownItemLikedBySomeone"
+    | "followedUserLiked"
+    | "followedUserFollows"
+    | "followedUserAddedItem";
+  user: mongoose.Types.ObjectId;
+  item?: mongoose.Types.ObjectId;
+  userWhoGotFollow?: mongoose.Types.ObjectId;
+  addedAt: number;
+  isReaded?: boolean;
+}
+
 export interface IUser extends Document {
   name: string;
   email: string;
@@ -13,6 +28,8 @@ export interface IUser extends Document {
   ownItems: Array<{ item: mongoose.Types.ObjectId }>;
   follows: Array<{ user: mongoose.Types.ObjectId }>;
   likedItems: Array<{ item: mongoose.Types.ObjectId }>;
+  notifications: Array<INotification>;
+  notificationsViewed: boolean;
 }
 
 export interface IUserModel extends Model<IUser> {
@@ -59,11 +76,11 @@ export interface IImageModel extends Model<IImage> {}
 export interface IMessangerRoom extends Document {
   roomName: string;
   messages: Array<{
-    message: string,
-    sendedAt: string,
-    senderID: string
+    message: string;
+    sendedAt: string;
+    senderID: string;
   }>;
-  isReaded: boolean
+  isReaded: boolean;
 }
 
 export interface IMessangerRoomModel extends Model<IMessangerRoom> {}

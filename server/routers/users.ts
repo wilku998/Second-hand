@@ -183,8 +183,8 @@ router.get("/api/users", async (req, res) => {
       foundedUsers.map(async user => {
         return await user.populate("ownItems").execPopulate();
       })
-    ).then(result => {
-      const users = result.map(user => ({ user, ownItems: user.ownItems }));
+    ).then(async result => {
+      const users = await Promise.all(result.map(async (user) => await parseUser(user, true)));
       res.send(users);
     });
   } catch (e) {
@@ -198,7 +198,7 @@ router.get(
   async (req: IUserRequest, res) => {
     try {
       const { user } = req;
-      const parsedUser = await parseUser(user);
+      const parsedUser = await parseUser(user, true);
       res.send(parsedUser);
     } catch (e) {
       res.status(400).send();

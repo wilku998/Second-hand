@@ -40,14 +40,13 @@ const ItemSmall = ({ className, item }: IProps) => {
     if (isOwn) {
       history.push(`/items/edit/${_id}`);
     } else {
-      if(isLiked){
+      if (isLiked) {
         await unlikeItemRequest(_id, owner._id);
-      }else{
+      } else {
         await likeItemRequest(_id, owner._id);
       }
     }
   };
-
   return (
     <div className={className}>
       <LinkToItem to={isOwn ? `/items/edit/${_id}` : `/items/${_id}`} />
@@ -61,9 +60,7 @@ const ItemSmall = ({ className, item }: IProps) => {
       <Image src={images[0]} />
       <ItemDescription>
         <Title>{name}</Title>
-        <span>
-          Rozmiar: {size}
-        </span>
+        <span>Rozmiar: {size}</span>
         <span>Cena: {price}PLN</span>
       </ItemDescription>
     </div>

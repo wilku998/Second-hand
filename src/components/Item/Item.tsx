@@ -104,7 +104,6 @@ const Item = ({ className, match, userStore }: IProps) => {
 
   useEffect(() => {
     if (item) {
-      console.log({item})
       setIsLiked(item.likedBy.findIndex(user => user._id === userID) > -1);
     }
   }, [item]);

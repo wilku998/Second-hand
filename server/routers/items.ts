@@ -57,7 +57,6 @@ router.get("/api/items", async (req, res) => {
     const items = await Item.find(match);
     const parsedItems = await Promise.all(
       items.map(async item => {
-        await item.populate("owner").execPopulate();
         return await parseItem(item);
       })
     );
@@ -70,7 +69,6 @@ router.get("/api/items", async (req, res) => {
 router.get("/api/items/:id", async (req, res) => {
   try {
     const item = await Item.findById(req.params.id);
-    await item.populate("owner").execPopulate();
     if (!item) {
       throw new Error("Unable to find item!");
     }

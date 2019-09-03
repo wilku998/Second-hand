@@ -56,6 +56,11 @@ socket.on("unfollow", (userID: string) => {
   userStore.removeFromArray("followedBy", userID);
 });
 
+socket.on("notification", (notification: any) => {
+  console.log('!!!')
+  console.log(notification)
+});
+
 export const userStore = new UserStore();
 export const viewStore = new ViewStore();
 export const searchStore = new SearchStore();

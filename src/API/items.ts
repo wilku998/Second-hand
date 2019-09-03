@@ -1,6 +1,6 @@
 import IItem from "../interfaces/IItem";
 import ajax from "./ajax";
-import { userStore } from "../app";
+import { userStore, socket } from "../app";
 import fetchData from "./fetchData";
 import { IUpdate } from "../components/Item/CreateItem/interfaces";
 import { addImagesRequest, removeImageRequest } from "./images";
@@ -18,6 +18,7 @@ export const addItemRequest = async (item: IItem, images: Array<string>) => {
       201
     );
     userStore.addItem(response);
+    socket.emit("sendNewItem", userStore.getMinifiedUser, response._id);
   } catch (e) {
     console.log(e);
   }
