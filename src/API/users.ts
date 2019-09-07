@@ -149,3 +149,8 @@ export const getUsersRequest = async (query: string) => {
 
 export const getFollowsAndLikes = async (userID: string) =>
   await fetchData(userID, "/api/users/followsAndLikes/");
+
+export const readNotificationRequest = async (id: string) => {
+  await ajax("PATCH", "/api/users/me/readNotification", { id }, 200);
+  userStore.readNotification(id);
+};

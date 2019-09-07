@@ -7,7 +7,6 @@ import React, {
   useRef,
   useLayoutEffect
 } from "react";
-import moment from "moment";
 import { observer, inject } from "mobx-react";
 import { socket } from "../../../app";
 import IUser from "../../../interfaces/IUser";
@@ -29,6 +28,7 @@ import {
   Info
 } from "./styleChat";
 import ReactSVG from "react-svg";
+import parseDate from "../../../functions/parseDate";
 
 interface IProps {
   messsageReaded: boolean;
@@ -36,8 +36,6 @@ interface IProps {
   interlocutor: IUser;
   interlocutorsStore?: IInterlocutorsStore;
 }
-
-moment.locale("pl");
 
 const Chat = ({
   user,
@@ -77,8 +75,6 @@ const Chat = ({
     }
     return false;
   };
-
-  const parseDate = (date: string) => moment(parseInt(date)).calendar();
 
   useLayoutEffect(() => {
     if (interlocutor) {

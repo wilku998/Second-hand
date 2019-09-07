@@ -10,6 +10,7 @@ export interface IUserStore {
   getMinifiedUser: IUser;
   getOwnItems: IUserStore["ownItems"];
   isAuth: boolean;
+  unreadedNotificationsQuantity: number;
   updateItem: (_id: string, update: IUpdate) => void;
   likeItem: (_id: string) => void;
   unlikeItem: (_id: string) => void;
@@ -17,13 +18,14 @@ export interface IUserStore {
   addToArray: (item: IItem) => void;
   ownItemLikedBySomeone: (_id: string, user: IUser) => void;
   ownItemUnlikedBySomeone: (_id: string, user: IUser) => void;
+  readNotification: (id: string) => void;
 }
 
 export default class UserStore {
   constructor() {
     autorun(() => {
-      console.log(this.getUser);
-      console.log(this.getOwnItems);
+      // console.log(this.getUser);
+      // console.log(this.getOwnItems);
     });
   }
 
@@ -49,6 +51,10 @@ export default class UserStore {
   @computed get isAuth() {
     return !!this.user;
   }
+
+  @computed get unreadedNotificationsQuantity() {
+    return this.user.notifications.filter(e => !e.isReaded).length
+  };
 
   updateItem(_id: string, update: IUpdate) {
     this.ownItems = this.ownItems.map(e => {
@@ -107,5 +113,11 @@ export default class UserStore {
         return e;
       }
     });
+  }
+
+  readNotification(id: string) {
+    this.user.notifications = this.user.notifications.map(e =>
+      e._id === id ? { ...e, isReaded: true } : e
+    );
   }
 }

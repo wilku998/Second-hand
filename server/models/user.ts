@@ -72,10 +72,6 @@ const userSchema = new Schema(
         }
       }
     ],
-    notificationsViewed: {
-      type: Boolean,
-      default: true
-    }
   },
   { timestamps: true }
 );

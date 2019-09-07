@@ -1,5 +1,4 @@
 export default {
-	navigationListItemLeftRightPadding: '1rem',
 	navigationHeight: '4.5rem',
 	rowWidth: '109rem',
 	chatHeight: '45rem',

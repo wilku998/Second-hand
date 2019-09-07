@@ -5,7 +5,13 @@ import User from "../models/user";
 import { IAuthRequest, IUserRequest } from "./interfaces";
 import AuthMiddleware from "../middlwares/auth";
 import FindUserMiddleware from "../middlwares/findUser";
-import { uploadImage, createRegexObj, parseUser, parseFollowsAndLikes, getFollowedBy } from "./functions";
+import {
+  uploadImage,
+  createRegexObj,
+  parseUser,
+  parseFollowsAndLikes,
+  getFollowedBy
+} from "./functions";
 import Item from "../models/item";
 
 const router = express.Router();
@@ -184,7 +190,9 @@ router.get("/api/users", async (req, res) => {
         return await user.populate("ownItems").execPopulate();
       })
     ).then(async result => {
-      const users = await Promise.all(result.map(async (user) => await parseUser(user, true)));
+      const users = await Promise.all(
+        result.map(async user => await parseUser(user, true))
+      );
       res.send(users);
     });
   } catch (e) {
@@ -236,7 +244,7 @@ router.get("/api/users/followsAndLikes/:id", async (req, res) => {
     await user.populate("likedItems.item").execPopulate();
     const { follows, likedItems } = user;
     const followedBy = await getFollowedBy(user._id);
-    
+
     res.send({
       likedItems: parseFollowsAndLikes(likedItems, "item"),
       follows: parseFollowsAndLikes(follows, "user"),
@@ -246,4 +254,25 @@ router.get("/api/users/followsAndLikes/:id", async (req, res) => {
     res.status(404).send();
   }
 });
+
+router.patch(
+  "/api/users/me/readNotification",
+  AuthMiddleware,
+  async (req: IAuthRequest, res) => {
+    try {
+      const notificationID = req.body.id;
+      const { user } = req;
+      user.notifications.forEach(e => {
+        if (e._id.toString() === notificationID) {
+          e.isReaded = true;
+        }
+      });
+      await user.save();
+      res.send();
+    } catch (e) {
+      res.status(500).send();
+    }
+  }
+);
+
 export default router;

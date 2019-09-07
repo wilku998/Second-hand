@@ -28,6 +28,7 @@ import IItem from "../../interfaces/IItem";
 import { IUserStore } from "../../store/user";
 import ReactSVG from "react-svg";
 import { unlikeItemRequest, likeItemRequest } from "../../API/users";
+import getItemTitle from "../../functions/getItemTitle";
 
 export interface IProps {
   className: string;
@@ -59,7 +60,7 @@ const Item = ({ className, match, userStore }: IProps) => {
       likedBy,
       _id
     } = item;
-    var title = `${category} ${brand} ${itemModel ? itemModel : ""}`;
+    var title = getItemTitle(item);
   }
 
   const onSeeAllClick = () => {

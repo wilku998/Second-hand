@@ -1,23 +1,15 @@
 import { observable, computed, autorun, toJS } from "mobx";
-import IMessage from "../interfaces/IMessage";
+import IInterlocutor from "../interfaces/IInterlocutor";
 
 export interface IInterlocutorsStore{
-    interlocutors: Array<{
-        isReaded: boolean;
-        roomName: string;
-        interlocutor: {
-            avatar: string;
-            name: string;
-            _id: string
-        };
-        lastMessage?: IMessage
-    }>
+    interlocutors: Array<IInterlocutor>
     getInterlocutors: IInterlocutorsStore["interlocutors"]
+    unreadedMessagesQuantity: number
 }
 export default class InterlocutorsStore {
     constructor() {
         autorun(() => {
-            // console.log(this.getInterlocutors);
+            console.log(this.getInterlocutors);
           });
     }
 
@@ -25,5 +17,9 @@ export default class InterlocutorsStore {
 
     @computed get getInterlocutors() {
         return toJS(this.interlocutors)
+    }
+
+    @computed get unreadedMessagesQuantity(){
+        return this.interlocutors.filter(e => !e.isReaded).length
     }
 }

@@ -1,25 +1,26 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent, useRef, useEffect } from "react";
 import ReactSVG from "react-svg";
 import { Link } from "react-router-dom";
 import { inject, observer } from "mobx-react";
 import {
   Content,
-  Menu,
   SearchButton,
   SearchContainer,
   SearchInput,
   SearchCatButton,
   SearchCatButtonList,
   SearchCat,
-  StyledNavigation
+  StyledNavigation,
+  LogoContainer,
+  Login
 } from "./styleNavigation";
 import Logo from "../Abstracts/Logo";
-import UserMenu from "./UserMenu/UserMenu";
-import { IUserStore } from "../../store/user";
 import CollapseIcon from "../Abstracts/CollapseIcon";
 import { getUsersRequest } from "../../API/users";
 import { getItemsRequest } from "../../API/items";
 import { searchStore, history } from "../../app";
+import Menu from "./Menu/Menu";
+import { IUserStore } from "../../store/user";
 
 export interface IProps {
   userStore?: IUserStore;
@@ -27,10 +28,14 @@ export interface IProps {
 
 const Navigation = ({ userStore }: IProps) => {
   const isAuth = userStore.isAuth;
-  const user = userStore.getUser;
   const [searchQuery, setSearchQuery] = useState("");
   const [searchCat, setSearchCat] = useState("Przedmioty");
   const [searchCatListVisible, setSearchCatListVisible] = useState(false);
+  const [closeSubmenuRequest, setCloseSubmenuRequest] = useState(false);
+  const searchCatRef = useRef();
+  const userMenuRef = useRef();
+  const messagesMenuRef = useRef();
+  const notificationsMenuRef = useRef();
 
   const onCatChange = (e: any) => {
     const { name } = e.target;
@@ -51,7 +56,9 @@ const Navigation = ({ userStore }: IProps) => {
     let searched;
     switch (searchCat) {
       case "Przedmioty":
-        searched = await getItemsRequest([{name: "name", selectedFilters: [searchQuery]}]);
+        searched = await getItemsRequest([
+          { name: "name", selectedFilters: [searchQuery] }
+        ]);
         searchStore.searchedItems = searched;
         history.push("/search/items");
         break;
@@ -63,14 +70,38 @@ const Navigation = ({ userStore }: IProps) => {
     }
   };
 
+  useEffect(() => {
+    const clickLisiner = (e: Event) => {
+      const refs = [
+        searchCatRef,
+        userMenuRef,
+        messagesMenuRef,
+        notificationsMenuRef
+      ];
+      if (
+        refs.every(ref => {
+          return !ref.current.contains(e.target);
+        })
+      ) {
+        setSearchCatListVisible(false);
+        setCloseSubmenuRequest(true);
+        console.log("close");
+      }
+    };
+    window.addEventListener("click", clickLisiner);
+    return () => {
+      window.removeEventListener("click", clickLisiner);
+    };
+  }, []);
+
   return (
     <StyledNavigation>
       <Content>
-        <Link to="/">
+        <LogoContainer to="/">
           <Logo size="small" squareColor="light" />
-        </Link>
+        </LogoContainer>
         <SearchContainer>
-          <SearchCat>
+          <SearchCat ref={searchCatRef}>
             <SearchCatButton onClick={onSearchCatButtonClick}>
               <span>{searchCat}</span>
               <CollapseIcon
@@ -105,21 +136,19 @@ const Navigation = ({ userStore }: IProps) => {
             <ReactSVG src="/svg/search.svg" />
           </SearchButton>
         </SearchContainer>
-        <Menu>
-          <li>Kobiety</li>
-          <li>Dzieci</li>
-          <li>Mężczyźni</li>
-          <li>
-            {!isAuth ? (
-              <Link to="/login">Zaloguj się</Link>
-            ) : (
-              <UserMenu user={user} />
-            )}
-          </li>
-        </Menu>
+        {!isAuth ? (
+          <Login to="/login">Zaloguj się</Login>
+        ) : (
+          <Menu
+            userMenuRef={userMenuRef}
+            messagesMenuRef={messagesMenuRef}
+            notificationsMenuRef={notificationsMenuRef}
+            setCloseSubmenuRequest={setCloseSubmenuRequest}
+            closeSubmenuRequest={closeSubmenuRequest}
+          />
+        )}
       </Content>
     </StyledNavigation>
   );
 };
-
 export default inject("userStore")(observer(Navigation));

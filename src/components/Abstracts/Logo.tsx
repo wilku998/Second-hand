@@ -35,7 +35,6 @@ export default styled(LogoBase)`
     ${({ squareColor, theme }) =>
       squareColor === "light"
         ? `background-image: linear-gradient(to right bottom,${theme.colorGreyLight2}, ${theme.colorGreyLight4});`
-        : `background-image: linear-gradient(to right bottom, ${theme.colorGreyLight6}, ${theme.colorGreyDark6});`
-    };
+        : `background-image: linear-gradient(to right bottom, ${theme.colorGreyLight6}, ${theme.colorGreyDark6});`};
   }
 `;

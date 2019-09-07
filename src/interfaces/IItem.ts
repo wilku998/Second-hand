@@ -30,3 +30,11 @@ export default interface IItem {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface IMinifedItem {
+  brand: string,
+  itemModel?: string,
+  category: string,
+  images: string[],
+  _id: string
+}

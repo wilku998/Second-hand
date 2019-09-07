@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import ReactSVG from "react-svg";
+import { Link } from "react-router-dom";
 
 export const StyledNavigation = styled.nav`
   position: fixed;
@@ -7,6 +9,8 @@ export const StyledNavigation = styled.nav`
   width: 100%;
   padding: 0 4rem;
   z-index: 100;
+  display: flex;
+
   ${({ theme }) => `
     background-color: ${theme.colorGreyLight1};
     border-bottom: ${theme.lightBorder2};
@@ -21,34 +25,10 @@ export const StyledNavigation = styled.nav`
 `;
 
 export const Content = styled.div`
-  padding: 0.5rem 0;
+  width: 100%;
   display: flex;
   align-items: center;
   position: relative;
-`;
-
-export const Menu = styled.ul`
-  list-style: none;
-  display: flex;
-  margin-left: auto;
-  & > li {
-    padding: ${({ theme }) => `0 ${theme.navigationListItemLeftRightPadding}`};
-    text-transform: uppercase;
-    cursor: pointer;
-    &:not(:last-child) {
-      position: relative;
-      &:after {
-        content: "";
-        position: absolute;
-        top: 50%;
-        right: 0;
-        transform: translateY(-50%);
-        width: 1px;
-        height: 75%;
-        background-color: ${props => props.theme.colorGreyLight4};
-      }
-    }
-  }
 `;
 
 export const SearchContainer = styled.div`
@@ -117,4 +97,15 @@ export const SearchButton = styled.button`
     width: 1.2rem;
     fill: ${({ theme }) => theme.colorGreyDark5};
   }
+`;
+
+export const LogoContainer = styled(Link)`
+  display: flex;
+  align-items: center;
+`;
+
+export const Login = styled(Link)`
+  margin-left: auto;
+  display: flex;
+  align-items: center;
 `;

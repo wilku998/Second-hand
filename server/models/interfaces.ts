@@ -29,7 +29,6 @@ export interface IUser extends Document {
   follows: Array<{ user: mongoose.Types.ObjectId }>;
   likedItems: Array<{ item: mongoose.Types.ObjectId }>;
   notifications: Array<INotification>;
-  notificationsViewed: boolean;
 }
 
 export interface IUserModel extends Model<IUser> {
