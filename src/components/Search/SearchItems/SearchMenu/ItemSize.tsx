@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, forwardRef } from "react";
 import {
   Label,
   Input,
@@ -18,20 +18,21 @@ interface IProps {
   onInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onSearchMenuButtonClick: (e: any) => void;
   onCleanFiltersClick: (e: any) => void;
+  ref: any;
 }
 
-const ItemSize = ({
+const ItemSize = forwardRef(({
   size,
   onSearchMenuButtonClick,
   isSizeInputVisible,
   isSizeSelectorVisible,
   onInputChange,
   onSelectorChange,
-  onCleanFiltersClick
-}: IProps) => {
+  onCleanFiltersClick,
+}: IProps, ref) => {
   const { label, isVisible, options, value, name, placeholder, type } = size;
   return (
-    <Item>
+    <Item ref={ref}>
       <SearchMenuButton name="size" onClick={onSearchMenuButtonClick}>
         {label}
       </SearchMenuButton>
@@ -74,6 +75,6 @@ const ItemSize = ({
       )}
     </Item>
   );
-};
+});
 
 export default ItemSize;

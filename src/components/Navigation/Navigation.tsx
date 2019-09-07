@@ -85,7 +85,6 @@ const Navigation = ({ userStore }: IProps) => {
       ) {
         setSearchCatListVisible(false);
         setCloseSubmenuRequest(true);
-        console.log("close");
       }
     };
     window.addEventListener("click", clickLisiner);

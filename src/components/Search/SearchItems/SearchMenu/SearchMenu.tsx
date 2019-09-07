@@ -1,4 +1,10 @@
-import React, { useState, ChangeEvent, Fragment } from "react";
+import React, {
+  useState,
+  ChangeEvent,
+  Fragment,
+  useRef,
+  useEffect
+} from "react";
 import initialFormState from "./initialFormState";
 import style, {
   Button,
@@ -24,9 +30,24 @@ export interface IProps {
   onSortByChange: (e: ChangeEvent<HTMLSelectElement>) => void;
 }
 
-const SearchMenu = ({ className, sortBy, sortByOptions, onSortByChange }: IProps) => {
+const SearchMenu = ({
+  className,
+  sortBy,
+  sortByOptions,
+  onSortByChange
+}: IProps) => {
   const [form, setForm] = useState(initialFormState);
   const { category, condition, gender, price, name, size } = form;
+
+  const refs = {
+    category: useRef(),
+    condition: useRef(),
+    gender: useRef(),
+    price: useRef(),
+    name: useRef(),
+    size: useRef()
+  };
+
   const selectors = [gender, category, condition];
   const inputs = [price, name];
   const activeFilters: ISearchItemsQuery["query"] = createActiveFiltersObject(
@@ -132,6 +153,21 @@ const SearchMenu = ({ className, sortBy, sortByOptions, onSortByChange }: IProps
     searchStore.searchedItems = items;
   };
 
+  useEffect(() => {
+    const listner = (e: Event) => {
+      if (
+        Object.keys(refs).every(key => !refs[key].current.contains(e.target))
+      ) {
+        console.log("close");
+        onSearchMenuButtonClick({ target: { name: undefined } });
+      }
+    };
+    window.addEventListener("click", listner);
+    return () => {
+      window.removeEventListener("click", listner);
+    };
+  }, []);
+
   return (
     <nav className={className}>
       <ItemsContainer>
@@ -143,6 +179,7 @@ const SearchMenu = ({ className, sortBy, sortByOptions, onSortByChange }: IProps
             onInputChange={onInputChange}
             onPriceChange={onPriceChange}
             onCleanFiltersClick={onCleanFiltersClick}
+            ref={refs[item.name]}
           />
         ))}
         <ItemSize
@@ -153,6 +190,7 @@ const SearchMenu = ({ className, sortBy, sortByOptions, onSortByChange }: IProps
           onSelectorChange={onSelectorChange}
           onSearchMenuButtonClick={onSearchMenuButtonClick}
           onCleanFiltersClick={onCleanFiltersClick}
+          ref={refs.size}
         />
         {selectors.map(item => (
           <ItemSelector
@@ -161,6 +199,7 @@ const SearchMenu = ({ className, sortBy, sortByOptions, onSortByChange }: IProps
             onSearchMenuButtonClick={onSearchMenuButtonClick}
             onCleanFiltersClick={onCleanFiltersClick}
             onSelectorChange={onSelectorChange}
+            ref={refs[item.name]}
           />
         ))}
       </ItemsContainer>
@@ -186,7 +225,11 @@ const SearchMenu = ({ className, sortBy, sortByOptions, onSortByChange }: IProps
         <label>
           Sortuj od
           <select value={sortBy} onChange={onSortByChange}>
-            {sortByOptions.map(e => <option key={e} value={e}>{e}</option>)}
+            {sortByOptions.map(e => (
+              <option key={e} value={e}>
+                {e}
+              </option>
+            ))}
           </select>
         </label>
       </SearchContainer>
