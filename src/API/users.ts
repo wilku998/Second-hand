@@ -6,6 +6,7 @@ import {
   clearUserAndInterlocutorsStores
 } from "./functions";
 import fetchData from "./fetchData";
+import { addImagesRequest } from "./images";
 
 export const loginRequest = async (data: {
   email: string;
@@ -61,14 +62,17 @@ export const logoutRequest = async () => {
   } catch (e) {}
 };
 
-export const updateUserRequest = async (update: any) => {
+export const updateUserRequest = async (update: any, avatar: string) => {
+  const user = userStore.getUser;
   try {
+    if (avatar !== user.avatar) {
+      const avatarID = await addImagesRequest([
+        avatar.replace("data:image/jpeg;base64, ", "")
+      ]);
+      update.avatar = `/api/images/${avatarID[0]}`;
+    }
     await ajax("PATCH", "/api/users/me", update, 200);
-    const user = userStore.getUser;
-    userStore.user = {
-      ...user,
-      ...update
-    };
+    userStore.updateUser(update);
   } catch (e) {
     if (e.error.code === 11000) {
       return "Email jest już zajęty";

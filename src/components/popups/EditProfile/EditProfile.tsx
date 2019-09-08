@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, ChangeEvent, useEffect } from "react";
 import Modal from "react-modal";
 import { inject, observer } from "mobx-react";
 import { IViewStore } from "../../../store/view";
@@ -11,6 +11,14 @@ import { IUserUpdate } from "./interfaces";
 import { ErrorMessage, Content } from "../styles";
 import Button_2 from "../../Abstracts/Button_2";
 import reactModalStyles from "../../../styles/reactModalStyles";
+import { getImageBase64Request } from "../../../API/images";
+import Avatar from "../../Abstracts/Avatar";
+import {
+  AvatarFileInput,
+  AvatarContainer,
+  AvatarFakeButton,
+  AvatarLoader
+} from "./styleEditProfile";
 
 Modal.setAppElement("#root");
 
@@ -35,7 +43,9 @@ const EditProfile = ({ viewStore, userStore }: IProps) => {
     };
   });
   const [form, onFormChange] = useUserForm(initialFormState);
+  const [avatar, setAvatar] = useState(user.avatar);
   const [error, setError] = useState(undefined);
+  const [avatarLoading, setAvatarLoading] = useState(false);
 
   const onRequestClose = () => viewStore.toggleEditProfile();
   const inputs = formKeys.map(key => ({ ...form[key], name: key }));
@@ -66,7 +76,7 @@ const EditProfile = ({ viewStore, userStore }: IProps) => {
           }
         }
       );
-      const requestError = await updateUserRequest(update);
+      const requestError = await updateUserRequest(update, avatar);
       if (requestError) {
         setError(requestError);
       } else {
@@ -75,6 +85,27 @@ const EditProfile = ({ viewStore, userStore }: IProps) => {
     }
   };
 
+  const onAvatarChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const formData = new FormData();
+    const image = e.target.files[0];
+    try {
+      formData.append("itemImage", image, image.name);
+      setAvatarLoading(true);
+      const base64 = await getImageBase64Request(formData);
+      setAvatar(`data:image/jpeg;base64, ${base64}`);
+      setAvatarLoading(false);
+      setError("");
+    } catch (e) {
+      setError("Zdjęcie nie może być większe niż 1mb");
+    }
+  };
+
+  useEffect(() => {
+    if (!isOpen) {
+      setError("");
+    }
+  }, [isOpen]);
+
   return (
     <Modal
       style={reactModalStyles}
@@ -82,10 +113,27 @@ const EditProfile = ({ viewStore, userStore }: IProps) => {
       onRequestClose={onRequestClose}
     >
       <Content>
+        <AvatarContainer>
+          {avatarLoading ? (
+            <AvatarLoader size={3} />
+          ) : (
+            <Avatar size="big" src={avatar} />
+          )}
+          <AvatarFileInput>
+            <AvatarFakeButton>Zmiana avataru</AvatarFakeButton>
+            <input
+              disabled={avatarLoading}
+              type="file"
+              accept="image/png, image/jpeg, image/jpg"
+              onChange={onAvatarChange}
+            />
+          </AvatarFileInput>
+        </AvatarContainer>
+
         <Form onSubmit={onSubmit}>
           {inputs.map(e => (
             <Label key={e.label}>
-              {e.label}
+              <span>{e.label}</span>
               <FormInput
                 value={e.value}
                 valid={e.valid}
@@ -96,7 +144,7 @@ const EditProfile = ({ viewStore, userStore }: IProps) => {
             </Label>
           ))}
           {error && <ErrorMessage>{error}</ErrorMessage>}
-          <Button_2>Potwierdź</Button_2>
+          <Button_2 disabled={avatarLoading}>Potwierdź</Button_2>
           <Button_2 role="button" onClick={onRequestClose}>
             Wróć się
           </Button_2>

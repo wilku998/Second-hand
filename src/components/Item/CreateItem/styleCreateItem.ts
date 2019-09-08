@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { Form } from "../../Abstracts/Form";
+import ReactSVG from "react-svg";
+import Loader from "../../Abstracts/Loader";
 
 export const Optional = styled.span`
   font-size: 1.2rem;
@@ -34,14 +36,15 @@ export const PhotoButton = styled.div`
     height: 100%;
     cursor: pointer;
   }
-  & > div {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 30%;
-    opacity: 0.5;
-  }
+`;
+
+export const CameraIcon = styled(ReactSVG)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 30%;
+  opacity: 0.5;
 `;
 
 export const ErrorMessage = styled.span`
@@ -65,4 +68,11 @@ export const RemoveImageButton = styled.button`
   color: white;
   border: none;
   font-size: 1.2rem;
+`;
+
+export const ImageLoader = styled(Loader)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `;

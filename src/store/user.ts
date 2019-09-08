@@ -12,6 +12,7 @@ export interface IUserStore {
   isAuth: boolean;
   unreadedNotificationsQuantity: number;
   updateItem: (_id: string, update: IUpdate) => void;
+  updateUser: (update: any) => void;
   likeItem: (_id: string) => void;
   unlikeItem: (_id: string) => void;
   removeFromArray: (_id: string) => void;
@@ -54,6 +55,13 @@ export default class UserStore {
 
   @computed get unreadedNotificationsQuantity() {
     return this.user.notifications.filter(e => !e.isReaded).length
+  };
+
+  updateUser(update: any) {
+    this.user={
+      ...this.user,
+      ...update
+    }
   };
 
   updateItem(_id: string, update: IUpdate) {

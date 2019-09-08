@@ -15,16 +15,22 @@ import Avatar from "../../../Abstracts/Avatar";
 import AlertCircle from "../../../Abstracts/AlertCircle";
 import { IInterlocutorsStore } from "../../../../store/interlocutors";
 import parseDate from "../../../../functions/parseDate";
+import { IUserStore } from "../../../../store/user";
 
 export interface IProps {
   isVisible: boolean;
   closeMenu: () => void;
   openMenu: (menu: "userMenu" | "messagesMenu" | "notificationsMenu") => void;
   interlocutorsStore?: IInterlocutorsStore;
+  userStore?: IUserStore;
 }
 const MessagesMenu = React.forwardRef(
-  ({ isVisible, closeMenu, openMenu, interlocutorsStore }: IProps, ref) => {
+  (
+    { isVisible, closeMenu, openMenu, interlocutorsStore, userStore }: IProps,
+    ref
+  ) => {
     const interlocutors = interlocutorsStore.getInterlocutors;
+    const user = userStore.getUser;
     const unreadedMessagesQuantity =
       interlocutorsStore.unreadedMessagesQuantity;
 
@@ -52,6 +58,7 @@ const MessagesMenu = React.forwardRef(
                     <SubMenuListButton
                       as={Link}
                       to={`/messenger/${e.interlocutor._id}`}
+                      color={e.isReaded && e.lastMessage.senderID !== user._id}
                     >
                       <UserLabel>
                         <Avatar size="small" src={e.interlocutor.avatar} />
@@ -75,4 +82,6 @@ const MessagesMenu = React.forwardRef(
   }
 );
 
-export default inject("interlocutorsStore")(observer(MessagesMenu));
+export default inject("interlocutorsStore", "userStore")(
+  observer(MessagesMenu)
+);

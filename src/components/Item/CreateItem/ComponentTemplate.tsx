@@ -18,7 +18,9 @@ import {
   AddPhotosContainer,
   ErrorMessage,
   RemoveImageButton,
-  ImagesErrorMessage
+  ImagesErrorMessage,
+  CameraIcon,
+  ImageLoader
 } from "./styleCreateItem";
 import { isSelectSize, onCategory_SizeChange } from "./functions";
 import validation from "./validaton";
@@ -52,6 +54,7 @@ const ComponentTemplate = ({
   const [resettingFileInput, setResettingFileInput] = useState(false);
   const [error, setError] = useState("");
   const [imagesError, setImagesError] = useState("");
+  const [imageLoading, setImageLoading] = useState(false);
 
   const {
     price,
@@ -78,11 +81,13 @@ const ComponentTemplate = ({
     if (images.findIndex(e => e.name === image.name) === -1) {
       try {
         formData.append("itemImage", image, image.name);
+        setImageLoading(true);
         const base64 = await getImageBase64Request(formData);
         setImages([
           ...images,
           { image: `data:image/jpeg;base64, ${base64}`, name: image.name }
         ]);
+        setImageLoading(false);
         setImagesError("");
       } catch (e) {
         setImagesError("Zdjęcie nie może być większe niż 1mb");
@@ -101,8 +106,7 @@ const ComponentTemplate = ({
   const onFormChange = (
     e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>
   ) => {
-    const property:
-    IItemKeys["keys"] = e.target.name;
+    const property: IItemKeys["keys"] = e.target.name;
     const value = e.target.value;
     setItemForm({
       ...itemForm,
@@ -144,7 +148,10 @@ const ComponentTemplate = ({
       const item: any = {};
       [...inputs, ...selectors, description].forEach(e => {
         if (e.value) {
-          item[e.name] = e.name==="size" && category.value ==="buty" ? `${e.value}EU` : e.value;
+          item[e.name] =
+            e.name === "size" && category.value === "buty"
+              ? `${e.value}EU`
+              : e.value;
         }
       });
       await onSubmitRequest(item, images);
@@ -183,11 +190,16 @@ const ComponentTemplate = ({
             ))}
             {images.length < 3 && !resettingFileInput && (
               <PhotoButton>
-                <ReactSVG src="/svg/camera.svg" />
+                {imageLoading ? (
+                  <ImageLoader size={6} />
+                ) : (
+                  <CameraIcon src="/svg/camera.svg" />
+                )}
                 <input
                   type="file"
                   accept="image/png, image/jpeg, image/jpg"
                   onChange={imageUpload}
+                  disabled={imageLoading}
                 />
               </PhotoButton>
             )}
@@ -235,8 +247,14 @@ const ComponentTemplate = ({
             />
           </Label>
           {error !== "" && <ErrorMessage>{error}</ErrorMessage>}
-          <ButtonSeeAll>{isEdit ? "Edytuj" : "Dodaj"} przedmiot</ButtonSeeAll>
-          {isEdit && <ButtonSeeAll type="button" onClick={onRemoveItemClick}>Usuń przedmiot</ButtonSeeAll>}
+          <ButtonSeeAll disabled={imageLoading}>
+            {isEdit ? "Edytuj" : "Dodaj"} przedmiot
+          </ButtonSeeAll>
+          {isEdit && (
+            <ButtonSeeAll type="button" onClick={onRemoveItemClick}>
+              Usuń przedmiot
+            </ButtonSeeAll>
+          )}
         </ItemForm>
       </div>
     </Container>

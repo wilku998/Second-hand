@@ -72,18 +72,17 @@ const Navigation = ({ userStore }: IProps) => {
 
   useEffect(() => {
     const clickLisiner = (e: Event) => {
-      const refs = [
-        searchCatRef,
-        userMenuRef,
-        messagesMenuRef,
-        notificationsMenuRef
-      ];
-      if (
-        refs.every(ref => {
-          return !ref.current.contains(e.target);
-        })
-      ) {
+      const refs = [userMenuRef, messagesMenuRef, notificationsMenuRef];
+      if (!searchCatRef.current.contains(e.target)) {
         setSearchCatListVisible(false);
+      }
+      if (
+        isAuth
+          ? refs.every(ref => {
+              return !ref.current || !ref.current.contains(e.target);
+            })
+          : false
+      ) {
         setCloseSubmenuRequest(true);
       }
     };
@@ -91,7 +90,7 @@ const Navigation = ({ userStore }: IProps) => {
     return () => {
       window.removeEventListener("click", clickLisiner);
     };
-  }, []);
+  }, [isAuth]);
 
   return (
     <StyledNavigation>
