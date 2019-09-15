@@ -33,7 +33,7 @@ const UsersSection = ({ users, title, userStore }: IUserProps) => {
               {user.ownItems.length > 0 ? (
                 <ItemsContainer>
                   {prepareItemProperties(
-                    user.ownItems,
+                    user.ownItems.slice(0, 4),
                     ownItems,
                     likedItems
                   ).map(item => (

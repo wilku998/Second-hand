@@ -93,11 +93,11 @@ const EditProfile = ({ viewStore, userStore }: IProps) => {
       setAvatarLoading(true);
       const base64 = await getImageBase64Request(formData);
       setAvatar(`data:image/jpeg;base64, ${base64}`);
-      setAvatarLoading(false);
       setError("");
     } catch (e) {
       setError("Zdjęcie nie może być większe niż 1mb");
     }
+    setAvatarLoading(false);
   };
 
   useEffect(() => {

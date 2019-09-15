@@ -13,30 +13,21 @@ import ItemSize from "./ItemSize";
 import ReactSVG from "react-svg";
 import initialFormState from "../initialFormState";
 import { ISearchItemsQuery } from "../../../../interfaces/ISearchItemsQuery";
-import SortContainer from "../../SortContainer/SortContainer";
 
 export interface IProps {
   className?: string;
-  sortBy: string;
-  sortByOptions: Array<string>;
-  onSortByChange: (e: ChangeEvent<HTMLSelectElement>) => void;
   form: any;
   activeFilters: ISearchItemsQuery["query"];
   setForm: (form: any) => void;
   searchItems: () => void;
-  count: number;
 }
 
 const SearchMenu = ({
   className,
-  sortBy,
-  sortByOptions,
-  onSortByChange,
   form,
   setForm,
   searchItems,
   activeFilters,
-  count
 }: IProps) => {
   const { category, condition, gender, price, name, size } = form;
 
@@ -227,12 +218,6 @@ const SearchMenu = ({
           ))}
         </ActiveFilters>
       )}
-      <SortContainer
-        count={count}
-        sortBy={sortBy}
-        sortByOptions={sortByOptions}
-        onSortByChange={onSortByChange}
-      />
     </nav>
   );
 };

@@ -87,7 +87,6 @@ const ComponentTemplate = ({
           ...images,
           { image: `data:image/jpeg;base64, ${base64}`, name: image.name }
         ]);
-        setImageLoading(false);
         setImagesError("");
       } catch (e) {
         setImagesError("Zdjęcie nie może być większe niż 1mb");
@@ -96,6 +95,7 @@ const ComponentTemplate = ({
       setImagesError("Nie możesz dodać tego samego zdjęcia dwa razy");
     }
     setResettingFileInput(true);
+    setImageLoading(false);
   };
 
   const removeImage = (e: any) => {

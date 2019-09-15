@@ -1,23 +1,34 @@
 import React from "react";
-import styled from "styled-components";
+import style, { ResultsCountButton, ResultsCount } from "./styleSortContainer";
 
-interface IProps {
-  count: number;
+export interface IProps {
+  limit: number;
   onSortByChange: (e: any) => void;
   sortByOptions: string[];
   sortBy: string;
   className?: string;
+  onLimitChange: (e: Event) => void;
+  resultsCountOptions: number[]
 }
 
 const SortContainer = ({
-  count,
+  limit,
   onSortByChange,
   sortByOptions,
   sortBy,
-  className
+  className,
+  onLimitChange,
+  resultsCountOptions
 }: IProps) => (
   <div className={className}>
-    <span>Znaleziono: {count}</span>
+    <ResultsCount>
+      <span>Wyników na stronę</span>
+      <div>
+        {resultsCountOptions.map(e => (
+          <ResultsCountButton onClick={onLimitChange} key={e} isselected={e === limit}>{e}</ResultsCountButton>
+        ))}
+      </div>
+    </ResultsCount>
     <label>
       Sortuj od
       <select value={sortBy} onChange={onSortByChange}>
@@ -31,16 +42,4 @@ const SortContainer = ({
   </div>
 );
 
-export default styled(SortContainer)`
-  display: flex;
-  justify-content: space-between;
-  line-height: 1;
-  margin-top: 1rem;
-  padding-top: 1rem;
-  ${({ theme }) => `
-    border-top: ${theme.lightBorder2};
-  `}
-  & select {
-    margin-left: 1rem;
-  }
-`;
+export default style(SortContainer);
