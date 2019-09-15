@@ -4,7 +4,6 @@ import { userStore, socket } from "../app";
 import fetchData from "./fetchData";
 import { IUpdate } from "../components/Item/CreateItem/interfaces";
 import { addImagesRequest, removeImageRequest } from "./images";
-import { ISearchItemsQuery } from "../interfaces/ISearchItemsQuery";
 
 export const addItemRequest = async (item: IItem, images: Array<string>) => {
   try {
@@ -27,21 +26,19 @@ export const addItemRequest = async (item: IItem, images: Array<string>) => {
 export const getItemRequest = async (id: string) =>
   await fetchData(id, "/api/items/");
 
-export const getItemsRequest = async (query?: ISearchItemsQuery["query"]) => {
-  if (query) {
-    var queryString = query
-      .map(e => `${e.name}=${e.selectedFilters.join("|")}`)
-      .join("&");
-  }
-
-  const items = await fetchData(
-    queryString ? "?" + queryString : "",
-    "/api/items"
+export const getItemsCountRequest = async (
+  query: string
+) => {
+  const response = await fetchData(
+    query,
+    "/api/items/count"
   );
-  if (!items) {
-    return [];
-  }
-  return items;
+  return response.count;
+};
+
+export const getItemsRequest = async (query: string) => {
+  const items = await fetchData(query, "/api/items");
+  return items ? items : [];
 };
 
 export const editItemRequest = async (

@@ -1,6 +1,8 @@
 import { userStore, history, interlocutorsStore, socket } from "../app";
 import { IInterlocutorsStore } from "../store/interlocutors";
 import { getInterlocutorsRequest } from "./messangerRooms";
+import { ISearchItemsQuery } from "../interfaces/ISearchItemsQuery";
+
 export const parseResponse = (response: any) =>
   !response || Object.keys(response).length === 0 || response.error
     ? undefined

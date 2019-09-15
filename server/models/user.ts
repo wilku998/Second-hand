@@ -72,6 +72,10 @@ const userSchema = new Schema(
         }
       }
     ],
+    followedByQuantity: {
+      type: Number,
+      default: 0
+    }
   },
   { timestamps: true }
 );

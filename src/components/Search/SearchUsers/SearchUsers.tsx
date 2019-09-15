@@ -1,35 +1,100 @@
-import React, { useState, ChangeEvent } from "react";
-import { observer, inject } from "mobx-react";
-import { ISearchStore } from "../../../store/search";
+import React, { useState, ChangeEvent, useEffect } from "react";
 import { StyledSearch } from "../styleSearch";
-import { Button } from "../SearchItems/SearchMenu/styleSearchMenu";
 import { SearchMenu, SearchContainer } from "./styleSearchUsers";
 import UsersSection from "../../Section/UsersSection/UsersSection";
-import { getUsersRequest } from "../../../API/users";
-import useSort from "../SearchItems/hooks/useSort";
-import sort from "../SearchItems/functions/sort";
+import { getUsersRequest, getUsersCountRequest } from "../../../API/users";
+import { history } from "../../../app";
+import IUser from "../../../interfaces/IUser";
+import useSearch from "../hooks/useSearch";
+import {
+  getValueFromQueryString,
+  createPageButtons
+} from "../functions/functions";
+import MoveButtons from "../MoveButtons/MoveButtons";
+import SortContainer from "../SortContainer/SortContainer";
+import Button_2 from "../../Abstracts/Button_2";
+import IItem from "../../../interfaces/IItem";
 
-interface IProps {
-  searchStore: ISearchStore;
-}
-
-const SearchUsers = ({ searchStore }: IProps) => {
-  const users = searchStore.getSearchedUsers;
-  const [query, setQuery] = useState("");
+const SearchUsers = () => {
+  const defaultLimit = 2;
   const sortByOptions = [
     "Data dodania (od najstarszych)",
-    "Data dodania (od najświeższych)"
+    "Data dodania (od najświeższych)",
+    "Popularność rosnąco",
+    "Popularność malejąco"
   ];
-  const {sortBy, onSortByChange} = useSort(sortByOptions);
+
+  const [page, setPage] = useState(1);
+  const [count, setCount] = useState(0);
+  const [limit, setLimit] = useState(defaultLimit);
+  const [users, setUsers]: [
+    { user: IUser[]; ownItems: IItem[] },
+    any
+  ] = useState([]);
+  const [name, setName] = useState("");
+  const [sortBy, setSortBy] = useState(sortByOptions[0]);
+  const pages = Math.ceil(count / limit);
+  const pageButtons = createPageButtons(page, pages);
+
+  const onSortByChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const { value } = e.target;
+    let query = "";
+    switch (value) {
+      case sortByOptions[0]:
+        query = createQuery(page);
+        break;
+      case sortByOptions[1]:
+        query = createQuery(page, "_id", "-1");
+        break;
+      case sortByOptions[2]:
+        query = createQuery(page, "followedByQuantity", "1");
+        break;
+      case sortByOptions[3]:
+        query = createQuery(page, "followedByQuantity", "-1");
+        break;
+    }
+    setSortBy(value);
+    history.push(`/search/users${query}`);
+  };
 
   const onSearchClick = async () => {
-    const users = await getUsersRequest(query);
-    searchStore.searchedUsers = users;
+    history.push(`/search/users${createQuery(1)}`);
   };
 
-  const onQueryChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value);
+  const onMoveButtonClick = async (e: Event) => {
+    const { goto } = e.currentTarget.dataset;
+    const newPage = parseInt(goto);
+    history.push(`/search/users${createQuery(newPage)}`);
   };
+
+  const createQuery = (page: number, sortBy = "_id", order = "1") =>
+    `?name=${name}&skip=${(page - 1) *
+      limit}&limit=${limit}&sortBy=${sortBy}&order=${order}`;
+
+  const onNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
+  };
+
+  useEffect(() => {
+    const nameFromQuery = getValueFromQueryString(
+      history.location.search,
+      "name"
+    );
+    if (nameFromQuery) {
+      setName(nameFromQuery);
+    }
+  }, []);
+
+  useSearch(
+    history,
+    getUsersRequest,
+    getUsersCountRequest,
+    defaultLimit,
+    setLimit,
+    setPage,
+    setCount,
+    setUsers
+  );
 
   return (
     <StyledSearch>
@@ -37,20 +102,28 @@ const SearchUsers = ({ searchStore }: IProps) => {
         <SearchContainer>
           <label>
             Nazwa użytkownika
-            <input type="text" value={query} onChange={onQueryChange} />
+            <input type="text" value={name} onChange={onNameChange} />
           </label>
-          <Button onClick={onSearchClick}>Szukaj użytkowników</Button>
+          <Button_2 onClick={onSearchClick}>Szukaj użytkowników</Button_2>
         </SearchContainer>
-        <label>
-          Sortuj od
-          <select value={sortBy} onChange={onSortByChange}>
-            {sortByOptions.map(e => <option key={e} value={e}>{e}</option>)}
-          </select>
-        </label>
+        <SortContainer
+          count={count}
+          sortBy={sortBy}
+          sortByOptions={sortByOptions}
+          onSortByChange={onSortByChange}
+        />
       </SearchMenu>
-      <UsersSection users={sort(sortBy, sortByOptions, users)} />
+      <UsersSection users={users} />
+      {pages > 1 && (
+        <MoveButtons
+          page={page}
+          pages={pages}
+          pageButtons={pageButtons}
+          onMoveButtonClick={onMoveButtonClick}
+        />
+      )}
     </StyledSearch>
   );
 };
 
-export default inject("searchStore")(observer(SearchUsers));
+export default SearchUsers;

@@ -3,6 +3,10 @@ import { IUser, IItem, INotification } from "../models/interfaces";
 import User from "../models/user";
 import { getMinifedUser, getMinifedItem } from "../functions/getMinifed";
 import { Types } from "mongoose";
+import { IMatch } from "./interfaces";
+
+export const parseNumber = (number: any) =>
+  number ? parseInt(number) : undefined;
 
 export const uploadImage = multer({
   limits: {
@@ -56,6 +60,8 @@ export const parseUser = async (user: IUser, notificationsDelete?: boolean) => {
     },
     ownItems
   };
+  delete parsedUser.followedByQuantity;
+
   if (notificationsDelete) {
     delete parsedUser.user.notifications;
     delete parsedUser.user.notificationsReaded;
@@ -115,7 +121,7 @@ export const parseUser = async (user: IUser, notificationsDelete?: boolean) => {
       ...parsedUser,
       user: {
         ...parsedUser.user,
-        notifications,
+        notifications
       }
     };
   }
@@ -131,4 +137,61 @@ export const parseItem = async (item: IItem) => {
     likedBy: likedBy.map(({ _id, avatar, name }) => ({ _id, avatar, name })),
     owner: { avatar, name, _id }
   };
+};
+
+export const createQueryUsers = (name?: string) =>
+  name
+    ? {
+        name: createRegexObj(name)
+      }
+    : {};
+
+export const createQueryItems = (query: any) => {
+  const { priceFrom, priceTo, name, owner } = query;
+
+  let match: IMatch = {
+    price: {$gte: priceFrom ? parseInt(priceFrom) : 0, $lte: priceTo ? parseInt(priceTo) : 10000}
+  };
+
+  Object.keys(query).forEach(
+    (
+      key:
+        | "size"
+        | "gender"
+        | "category"
+        | "name"
+        | "owner"
+        | "priceFrom"
+        | "priceTo"
+        | "condition"
+        | "limit"
+        | "skip"
+        | "order"
+        | "sortBy"
+    ) => {
+      if (
+        key !== "priceFrom" &&
+        key !== "priceTo" &&
+        key !== "skip" &&
+        key !== "limit" &&
+        key !== "sortBy" &&
+        key !== "order" 
+      ) {
+        if (key === "name") {
+          match = {
+            ...match,
+            $or: [
+              { itemModel: createRegexObj(name) },
+              { brand: createRegexObj(name) }
+            ]
+          };
+        } else if (key === "owner") {
+          match.owner = owner;
+        } else {
+          match[key] = createRegexObj(query[key]);
+        }
+      }
+    }
+  );
+  return match;
 };

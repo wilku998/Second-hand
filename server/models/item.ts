@@ -33,7 +33,7 @@ const itemSchema = new Schema({
     trim: true
   },
   price: {
-    type: String,
+    type: Number,
     required: true
   },
   images: {

@@ -11,7 +11,6 @@ import AppRouter from "./routers/AppRouter";
 import { getProfileRequest } from "./API/users";
 import UserStore from "./store/user";
 import ViewStore from "./store/view";
-import SearchStore from "./store/search";
 import InterlocutorsStore from "./store/interlocutors";
 import IMessage from "./interfaces/IMessage";
 import IUser from "./interfaces/IUser";
@@ -63,13 +62,11 @@ socket.on("notification", (notification: any) => {
 
 export const userStore = new UserStore();
 export const viewStore = new ViewStore();
-export const searchStore = new SearchStore();
 export const interlocutorsStore = new InterlocutorsStore();
 
 const stores = {
   userStore,
   viewStore,
-  searchStore,
   interlocutorsStore
 };
 

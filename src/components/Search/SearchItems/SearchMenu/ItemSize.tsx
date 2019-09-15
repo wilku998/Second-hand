@@ -44,6 +44,8 @@ const ItemSize = forwardRef(({
               <Input
                 type={type}
                 onChange={onInputChange}
+                min={17}
+                max={49}
                 name={name}
                 value={value}
                 placeholder={placeholder}

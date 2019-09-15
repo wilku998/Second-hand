@@ -4,6 +4,7 @@ export default styled.img<{ size: string }>`
   object-fit: cover;
   object-position: center;
   border-radius: 50%;
+  margin-right: 1rem;
 
   ${({ size, theme }) => `
     border: ${theme.lightBorder2};
@@ -11,11 +12,10 @@ export default styled.img<{ size: string }>`
       size === "big"
         ? `  width: 3rem;
     height: 3rem;
-    margin-right: 1.5rem;
     `
         : `  width: 2rem;
     height: 2rem;
-    margin-right: 1rem;`
+    `
     }
   `}
 `;

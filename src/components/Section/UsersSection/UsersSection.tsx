@@ -30,7 +30,7 @@ const UsersSection = ({ users, title, userStore }: IUserProps) => {
                 additionalStyles="grid-column: 1/5; margin-bottom: 2rem;"
                 user={user.user}
               />
-              {user.ownItems ? (
+              {user.ownItems.length > 0 ? (
                 <ItemsContainer>
                   {prepareItemProperties(
                     user.ownItems,

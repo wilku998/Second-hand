@@ -16,8 +16,8 @@ import {
 } from "./styleNavigation";
 import Logo from "../Abstracts/Logo";
 import CollapseIcon from "../Abstracts/CollapseIcon";
-import { getUsersRequest } from "../../API/users";
-import { getItemsRequest } from "../../API/items";
+import { getUsersRequest, getUsersCountRequest } from "../../API/users";
+import { getItemsRequest, getItemsCountRequest } from "../../API/items";
 import { searchStore, history } from "../../app";
 import Menu from "./Menu/Menu";
 import { IUserStore } from "../../store/user";
@@ -53,19 +53,12 @@ const Navigation = ({ userStore }: IProps) => {
   };
 
   const searchAction = async () => {
-    let searched;
     switch (searchCat) {
       case "Przedmioty":
-        searched = await getItemsRequest([
-          { name: "name", selectedFilters: [searchQuery] }
-        ]);
-        searchStore.searchedItems = searched;
-        history.push("/search/items");
+        history.push(`/search/items?name=${searchQuery}`);
         break;
       case "Użytkownicy":
-        searched = await getUsersRequest(searchQuery);
-        searchStore.searchedUsers = searched;
-        history.push("/search/users");
+        history.push(`/search/users?name=${searchQuery}`);
         break;
     }
   };

@@ -69,7 +69,6 @@ const NotificationsMenu = React.forwardRef(
             (object.link = `/items/${notification.item._id}`);
           break;
         case `followedUserFollows`:
-          console.log(notification.userWhoGotFollow);
           (object.info = `Zabserwował użytkownika ${notification.userWhoGotFollow.name}`),
             (object.link = `/users/${notification.userWhoGotFollow._id}`);
           break;

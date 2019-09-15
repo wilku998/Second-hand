@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import InvisibleButton from "../Abstracts/InvisibleButton";
+import ReactSVG from "react-svg";
 
 export const StyledSearch = styled.main`
   display: flex;

@@ -1,13 +1,16 @@
-const toRegexRange = require("to-regex-range");
 import express from "express";
 import Item from "../models/item";
 import AuthMiddleware from "../middlwares/auth";
-import { IAuthRequest, IMatch } from "./interfaces";
-import { createRegexObj, parseItem } from "./functions";
+import { IAuthRequest } from "./interfaces";
+import { parseItem, createQueryItems, parseNumber } from "./functions";
 const router = express.Router();
 
 router.post("/api/items", AuthMiddleware, async (req: IAuthRequest, res) => {
-  const item = new Item({ ...req.body, owner: req.user._id });
+  const item = new Item({
+    ...req.body,
+    owner: req.user._id,
+    price: parseInt(req.body.price)
+  });
   try {
     await item.save();
     res.status(201).send(await parseItem(item));
@@ -16,50 +19,33 @@ router.post("/api/items", AuthMiddleware, async (req: IAuthRequest, res) => {
   }
 });
 
-router.get("/api/items", async (req, res) => {
-  const { priceFrom, priceTo, name, owner } = req.query;
-  let match: IMatch = {
-    price: new RegExp(
-      toRegexRange(priceFrom ? priceFrom : 0, priceTo ? priceTo : 9999)
-    )
-  };
-
-  Object.keys(req.query).forEach(
-    (
-      key:
-        | "size"
-        | "gender"
-        | "category"
-        | "name"
-        | "owner"
-        | "priceFrom"
-        | "priceTo"
-        | "condition"
-    ) => {
-      if (key !== "priceFrom" && key !== "priceTo") {
-        if (key === "name") {
-          match = {
-            ...match,
-            $or: [
-              { itemModel: createRegexObj(name) },
-              { brand: createRegexObj(name) }
-            ]
-          };
-        } else if (key === "owner") {
-          match.owner = owner;
-        } else {
-          match[key] = createRegexObj(req.query[key]);
-        }
-      }
-    }
-  );
+router.get("/api/items/count", async (req, res) => {
+  const query = createQueryItems(req.query);
   try {
-    const items = await Item.find(match);
+    const count = await Item.countDocuments(query);
+    res.send({ count });
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
+router.get("/api/items", async (req, res) => {
+  const { skip, limit, order, sortBy } = req.query;
+  const query = createQueryItems(req.query);
+  console.log(query);
+  try {
+    const items = await Item.find(query)
+      .sort({ [sortBy]: parseNumber(order) })
+      .skip(parseNumber(skip))
+      .limit(parseNumber(limit));
+
+      console.log(items);
     const parsedItems = await Promise.all(
       items.map(async item => {
         return await parseItem(item);
       })
     );
+
     res.send(parsedItems);
   } catch (e) {
     res.status(404).send();

@@ -1,7 +1,7 @@
 import { FunctionComponent } from "react";
 import styled from "styled-components";
-import Button_2 from "../../../Abstracts/Button_2";
 import InvisibleButton from "../../../Abstracts/InvisibleButton";
+import Button_2 from "../../../Abstracts/Button_2";
 
 export default (SearchMenu: FunctionComponent<IProps>) => styled(SearchMenu)`
   margin-bottom: 2rem;
@@ -12,7 +12,7 @@ export const ItemsContainer = styled.div`
   grid-auto-flow: column;
   grid-auto-columns: 1fr;
   grid-gap: 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 `;
 
 export const Item = styled.div`
@@ -26,8 +26,10 @@ export const Item = styled.div`
 `;
 
 export const Button = styled(Button_2)`
+  width: 100%;
   font-size: 1.4rem;
 `;
+
 export const Input = styled.input`
   width: 100%;
 `;
@@ -75,7 +77,7 @@ export const CheckLabel = styled.label`
   }
 `;
 
-export const ButtonCleanFilter = styled(Button_2)`
+export const ButtonCleanFilter = styled(Button)`
   margin-top: 1rem;
   width: 100%;
 `;
@@ -114,7 +116,9 @@ export const ActiveFilter = styled.span`
   }
 `;
 
-export const RemoveActiveFilterButton = styled(InvisibleButton)`
+export const RemoveActiveFilterButton = styled.button`
+  border: none;
+  background: none;
   width: 1rem;
   height: 1.1rem;
   position: absolute;
@@ -133,16 +137,6 @@ export const SmallTitle = styled.h4`
   margin-bottom: 0.5rem;
 `;
 
-export const SearchContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+export const ActiveFilters = styled.div`
   margin-top: 1rem;
-  padding-top: 1rem;
-  ${({ theme }) => `
-    border-top: ${theme.lightBorder2};
-  `}
-  & select {
-    margin-left: 1rem;
-  }
 `;

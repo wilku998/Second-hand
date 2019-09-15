@@ -1,42 +1,43 @@
-import React, {
-  useState,
-  ChangeEvent,
-  Fragment,
-  useRef,
-  useEffect
-} from "react";
-import initialFormState from "./initialFormState";
+import React, { ChangeEvent, useRef, useEffect } from "react";
 import style, {
   Button,
   ItemsContainer,
   ActiveFilter,
   RemoveActiveFilterButton,
   SmallTitle,
-  SearchContainer
+  ActiveFilters
 } from "./styleSearchMenu";
 import ItemInput from "./ItemInput";
 import ItemSelector from "./ItemSelector";
 import ItemSize from "./ItemSize";
-import { createActiveFiltersObject } from "./functions";
 import ReactSVG from "react-svg";
-import { getItemsRequest } from "../../../../API/items";
+import initialFormState from "../initialFormState";
 import { ISearchItemsQuery } from "../../../../interfaces/ISearchItemsQuery";
-import { searchStore } from "../../../../app";
+import SortContainer from "../../SortContainer/SortContainer";
 
 export interface IProps {
   className?: string;
   sortBy: string;
   sortByOptions: Array<string>;
   onSortByChange: (e: ChangeEvent<HTMLSelectElement>) => void;
+  form: any;
+  activeFilters: ISearchItemsQuery["query"];
+  setForm: (form: any) => void;
+  searchItems: () => void;
+  count: number;
 }
 
 const SearchMenu = ({
   className,
   sortBy,
   sortByOptions,
-  onSortByChange
+  onSortByChange,
+  form,
+  setForm,
+  searchItems,
+  activeFilters,
+  count
 }: IProps) => {
-  const [form, setForm] = useState(initialFormState);
   const { category, condition, gender, price, name, size } = form;
 
   const refs = {
@@ -50,12 +51,6 @@ const SearchMenu = ({
 
   const selectors = [gender, category, condition];
   const inputs = [price, name];
-  const activeFilters: ISearchItemsQuery["query"] = createActiveFiltersObject(
-    selectors,
-    name,
-    price,
-    size
-  );
 
   const isCatgoryFilterUnactive =
     activeFilters.findIndex(e => e.name === "category") < 0;
@@ -74,7 +69,7 @@ const SearchMenu = ({
     Object.keys(form).forEach(key => {
       newForm[key] = {
         ...form[key],
-        isVisible: form[key].name === name ? !form[key].isVisible : false
+        isVisible: key === name ? !form[key].isVisible : false
       };
     });
     setForm(newForm);
@@ -141,16 +136,22 @@ const SearchMenu = ({
   };
 
   const onCleanFiltersClick = (e: any) => {
-    const { name } = e.target;
-    setForm({
-      ...form,
-      [name]: initialFormState[name]
-    });
-  };
+    const { name } = e.currentTarget;
 
-  const onSearchClick = async () => {
-    const items = await getItemsRequest(activeFilters);
-    searchStore.searchedItems = items;
+    if (name === "priceFrom" || name === "priceTo") {
+      setForm({
+        ...form,
+        price: {
+          ...form.price,
+          [name]: initialFormState.price[name]
+        }
+      });
+    } else {
+      setForm({
+        ...form,
+        [name]: initialFormState[name]
+      });
+    }
   };
 
   useEffect(() => {
@@ -158,15 +159,21 @@ const SearchMenu = ({
       if (
         Object.keys(refs).every(key => !refs[key].current.contains(e.target))
       ) {
-        console.log("close");
-        onSearchMenuButtonClick({ target: { name: undefined } });
+        const newForm: any = {};
+        Object.keys(form).forEach(key => {
+          newForm[key] = {
+            ...form[key],
+            isVisible: false
+          };
+        });
+        setForm(newForm);
       }
     };
     window.addEventListener("click", listner);
     return () => {
       window.removeEventListener("click", listner);
     };
-  }, []);
+  }, [form]);
 
   return (
     <nav className={className}>
@@ -203,36 +210,29 @@ const SearchMenu = ({
           />
         ))}
       </ItemsContainer>
+      <Button onClick={searchItems}>Szukaj przedmiotów</Button>
       {activeFilters.length > 0 && (
-        <div>
+        <ActiveFilters>
           <SmallTitle>Aktywne filtry</SmallTitle>
           {activeFilters.map(e => (
             <ActiveFilter key={e.name}>
               <RemoveActiveFilterButton
-                onClick={() =>
-                  onCleanFiltersClick({ target: { name: e.name } })
-                }
+                name={e.name}
+                onClick={onCleanFiltersClick}
               >
                 <ReactSVG src="/svg/close.svg" />
               </RemoveActiveFilterButton>
               {e.label}: {e.selectedFilters.join(" | ")}
             </ActiveFilter>
           ))}
-        </div>
+        </ActiveFilters>
       )}
-      <SearchContainer>
-        <Button onClick={onSearchClick}>Szukaj przedmiotów</Button>
-        <label>
-          Sortuj od
-          <select value={sortBy} onChange={onSortByChange}>
-            {sortByOptions.map(e => (
-              <option key={e} value={e}>
-                {e}
-              </option>
-            ))}
-          </select>
-        </label>
-      </SearchContainer>
+      <SortContainer
+        count={count}
+        sortBy={sortBy}
+        sortByOptions={sortByOptions}
+        onSortByChange={onSortByChange}
+      />
     </nav>
   );
 };

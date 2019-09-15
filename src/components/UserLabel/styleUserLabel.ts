@@ -18,7 +18,7 @@ export const Button = styled(Button_2)`
 `;
 
 export const Name = styled.h3`
+  font-size: 1.4rem;
   font-weight: 400;
-  font-size: 1.6rem;
   margin-right: auto;
 `;

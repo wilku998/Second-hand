@@ -143,13 +143,20 @@ export const unfollowUserRequest = async (userID: string) =>
 export const getUserRequest = async (id: string) =>
   await fetchData(id, "/api/users/");
 
+export const getUsersCountRequest = async (query: string) => {
+  const response = await fetchData(query, "/api/users/count");
+  return response.count;
+};
+
 export const getUsersRequest = async (query: string) => {
-  const users = await fetchData(`?name=${query}`, "/api/users");
+  const users = await fetchData(query, "/api/users");
   if (!users) {
     return [];
   }
   return users;
 };
+
+export const getMostPopularUsersRequest = async () => await getUsersRequest('?sortBy=followedByQuantity&order=-1');
 
 export const getFollowsAndLikes = async (userID: string) =>
   await fetchData(userID, "/api/users/followsAndLikes/");

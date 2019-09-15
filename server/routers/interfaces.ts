@@ -15,9 +15,9 @@ export interface IMatch {
   category?: { $regex: RegExp; $options: string };
   brand?: { $regex: RegExp; $options: string };
   condition?: { $regex: RegExp; $options: string };
-  price: RegExp;
+  price: { $gte: number; $lte: number };
   $or?: [
-    { itemModel: { $regex: RegExp; $options: string } },
-    { brand: { $regex: RegExp; $options: string } }
+    { itemModel: { $regex: RegExp; $options: string } | "" },
+    { brand: { $regex: RegExp; $options: string } | "" }
   ];
 }

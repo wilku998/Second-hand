@@ -43,9 +43,6 @@ const createAndEmitNotification = async (
   propertyForNotification?: IMinifedItem | IMinifedUser,
   propertyName?: "item" | "userWhoGotFollow"
 ) => {
-  console.log({
-    user, kind, userForNotification, propertyForNotification, propertyName
-  })
   const _id = Types.ObjectId();
   const notification: any = {
     _id,
@@ -208,7 +205,6 @@ io.on("connection", (socket: Socket) => {
       roomName: string;
       senderID: string;
     }) => {
-      console.log("send message");
       const room = await MessangerRoom.findOne({ roomName });
       if (room) {
         const messageObject = {
@@ -231,7 +227,6 @@ io.on("connection", (socket: Socket) => {
       room.isReaded = true;
       room.save();
       io.sockets.in(roomName).emit("messageReaded");
-      console.log("send message readed");
     }
   });
 

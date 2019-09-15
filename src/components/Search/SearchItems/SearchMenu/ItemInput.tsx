@@ -45,6 +45,16 @@ const ItemInput = forwardRef(
                       <Input
                         type={type}
                         onChange={onPriceChange}
+                        min={
+                          key === "priceTo" && !isNaN(item.priceFrom.value)
+                            ? item.priceFrom.value
+                            : 0
+                        }
+                        max={
+                          key === "priceFrom" && !isNaN(item.priceTo.value)
+                            ? item.priceTo.value
+                            : 9999
+                        }
                         name={key}
                         value={item[key].value}
                       />

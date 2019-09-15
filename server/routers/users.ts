@@ -10,7 +10,9 @@ import {
   createRegexObj,
   parseUser,
   parseFollowsAndLikes,
-  getFollowedBy
+  getFollowedBy,
+  createQueryUsers,
+  parseNumber
 } from "./functions";
 import Item from "../models/item";
 
@@ -148,6 +150,12 @@ router.patch(
     try {
       let { user } = req;
       const { userID } = req.body;
+      const followedUser = await User.findById(userID);
+      if (!followedUser) {
+        throw new Error();
+      }
+      followedUser.followedByQuantity++;
+      await followedUser.save();
       user.follows.push({ user: userID });
       await user.save();
       res.send();
@@ -164,37 +172,47 @@ router.delete(
     try {
       let { user } = req;
       const { userID } = req.body;
+      const followedUser = await User.findById(userID);
+      if (!followedUser) {
+        throw new Error();
+      }
+      followedUser.followedByQuantity--;
+      await followedUser.save();
       user.follows = user.follows.filter(e => {
         return e.user.toString() !== userID;
       });
       await user.save();
       res.send();
     } catch (e) {
-      res.status(400).send(e);
+      res.status(404).send(e);
     }
   }
 );
 
-router.get("/api/users", async (req, res) => {
-  const { name } = req.query;
-  let match: { name?: { $regex: RegExp; $options: string } } = name
-    ? {
-        name: createRegexObj(name)
-      }
-    : {};
+router.get("/api/users/count", async (req, res) => {
+  const query = createQueryUsers(req.query.name);
   try {
-    const foundedUsers = await User.find(match);
+    const count = await User.countDocuments(query);
+    res.send({ count });
+  } catch (e) {
+    res.status(500).send();
+  }
+});
 
-    Promise.all(
-      foundedUsers.map(async user => {
-        return await user.populate("ownItems").execPopulate();
-      })
-    ).then(async result => {
-      const users = await Promise.all(
-        result.map(async user => await parseUser(user, true))
-      );
-      res.send(users);
-    });
+router.get("/api/users", async (req, res) => {
+  const { name, skip, limit, order, sortBy } = req.query;
+  const query = createQueryUsers(name);
+  try {
+    const foundedUsers = await User.find(query)
+      .sort({ [sortBy]: parseNumber(order) })
+      .skip(parseNumber(skip))
+      .limit(parseNumber(limit));
+
+    const users = await Promise.all(
+      foundedUsers.map(async user => await parseUser(user, true))
+    );
+
+    res.send(users);
   } catch (e) {
     res.status(404).send();
   }

@@ -9,7 +9,7 @@ export const Section = styled.section`
 `;
 
 export const Title = styled.h1`
-  font-size: 3rem;
+  font-size: 2rem;
   font-weight: 400;
   margin-bottom: 1rem;
 `;
@@ -25,6 +25,6 @@ export const ItemsContainer = styled.div`
 export const Info = styled.span`
   grid-column: 1/5;
   text-align: center;
-  margin-top: 4rem;
   display: block;
+  font-size: 1.2rem;
 `

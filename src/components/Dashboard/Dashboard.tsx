@@ -4,24 +4,25 @@ import Header from "./Header/Header";
 import ItemsSection from "../Section/ItemsSection/ItemsSection";
 import UsersSection from "../Section/UsersSection/UsersSection";
 import { getItemsRequest } from "../../API/items";
-import { getUsersRequest } from "../../API/users";
+import fetchData from "../../API/fetchData";
+import { getMostPopularUsersRequest } from "../../API/users";
 
 const Dashboard = () => {
   const [items, setItems] = useState(undefined);
   const [users, setUsers] = useState(undefined);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const items = await getItemsRequest();
-      const users = await getUsersRequest('');
-      if(items){
-        setItems(items)
+    const fetchItemsAndUsers = async () => {
+      const items = await getItemsRequest("?limit=8&sortBy=_id&order=-1");
+      const users = await getMostPopularUsersRequest();
+      if (items) {
+        setItems(items);
       }
-      if(users){
-        setUsers(users)
+      if (users) {
+        setUsers(users);
       }
-    }
-    fetchData();
+    };
+    fetchItemsAndUsers();
   }, []);
 
   return (
