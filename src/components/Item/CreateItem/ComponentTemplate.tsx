@@ -1,17 +1,10 @@
 import React, { useState, useEffect, ChangeEvent } from "react";
-import ReactSVG from "react-svg";
+import moment from "moment";
 import { inject, observer } from "mobx-react";
-import style, {
-  Image,
-  SellerProfile,
-  Info,
-  GridContainer,
-  ButtonSeeAll
-} from "../styleItem";
 import Avatar from "../../Abstracts/Avatar";
 import Container from "../../Abstracts/Container";
 import { Label, FormInput } from "../../Abstracts/Form";
-import {
+import style, {
   Optional,
   ItemForm,
   PhotoButton,
@@ -20,7 +13,12 @@ import {
   RemoveImageButton,
   ImagesErrorMessage,
   CameraIcon,
-  ImageLoader
+  ImageLoader,
+  CreatedAt,
+  Image,
+  SellerProfile,
+  GridContainer,
+  Info
 } from "./styleCreateItem";
 import { isSelectSize, onCategory_SizeChange } from "./functions";
 import validation from "./validaton";
@@ -28,6 +26,7 @@ import { getImageBase64Request } from "../../../API/images";
 import { history } from "../../../app";
 import IItem from "../../../interfaces/IItem";
 import { Iimages, IForm, IItemKeys } from "./interfaces";
+import Button_2 from "../../Abstracts/Button_2";
 
 export interface IProps {
   className?: string;
@@ -37,6 +36,7 @@ export interface IProps {
   onSubmitRequest: (item: IItem, images: Iimages["images"]) => void;
   isEdit: boolean;
   onRemoveItemClick?: () => void;
+  createdAt?: string;
 }
 
 const ComponentTemplate = ({
@@ -46,7 +46,8 @@ const ComponentTemplate = ({
   initialImages,
   onSubmitRequest,
   isEdit,
-  onRemoveItemClick
+  onRemoveItemClick,
+  createdAt
 }: IProps) => {
   const user = userStore.getUser;
   const [itemForm, setItemForm] = useState(initialForm);
@@ -55,6 +56,7 @@ const ComponentTemplate = ({
   const [error, setError] = useState("");
   const [imagesError, setImagesError] = useState("");
   const [imageLoading, setImageLoading] = useState(false);
+  const parsedCreatedAt = moment(createdAt).format("DD-MM-YYYY");
 
   const {
     price,
@@ -206,6 +208,7 @@ const ComponentTemplate = ({
           </GridContainer>
         </AddPhotosContainer>
         <ItemForm onSubmit={onSubmit}>
+          {isEdit && <CreatedAt>Dodano w dniu: {parsedCreatedAt}</CreatedAt>}
           {selectors.map(e => (
             <Label key={e.name}>
               {e.label}
@@ -247,13 +250,13 @@ const ComponentTemplate = ({
             />
           </Label>
           {error !== "" && <ErrorMessage>{error}</ErrorMessage>}
-          <ButtonSeeAll disabled={imageLoading}>
+          <Button_2 disabled={imageLoading}>
             {isEdit ? "Edytuj" : "Dodaj"} przedmiot
-          </ButtonSeeAll>
+          </Button_2>
           {isEdit && (
-            <ButtonSeeAll type="button" onClick={onRemoveItemClick}>
+            <Button_2 type="button" onClick={onRemoveItemClick}>
               Usuń przedmiot
-            </ButtonSeeAll>
+            </Button_2>
           )}
         </ItemForm>
       </div>

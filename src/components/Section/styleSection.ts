@@ -1,9 +1,18 @@
 import styled from "styled-components";
+import Button_1 from "../Abstracts/Button_1";
 
-export const Section = styled.section`
+export const StyledUsersSection = styled.div`
+ margin-top: 4rem;
+`;
+
+export const StyledItemSection = styled.section`
   width: ${({ theme }) => theme.rowWidth};
-  margin-bottom: 4rem;
-  &:not(:first-of-type){
+  margin-top: 4rem;
+`;
+
+export const UserSection = styled.section`
+  width: ${({ theme }) => theme.rowWidth};
+  &:not(:first-of-type) {
     margin-top: 4rem;
   }
 `;
@@ -27,4 +36,9 @@ export const Info = styled.span`
   text-align: center;
   display: block;
   font-size: 1.2rem;
-`
+`;
+
+export const ButtonShowMore = styled(Button_1)`
+  margin-top: 2rem;
+  width: 100%;
+`;

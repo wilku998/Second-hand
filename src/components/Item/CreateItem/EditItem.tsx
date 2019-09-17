@@ -7,7 +7,6 @@ import { inject, observer } from "mobx-react";
 import { Iimages, IUpdate, IItemKeys } from "./interfaces";
 import { editItemRequest } from "../../../API/items";
 import { IUserStore } from "../../../store/user";
-import { history } from "../../../app";
 import RemoveProfile from "../../popups/RemoveItem/RemoveItem";
 
 interface IProps {
@@ -16,7 +15,7 @@ interface IProps {
 }
 
 const EditItem = ({ userStore, match }: IProps) => {
-  const [removeItemIsOpen, setRemoveItemIsOpen] = useState(true);
+  const [removeItemIsOpen, setRemoveItemIsOpen] = useState(false);
 
   const ownItems = userStore.getOwnItems;
   const editItemID = match.params.id;
@@ -99,6 +98,7 @@ const EditItem = ({ userStore, match }: IProps) => {
             initialForm={itemEditForm}
             onSubmitRequest={onSubmitRequest}
             isEdit={true}
+            createdAt={item.createdAt}
             onRemoveItemClick={toggleRemoveItemIsOpen}
           />
           <RemoveProfile

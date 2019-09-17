@@ -2,155 +2,111 @@ import { FunctionComponent } from "react";
 import styled from "styled-components";
 import { IProps } from "./Item";
 import Button_2 from "../Abstracts/Button_2";
-import { Link } from "react-router-dom";
 import InvisibleButton from "../Abstracts/InvisibleButton";
 
 export default (Item: FunctionComponent<IProps>) => styled(Item)`
+  display: grid;
+  align-items: start;
+  grid-template-columns: calc(100% - 35rem) 35rem;
+  ${({ theme }) => `
+    width: ${theme.rowWidth};
+  `}
+`;
+
+export const Content = styled.div`
+  padding: 2rem;
+  margin-left: 2rem;
   display: flex;
-  margin: auto;
+  flex-direction: column;
+  grid-column: 2/3;
   ${({ theme }) => `
     background-color: ${theme.colorGreyLight1};
     border: ${theme.lightBorder2};
     box-shadow: ${theme.lightShadow};
-    & > * {
-      padding: 2rem;
-      &:not(:last-child){
-      border-right: ${theme.lightBorder};
-      }
-    }
   `}
 `;
 
-export const MainImage = styled.img`
-  position: absolute;
-  top: 0%;
-  left: 0;
-  z-index: 10;
-`;
 
-export const MainImageContainer = styled.div`
-  position: relative;
-  display: grid;
-  grid-auto-columns: max-content;
-`;
-
-export const Content = styled.div`
-  min-height: 60rem;
-  width: 35rem;
-  display: flex;
-  flex-direction: column;
-`;
-
-export const Title = styled.h2`
-  font-weight: 400;
-  line-height: 1.2;
-  text-transform: uppercase;
-  display: flex;
-  align-items: center;
-`;
-
-export const Description = styled.span`
-  padding-top: 1rem;
-  ${({ theme }) => `
-    border-top: ${theme.lightBorder};
-  `}
-`;
-
-export const ItemInfo = styled(Description)`
+export const ItemInfo = styled.ul`
   margin-top: 1rem;
-  line-height: 1;
-  display: flex;
-  flex-direction: column;
-  & > span {
-    margin-bottom: 1rem;
-  }
-`;
-
-export const ButtonMessage = styled(Button_2)`
-  margin-top: 2rem;
-`;
-
-export const ButtonSeeAll = styled(Button_2)`
-  margin-top: auto;
-`;
-
-export const ButtonSeeWhoLiked = styled(Button_2)`
-  font-size: 1.2rem;
-  align-self: flex-start;
-`;
-
-export const GridContainer = styled.div`
-  display: grid;
-  grid-gap: 2rem;
-  grid-template-columns: repeat(2, 1fr);
-  margin-top: 2rem;
-`;
-
-export const Image = styled.div`
-  position: relative;
-  padding-top: 100%;
-  border-radius: 0.3rem;
-  overflow: hidden;
-  & > img {
-    top: 0;
-    left: 0;
-    position: absolute;
-  }
-`;
-
-export const Info = styled.span`
-  display: block;
-  text-align: center;
-  font-size: 1.2rem;
-  padding-top: 2rem;
-  margin-top: 2rem;
+  padding-top: 1rem;
+  list-style: none;
   ${({ theme }) => `
     border-top: ${theme.lightBorder};
   `}
 `;
 
-export const Seller = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 2rem;
-  width: 30rem;
+export const ItemAbout = styled(ItemInfo)`
+  font-size: 1.2rem;
 `;
 
-export const SellerProfile = styled.div`
-  display: flex;
-  align-items: center;
-  font-size: 1.6rem;
-`;
-
-export const SellerOtherItems = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-`;
-
-export const LikeButton = styled(InvisibleButton)`
-  position: relative;
-  padding: 1rem;
-  margin-right: 1rem;
-  &:hover {
-    cursor: pointer;
+export const Button = styled(Button_2)`
+  &:first-of-type {
+    margin-top: 2rem;
   }
-  & > div > div > svg {
-    position: absolute;
-    top: 50%;
-    left: 50;
-    transform: translate(-50%, -50%);
-    width: 1.6rem;
-    height: 1.6rem;
-    fill: ${({ theme }) => `${theme.colorGreyDark1}`};
+  &:not(:first-of-type) {
+    margin-top: 1rem;
   }
+`;
+
+export const ImagesGrid = styled.div`
+  grid-column: 1/2;
+  display: grid;
+  grid-auto-rows: 1fr;
+  grid-auto-columns: 1fr;
+  height: 60rem;
+  grid-gap: 0.2rem;
+  margin-bottom: 4rem;
+  ${({ theme }) => `
+    box-shadow: ${theme.lightShadow};
+  `}
 `;
 
 export const ImageButton = styled(InvisibleButton)`
   position: absolute;
+  top: 0%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+`;
+
+export const Image = styled.img`
+  position: absolute;
   top: 0;
   left: 0;
-  height: 100%;
-  width: 100%;
-  z-index: 100;
+  border-radius: 0.3rem;
+`;
+
+export const ImageContainer = styled.div<{
+  imagesQuantity?: number;
+  imagePosition: number;
+}>`
+  position: relative;
+  ${({ imagesQuantity, imagePosition }) => `
+    ${
+      imagePosition === 0
+        ? `
+      grid-row: 1/3;
+      grid-column: 1/2;
+    `
+        : ""
+    }
+    ${
+      imagePosition === 1
+        ? `
+    grid-column: 2/3;
+    grid-row: ${imagesQuantity > 2 ? "1/2" : "1/3"};
+    `
+        : ""
+    }
+    ${
+      imagePosition === 2
+        ? `
+    grid-column: 2/3;
+    grid-row: 2/3;
+    `
+        : ""
+    }
+  `}
 `;

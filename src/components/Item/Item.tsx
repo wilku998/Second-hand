@@ -1,34 +1,25 @@
 import React, { useEffect, useState } from "react";
+import moment from "moment";
 import { inject, observer } from "mobx-react";
-import { Link } from "react-router-dom";
 import { history, viewStore } from "../../app";
 import style, {
   Content,
-  Image,
-  Description,
-  Title,
-  ButtonMessage,
-  Seller,
-  SellerProfile,
-  Info,
-  GridContainer,
-  MainImageContainer,
-  MainImage,
-  ButtonSeeAll,
-  SellerOtherItems,
+  Button,
   ItemInfo,
-  LikeButton,
+  ItemAbout,
+  ImagesGrid,
+  Image,
+  ImageContainer,
   ImageButton
 } from "./styleItem";
 import Avatar from "../Abstracts/Avatar";
 import Container from "../Abstracts/Container";
-import { FakeImage } from "../Abstracts/FakeImage";
 import { getItemRequest, getItemsRequest } from "../../API/items";
 import IItem from "../../interfaces/IItem";
 import { IUserStore } from "../../store/user";
-import ReactSVG from "react-svg";
 import { unlikeItemRequest, likeItemRequest } from "../../API/users";
-import getItemTitle from "../../functions/getItemTitle";
+import { SellerProfile } from "./CreateItem/styleCreateItem";
+import ItemsSection from "../Section/ItemsSection/ItemsSection";
 
 export interface IProps {
   className: string;
@@ -41,51 +32,53 @@ const Item = ({ className, match, userStore }: IProps) => {
   const ownItems = userStore.getOwnItems;
   const user = userStore.getUser;
   const [item, setItem]: [IItem, any] = useState(undefined);
-  const [isLiked, setIsLiked] = useState(false);
   const [sellerOtherItems, setSellerOtherItems] = useState([]);
-
-  const userID = user ? user._id : "";
+  const userID = user ? user._id : undefined;
+  if (item) {
+    var isLiked = item.likedBy.findIndex(user => user._id === userID) > -1;
+  }
 
   if (item) {
     var {
-      category,
       brand,
+      category,
+      itemModel,
       size,
       price,
       images,
       owner,
       description,
       condition,
-      itemModel,
       likedBy,
-      _id
+      _id,
+      createdAt
     } = item;
-    var title = getItemTitle(item);
+    var parsedCreatedAt = moment(createdAt).format("DD-MM-YYYY");
   }
-
-  const onSeeAllClick = () => {
-    history.push(`/users/${item.owner._id}`);
-  };
-
 
   const onLikeClick = async () => {
     try {
       if (isLiked) {
-        await unlikeItemRequest(_id, item.owner._id);
+        try {
+          await unlikeItemRequest(_id, item.owner._id);
+          setItem({
+            ...item,
+            likedBy: item.likedBy.filter(e => e._id !== user._id)
+          });
+        } catch (e) {}
       } else {
-        await likeItemRequest(_id, item.owner._id);
+        try {
+          await likeItemRequest(_id, item.owner._id);
+          setItem({
+            ...item,
+            likedBy: [
+              ...item.likedBy,
+              { avatar: user.avatar, _id: user._id, name: user.name }
+            ]
+          });
+        } catch (e) {}
       }
-      await fetchItem(_id)
-    }catch(e){
-    }
-  };
-
-  const fetchItem = async (id: string) => {
-    const foundedItem: IItem = await getItemRequest(id);
-    if (foundedItem) {
-      setItem(foundedItem);
-    }
-    return foundedItem;
+    } catch (e) {}
   };
 
   const onPhotoClick = (e: any) => {
@@ -95,7 +88,7 @@ const Item = ({ className, match, userStore }: IProps) => {
       isOpen: true,
       defaultPosition: index,
       images,
-      title
+      title: "title"
     };
   };
 
@@ -104,25 +97,17 @@ const Item = ({ className, match, userStore }: IProps) => {
   };
 
   useEffect(() => {
-    if (item) {
-      setIsLiked(item.likedBy.findIndex(user => user._id === userID) > -1);
-    }
-  }, [item]);
-
-  useEffect(() => {
     const isOwn = ownItems.findIndex(e => e._id === itemID) > -1;
     if (isOwn) {
       history.push(`/items/edit/${itemID}`);
     } else {
       const fetchData = async () => {
-        const foundedItem = await fetchItem(itemID);
+        const foundedItem = await getItemRequest(itemID);
         if (foundedItem) {
-          const otherItems: Array<IItem> = await getItemsRequest([
-            {
-              selectedFilters: [foundedItem.owner._id],
-              name: "owner"
-            }
-          ]);
+          const otherItems: Array<IItem> = await getItemsRequest(
+            `?owner=${foundedItem.owner._id}&limit=4`
+          );
+          setItem(foundedItem);
           if (otherItems) {
             setSellerOtherItems(otherItems.filter(e => e._id !== itemID));
           }
@@ -138,78 +123,51 @@ const Item = ({ className, match, userStore }: IProps) => {
         <span>przedmiot nie został znaleziony</span>
       ) : (
         <div className={className}>
-          <Seller>
-            <SellerProfile>
-              <Avatar size="big" src={owner.avatar} />
-              <Link to={`/users/${owner._id}`}>{owner.name}</Link>
-            </SellerProfile>
-            {sellerOtherItems.length > 0 ? (
-              <SellerOtherItems>
-                <Info>Inne przedmioty sprzedającego</Info>
-                <GridContainer>
-                  {sellerOtherItems.slice(0, 6).map(otherItem => (
-                    <Image
-                      as={Link}
-                      to={`/items/${otherItem._id}`}
-                      key={otherItem._id}
-                    >
-                      <img src={otherItem.images[0]} />
-                    </Image>
-                  ))}
-                </GridContainer>
-                {sellerOtherItems.length > 6 && (
-                  <ButtonSeeAll onClick={onSeeAllClick}>
-                    Zobacz wszystkie
-                  </ButtonSeeAll>
-                )}
-              </SellerOtherItems>
-            ) : (
-              <Info>Sprzedawca nie posiada więcej przedmiotów na sprzedaż</Info>
-            )}
-          </Seller>
-          <MainImageContainer>
-            <FakeImage />
-            <MainImage src={images[0]} />
-            <ImageButton onClick={onPhotoClick} name={images[0]} />
-          </MainImageContainer>
+          <ImagesGrid>
+            {images.map((img, i) => (
+              <ImageContainer
+                key={img}
+                imagesQuantity={images.length}
+                imagePosition={i}
+              >
+                <ImageButton name={img} onClick={onPhotoClick} />
+                <Image src={img} />
+              </ImageContainer>
+            ))}
+          </ImagesGrid>
           <Content>
-            <Title>
-              <LikeButton onClick={onLikeClick}>
-                <ReactSVG
-                  src={isLiked ? "/svg/heartbreak.svg" : "/svg/heart.svg"}
-                />
-              </LikeButton>
-              {title}
-            </Title>
-            <ItemInfo>
-              <span>Stan: {condition}</span>
-              <span>Rozmiar: {size}</span>
-              <span>Cena: {price}PLN</span>
-              <span>
+            <SellerProfile to={`/users/${owner._id}`}>
+              <Avatar size="big" src={owner.avatar} />
+              <span>{owner.name}</span>
+            </SellerProfile>
+            <ItemAbout>
+              <li>Dodano w dniu: {parsedCreatedAt}</li>
+              <li>
                 Polubione przez {likedBy.length}{" "}
                 {likedBy.length === 1 ? "osobę" : "osób"}
-              </span>
-              {description && <Description>{description}</Description>}
+              </li>
+            </ItemAbout>
+            <ItemInfo as="ul">
+              <li>Marka: {brand}</li>
+              {itemModel && <li>Marka: {itemModel}</li>}
+              <li>Kategoria: {category}</li>
+              <li>Stan: {condition}</li>
+              <li>Rozmiar: {size}</li>
+              <li>Cena: {price}PLN</li>
             </ItemInfo>
-            <ButtonMessage onClick={sendMessage}>
+            {description && <ItemInfo as="span">{description}</ItemInfo>}
+            <Button onClick={onLikeClick}>
+              {!isLiked ? "Dodaj to polubionych" : "Usuń z polubionych"}
+            </Button>
+            <Button onClick={sendMessage}>
               Napisz wiadomość do sprzedawcy
-            </ButtonMessage>
-            {images.length > 1 ? (
-              <div>
-                <Info>Inne zdjęcia przedmiotu</Info>
-                <GridContainer>
-                  {images.slice(1).map(otherImage => (
-                    <Image key={otherImage}>
-                      <ImageButton onClick={onPhotoClick} name={otherImage} />
-                      <img src={otherImage} />
-                    </Image>
-                  ))}
-                </GridContainer>
-              </div>
-            ) : (
-              <Info>Przedmiot nie posiada więcej zdjęć</Info>
-            )}
+            </Button>
           </Content>
+          <ItemsSection
+            limit={8}
+            title="Inne przedmioty sprzedającego"
+            items={sellerOtherItems}
+          />
         </div>
       )}
     </Container>

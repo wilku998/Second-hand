@@ -127,6 +127,9 @@ export const parseUser = async (user: IUser, notificationsDelete?: boolean) => {
   }
 };
 
+export const parseUsers = async (users: IUser[]) =>
+  await Promise.all(users.map(user => parseUser(user, true)));
+
 export const parseItem = async (item: IItem) => {
   await item.populate("owner").execPopulate();
   const { avatar, name, _id }: any = item.owner;
@@ -150,7 +153,10 @@ export const createQueryItems = (query: any) => {
   const { priceFrom, priceTo, name, owner } = query;
 
   let match: IMatch = {
-    price: {$gte: priceFrom ? parseInt(priceFrom) : 0, $lte: priceTo ? parseInt(priceTo) : 10000}
+    price: {
+      $gte: priceFrom ? parseInt(priceFrom) : 0,
+      $lte: priceTo ? parseInt(priceTo) : 10000
+    }
   };
 
   Object.keys(query).forEach(
@@ -175,7 +181,7 @@ export const createQueryItems = (query: any) => {
         key !== "skip" &&
         key !== "limit" &&
         key !== "sortBy" &&
-        key !== "order" 
+        key !== "order"
       ) {
         if (key === "name") {
           match = {

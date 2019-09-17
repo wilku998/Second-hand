@@ -12,7 +12,8 @@ import {
   parseFollowsAndLikes,
   getFollowedBy,
   createQueryUsers,
-  parseNumber
+  parseNumber,
+  parseUsers
 } from "./functions";
 import Item from "../models/item";
 
@@ -208,10 +209,7 @@ router.get("/api/users", async (req, res) => {
       .skip(parseNumber(skip))
       .limit(parseNumber(limit));
 
-    const users = await Promise.all(
-      foundedUsers.map(async user => await parseUser(user, true))
-    );
-
+    const users = await parseUsers(foundedUsers);
     res.send(users);
   } catch (e) {
     res.status(404).send();
@@ -265,9 +263,10 @@ router.get("/api/users/followsAndLikes/:id", async (req, res) => {
 
     res.send({
       likedItems: parseFollowsAndLikes(likedItems, "item"),
-      follows: parseFollowsAndLikes(follows, "user"),
-      followedBy
+      follows: await parseUsers(parseFollowsAndLikes(follows, "user")),
+      followedBy: await parseUsers(followedBy)
     });
+    
   } catch (e) {
     res.status(404).send();
   }

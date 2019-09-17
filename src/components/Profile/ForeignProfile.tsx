@@ -19,41 +19,63 @@ export interface IProps {
 
 const ForeignProfile = ({ match, userStore }: IProps) => {
   const userID = match.params.id;
-  const ownProfile = userStore.getUser
+  const ownProfile = userStore.getUser;
   const [user, setUser]: [
     { user: IUser; ownItems: Array<IItem> },
     (user: { user: IUser; ownItems: Array<IItem> }) => void
   ] = useState({ user: undefined, ownItems: undefined });
-  const isFollowed = userStore.getUser ? checkIfIsFollowed(ownProfile.follows, userID) : false
 
-  const fetchData = async () => {
-    const foundedUser = await getUserRequest(userID);
-    if (foundedUser) {
-      setUser(foundedUser);
-    }
-  };
+  const isFollowed = userStore.getUser
+    ? checkIfIsFollowed(ownProfile.follows, userID)
+    : false;
 
   const buttons = [
-    { text: "Wyślij wiadomość", onClick: () => {
-      history.push(`/messenger/${userID}`)
-    } },
+    {
+      text: "Wyślij wiadomość",
+      onClick: () => {
+        history.push(`/messenger/${userID}`);
+      }
+    },
     {
       text: isFollowed ? "Przestań obserwować" : "Obserwuj",
       onClick: async () => {
         if (isFollowed) {
-          await unfollowUserRequest(userID);
+          try {
+            await unfollowUserRequest(userID);
+            setUser({
+              ...user,
+              user: {
+                ...user.user,
+                followedBy: user.user.followedBy.filter(
+                  e => e !== ownProfile._id
+                )
+              }
+            });
+          } catch (e) {}
         } else {
-          await followUserRequest(userID);
+          try {
+            await followUserRequest(userID);
+            setUser({
+              ...user,
+              user: {
+                ...user.user,
+                followedBy: [...user.user.followedBy, ownProfile._id]
+              }
+            });
+          } catch (e) {}
         }
-        fetchData();
       }
     }
   ];
 
   useEffect(() => {
-    if (userID !== "me") {
-      fetchData();
-    }
+    const fetchData = async () => {
+      const foundedUser = await getUserRequest(userID);
+      if (foundedUser) {
+        setUser(foundedUser);
+      }
+    };
+    fetchData();
   }, [userID]);
 
   return (

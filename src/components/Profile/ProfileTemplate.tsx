@@ -2,17 +2,17 @@ import React, { useEffect, useState } from "react";
 import style, {
   UserLabel,
   UserInfo,
-  Avatar,
-  AvatarContainer,
   Name,
   Content,
-  Button
+  Button,
+  Avatar,
+  AvatarContainer
 } from "./styleProfile";
 import IUser from "../../interfaces/IUser";
 import IItem from "../../interfaces/IItem";
-import { FakeImage } from "../Abstracts/FakeImage";
 import ItemsSection from "../Section/ItemsSection/ItemsSection";
 import { getFollowsAndLikes } from "../../API/users";
+import UsersSection from "../Section/UsersSection/UsersSection";
 
 export interface IProps {
   className?: string;
@@ -33,8 +33,14 @@ const ProfileTemplate = ({
     var { avatar, name, _id } = user;
   }
   const [likedItems, setLikedItems]: [IItem[], any] = useState([]);
-  const [follows, setFollows]: [IUser[], any] = useState([]);
-  const [followedBy, setFollowedBy]: [IUser[], any] = useState([]);
+  const [follows, setFollows]: [
+    { user: IUser; ownItems: IItem[] }[],
+    any
+  ] = useState([]);
+  const [followedBy, setFollowedBy]: [
+    { user: IUser; ownItems: IItem[] }[],
+    any
+  ] = useState([]);
 
   useEffect(() => {
     if (user) {
@@ -44,6 +50,7 @@ const ProfileTemplate = ({
           follows: fetchedFollows,
           followedBy: fetchedFollowedBy
         } = await getFollowsAndLikes(_id);
+        console.log({ fetchedFollows, fetchedLikedItems });
         setLikedItems(fetchedLikedItems);
         setFollows(fetchedFollows);
         setFollowedBy(fetchedFollowedBy);
@@ -58,7 +65,6 @@ const ProfileTemplate = ({
         <Content>
           <UserLabel>
             <AvatarContainer>
-              <FakeImage />
               <Avatar src={avatar} />
             </AvatarContainer>
             <UserInfo>
@@ -75,6 +81,7 @@ const ProfileTemplate = ({
           </UserLabel>
           {ownItems && (
             <ItemsSection
+              limit={8}
               items={ownItems}
               title={
                 isOwnProfile ? "Twoje przedmioty" : "Przedmioty użytkownika"
@@ -82,7 +89,21 @@ const ProfileTemplate = ({
             />
           )}
           {likedItems.length > 0 && (
-            <ItemsSection items={likedItems} title="Polubione przedmioty" />
+            <ItemsSection
+              limit={8}
+              items={likedItems}
+              title="Polubione przedmioty"
+            />
+          )}
+          {follows.length > 0 && (
+            <UsersSection
+              limit={3}
+              users={follows}
+              title={isOwnProfile ? "Obserwujesz" : "Obserwuje"}
+            />
+          )}
+          {followedBy.length > 0 && (
+            <UsersSection limit={3} users={followedBy} title="Obserwujący" />
           )}
         </Content>
       ) : (

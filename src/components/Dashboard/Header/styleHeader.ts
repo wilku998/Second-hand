@@ -5,7 +5,7 @@ import Button_1 from "../../Abstracts/Button_1";
 
 export default (Header: FunctionComponent<IProps>) => styled(Header)`
   padding: 4rem 4rem 8rem 4rem;
-  margin-bottom: 8rem;
+  margin-bottom: 4rem;
   display: flex;
   align-items: flex-start;
   position: relative;

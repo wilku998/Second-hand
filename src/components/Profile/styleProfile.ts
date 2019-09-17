@@ -1,27 +1,24 @@
 import { FunctionComponent } from "react";
 import styled from "styled-components";
 import { IProps } from "./Profile";
-import AvatarTemplate from "../Abstracts/Avatar";
 import Button_2 from "../Abstracts/Button_2";
 
 export default (Profile: FunctionComponent<IProps>) => styled(Profile)`
-    display: flex;
-    justify-content: center;
-    margin-top: 4rem;    
+  display: flex;
+  justify-content: center;
+  margin-top: 4rem;
 `;
 
 export const Content = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    ${({theme}) => `
-        background-color: ${theme.colorGreyLight1};
-        padding: 4rem;
-        width: calc(${theme.rowWidth} + 8rem);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  ${({ theme }) => `
+      width: ${theme.rowWidth};
     `}
 `;
 
-export const Avatar = styled(AvatarTemplate)`
+export const Avatar = styled.img`
   position: absolute;
   top: 0;
   left: 0;
@@ -31,13 +28,16 @@ export const Avatar = styled(AvatarTemplate)`
 
 export const AvatarContainer = styled.div`
   position: relative;
-  display: grid;
-  grid-auto-columns: max-content;
+  width: 20rem;
 `;
 
 export const UserLabel = styled.div`
+  width: 100%;
   display: flex;
-  margin-bottom: 4rem;
+  padding-bottom: 2rem;
+  ${({ theme }) => `
+    border-bottom: ${theme.lightBorder2};
+  `}
 `;
 
 export const UserInfo = styled.div`
@@ -47,10 +47,10 @@ export const UserInfo = styled.div`
 `;
 
 export const Name = styled.h1`
-    font-weight: 400;
-    font-size: 3rem;
+  font-weight: 400;
+  font-size: 3rem;
 `;
 
 export const Button = styled(Button_2)`
   margin-top: 1rem;
-`
+`;
