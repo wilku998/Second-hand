@@ -173,7 +173,7 @@ const ComponentTemplate = ({
     <Container>
       <div className={className}>
         <AddPhotosContainer>
-          <SellerProfile>
+          <SellerProfile as="div">
             <Avatar size="big" src={user.avatar} />
             <span>{user.name}</span>
           </SellerProfile>

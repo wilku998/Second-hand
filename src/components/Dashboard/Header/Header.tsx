@@ -1,41 +1,35 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { inject, observer } from "mobx-react";
 import style, {
   Content,
   Title,
   Description,
   Button,
-  Background,
   BackgroundDesc
 } from "./styleHeader";
 import Logo from "../../Abstracts/Logo";
-import images from "./images";
+import { IUserStore } from "../../../store/user";
+import { history } from "../../../app";
 
 export interface IProps {
   className?: string;
+  userStore?: IUserStore
 }
 
-const Header = ({ className }: IProps) => {
-  const [position, setPosition] = useState(0);
+const Header = ({ className, userStore }: IProps) => {
+  const isAuth = userStore.isAuth;
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setPosition(position + 1 > 2 ? 0 : position + 1);
-    }, 5000);
-    return () => {
-      clearInterval(interval);
+  const onStartSellClick = () => {
+    if(isAuth){
+      history.push("/items/create");
+    }else{
+      history.push("/login")
     }
-  }, []);
+  };
 
   return (
     <header className={className}>
-      {images.map((img, imgIndex) => (
-        <Background
-          key={img.image}
-          visible={position === imgIndex}
-          src={img.image}
-        />
-      ))}
-      <BackgroundDesc>{images[position].desc}</BackgroundDesc>
+      {/* <BackgroundDesc>Eo eoeo eo</BackgroundDesc> */}
       <Content>
         <Logo size="big" squareColor="dark" />
         <Title>Masz w szafie pełno starych, nie noszonych ubrań?</Title>
@@ -43,9 +37,9 @@ const Header = ({ className }: IProps) => {
           W takim razie trafiłeś w odpowiednie miejsce, gdzie możesz dać im
           drugie życie.
         </Description>
-        <Button>Zacznij sprzedawać</Button>
+        <Button onClick={onStartSellClick}>Zacznij sprzedawać</Button>
       </Content>
     </header>
   );
 };
-export default style(Header);
+export default inject("userStore")(observer(style(Header)));

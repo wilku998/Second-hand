@@ -45,6 +45,8 @@ export const SubMenuList = styled.ul`
   top: 100%;
   right: 0;
   width: 100%;
+  max-height: 20rem;
+  overflow-y: auto;
   text-transform: none;
   text-align: center;
   ${({ theme }) => `

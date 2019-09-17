@@ -9,6 +9,7 @@ export default (Header: FunctionComponent<IProps>) => styled(Header)`
   display: flex;
   align-items: flex-start;
   position: relative;
+  background: url('/images/header_background.jpg') center/cover no-repeat fixed;
 `;
 
 export const Button = styled(Button_1)`
@@ -47,19 +48,6 @@ export const Title = styled.h1`
 export const Description = styled.p`
   font-size: 1.8rem;
   margin-bottom: 2rem;
-`;
-
-export const Background = styled.img<{visible: boolean}>`
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-  object-position: center;
-  ${({ visible }) => `
-    opacity: ${visible ? 1 : 0};
-  `}
 `;
 
 export const BackgroundDesc = styled.span`
