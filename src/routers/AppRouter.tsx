@@ -17,6 +17,7 @@ import SearchUsers from "../components/Search/SearchUsers/SearchUsers";
 import RemoveProfile from "../components/popups/RemoveProfile/RemoveProfile";
 import Gallery from "../components/Gallery/Gallery";
 import Messenger from "../components/Messenger/Messenger";
+import Footer from "../components/Footer/Footer";
 
 interface IProps {
   history: any;
@@ -60,6 +61,7 @@ const AppRouter = ({ history, userStore }: IProps) => {
         <Route path="/items/:id" component={Item} />
         <PublicRoute path="/login" isAuth={isAuth} component={Login} />
       </Switch>
+      <Footer />
     </Router>
   );
 };

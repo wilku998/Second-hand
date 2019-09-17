@@ -23,6 +23,7 @@ export default {
 	colorGreyLight4: '#e9e9e9',
 	colorGreyLight5: '#e2e2e2',
 	colorGreyLight6: '#ccc',
+	colorGreyDark0: '#272727',
 	colorGreyDark1: '#333',
 	colorGreyDark2: 'rgb(59, 59, 59)',
 	colorGreyDark3: '#444',
