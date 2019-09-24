@@ -5,7 +5,7 @@ export default async (userIDString: string, room: IMessangerRoom) => {
   const { isReaded, roomName, messages } = room;
   const interlocutorID = roomName.replace("-", "").replace(userIDString, "");
   const interlocutor = await User.findById(interlocutorID);
-
+  
   return {
     isReaded,
     roomName,

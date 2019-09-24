@@ -79,7 +79,7 @@ export const parseUser = async (user: IUser, notificationsDelete?: boolean) => {
           user
         } = e;
 
-        const parsedUser = await getMinifedUser(e.user);
+        const parsedUser = await getMinifedUser(user);
         if (!parsedUser) {
           return null;
         }

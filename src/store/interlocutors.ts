@@ -1,5 +1,6 @@
 import { observable, computed, autorun, toJS } from "mobx";
 import IInterlocutor from "../interfaces/IInterlocutor";
+import { userStore } from "../app";
 
 export interface IInterlocutorsStore {
   interlocutors: Array<IInterlocutor>;
@@ -28,7 +29,12 @@ export default class InterlocutorsStore {
   }
 
   @computed get unreadedMessagesQuantity() {
-    return this.interlocutors.filter(e => !e.isReaded && e.lastMessage).length;
+    const user = userStore.getMinifiedUser;
+    return this.interlocutors.filter(
+      e =>
+        !e.isReaded &&
+        (e.lastMessage ? e.lastMessage.senderID !== user._id : false)
+    ).length;
   }
 
   getInterlocutor(_id: string) {

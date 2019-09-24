@@ -1,4 +1,3 @@
-import IItem from "./IItem";
 import INotification from "./INotification";
 
 export default interface IUser {
@@ -10,7 +9,6 @@ export default interface IUser {
   followedBy?: Array<string>;
   likedItems?: Array<string>;
   notifications?: INotification[];
-  notificationsReaded?: boolean;
 }
 
 export interface IMinifedUser {

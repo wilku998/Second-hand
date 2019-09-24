@@ -130,6 +130,10 @@ io.on("connection", (socket: Socket) => {
     "sendLikeItem",
     async (itemID, userToEmitID, user: IMinifedUser) => {
       const item = await getMinifedItem(itemID);
+      const userToEmit = await User.findById(userToEmitID);
+      userToEmit.populate("ownItems").execPopulate();
+      console.log(userToEmit.ownItems);
+
       await createAndEmitNotification(
         await User.findById(userToEmitID),
         "ownItemLikedBySomeone",
@@ -137,12 +141,18 @@ io.on("connection", (socket: Socket) => {
         item,
         "item"
       );
-      await emitNotificationForFollowedBy(
-        "followedUserLiked",
-        user,
-        item,
-        "item"
-      );
+      if (
+        userToEmit.ownItems.findIndex(
+          (e: any) => e._id.toString() === itemID
+        ) === -1
+      ) {
+        await emitNotificationForFollowedBy(
+          "followedUserLiked",
+          user,
+          item,
+          "item"
+        );
+      }
     }
   );
 

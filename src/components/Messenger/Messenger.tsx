@@ -46,28 +46,22 @@ const Messanger = ({ match, userStore, interlocutorsStore }: IProps) => {
   }
 
   useEffect(() => {
-    const existingInterlocutor = interlocutorsStore.getInterlocutor(
-      interlocutorID
-    );
-    if (existingInterlocutor) {
-      setInterlocutor(existingInterlocutor.interlocutor);
+    if (interlocutorFromStore) {
+      setInterlocutor(interlocutorFromStore.interlocutor);
     }
   }, [interlocutorID, interlocutors]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const existingInterlocutor = interlocutorsStore.getInterlocutor(
-        interlocutorID
-      );
       let room;
-      if (!existingInterlocutor) {
+      if (!interlocutorFromStore) {
         try {
           room = await createMessangerRoomRequest(interlocutorID);
           socket.emit("sendNewRoom", room, user._id, interlocutorID);
         } catch (e) {
         }
       } else {
-        room = await getMessangerRoomRequest(existingInterlocutor.roomName);
+        room = await getMessangerRoomRequest(interlocutorFromStore.roomName);
       }
       if (room) {
         setMessages(room.messages);

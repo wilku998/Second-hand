@@ -50,7 +50,7 @@ socket.on("unfollow", (userID: string) => {
 });
 
 socket.on("notification", (notification: any) => {
-  //add notification
+  userStore.addToArray("notifications", notification)
 });
 
 socket.on("messageReaded", (roomName: string) => {

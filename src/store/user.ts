@@ -25,7 +25,7 @@ export interface IUserStore {
 export default class UserStore {
   constructor() {
     autorun(() => {
-      // console.log(this.getUser);
+      console.log(this.getUser);
       // console.log(this.getOwnItems);
     });
   }
@@ -93,8 +93,8 @@ export default class UserStore {
     this.user[property] = this.user[property].filter(e => e !== _id);
   }
 
-  addToArray(property: "follows" | "likedItems" | "followedBy", _id: string) {
-    this.user[property] = [...this.user[property], _id];
+  addToArray(property: "follows" | "likedItems" | "followedBy" | "notifications", any: any) {
+    this.user[property] = [...this.user[property], any];
   }
 
   ownItemLikedBySomeone(_id: string, user: IUser) {

@@ -20,13 +20,14 @@ router.get(
 
       const interlocutors = await Promise.all(
         messangerRooms.map(async room => {
-          const lastMessage = await createInterlocutor(userIDString, room);
-          return lastMessage;
+          const interlocutor = await createInterlocutor(userIDString, room);
+          return interlocutor;
         })
       );
 
       res.send(interlocutors.filter(e => e.interlocutor));
     } catch (e) {
+      console.log(e);
       res.status(500).send();
     }
   }
