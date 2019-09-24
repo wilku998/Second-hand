@@ -6,6 +6,8 @@ import UsersSection from "../Section/UsersSection/UsersSection";
 import { getItemsRequest } from "../../API/items";
 import fetchData from "../../API/fetchData";
 import { getMostPopularUsersRequest } from "../../API/users";
+import media from "../../styles/media";
+import Container from "../Abstracts/Container";
 
 const Dashboard = () => {
   const [items, setItems] = useState(undefined);
@@ -28,18 +30,12 @@ const Dashboard = () => {
   return (
     <main>
       <Header />
-      <Main>
+      <Container>
         {items && <ItemsSection title="Ostatnio dodane" items={items} />}
         {users && <UsersSection title="Najlepsi sprzedawcy" users={users} />}
-      </Main>
+      </Container>
     </main>
   );
 };
-const Main = styled.main`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: fit-content;
-  margin: auto;
-`;
+
 export default Dashboard;

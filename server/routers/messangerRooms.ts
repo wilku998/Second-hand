@@ -4,6 +4,7 @@ import authMiddleware from "../middlwares/auth";
 import MessangerRoom from "../models/messangerRoom";
 import { createRegexObj } from "./functions";
 import createInterlocutor from "../functions/createInterlocutor";
+import User from "../models/user";
 
 const router = express.Router();
 
@@ -23,7 +24,8 @@ router.get(
           return lastMessage;
         })
       );
-      res.send(interlocutors);
+
+      res.send(interlocutors.filter(e => e.interlocutor));
     } catch (e) {
       res.status(500).send();
     }
@@ -35,15 +37,20 @@ router.post(
   authMiddleware,
   async (req: IAuthRequest, res) => {
     const { interlocutorID } = req.body;
-    const userIDString = req.user._id.toString()
+    const userIDString = req.user._id.toString();
     try {
+      const interlocutor = await User.findById(interlocutorID);
+      if(!interlocutor){
+        throw new Error();
+      }
       const room = new MessangerRoom({
         roomName: `${userIDString}-${interlocutorID}`
       });
       await room.save();
+
       res.status(201).send(room);
     } catch (e) {
-      res.status(500).send();
+      res.status(404).send();
     }
   }
 );

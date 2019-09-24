@@ -3,13 +3,18 @@ import styled from "styled-components";
 import ReactSVG from "react-svg";
 import { IProps } from "./Menu";
 import InvisibleButton from "../../Abstracts/InvisibleButton";
+import media from "../../../styles/media";
 
 export default (Menu: FunctionComponent<IProps>) => styled(Menu)`
   list-style: none;
   display: flex;
-  margin-left: auto;
   align-self: stretch;
   position: relative;
+  margin-left: auto;
+  ${media.medium`
+    height: 4.5rem;
+    margin-left: 0;
+  `}
 `;
 
 export const MenuItem = styled.li`
@@ -20,6 +25,9 @@ export const MenuItem = styled.li`
     ${({ theme }) => `
       border-right: ${theme.lightBorder2};
     `}
+  }
+  &:last-child {
+    padding-right: 0;
   }
 `;
 
@@ -57,9 +65,15 @@ export const SubMenuList = styled.ul`
   & > li {
     width: 100%;
   }
+  ${media.small`
+    position: fixed;
+    top: 4.5rem;
+    border-left: none;
+    border-right: none;
+  `}
 `;
 
-export const SubMenuListButton = styled(InvisibleButton)`
+export const SubMenuListButton = styled(InvisibleButton)<{color: string}>`
   padding: 0.7rem 1rem;
   width: 100%;
   line-height: 1.15;

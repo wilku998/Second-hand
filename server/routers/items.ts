@@ -32,15 +32,14 @@ router.get("/api/items/count", async (req, res) => {
 router.get("/api/items", async (req, res) => {
   const { skip, limit, order, sortBy } = req.query;
   const query = createQueryItems(req.query);
-  console.log(query);
+
   try {
     const items = await Item.find(query)
       .sort({ [sortBy]: parseNumber(order) })
       .skip(parseNumber(skip))
       .limit(parseNumber(limit));
 
-      console.log(items);
-    const parsedItems = await Promise.all(
+      const parsedItems = await Promise.all(
       items.map(async item => {
         return await parseItem(item);
       })

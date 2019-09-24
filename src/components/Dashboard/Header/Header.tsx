@@ -5,7 +5,8 @@ import style, {
   Title,
   Description,
   Button,
-  BackgroundDesc
+  BackgroundDesc,
+  HeaderLogo
 } from "./styleHeader";
 import Logo from "../../Abstracts/Logo";
 import { IUserStore } from "../../../store/user";
@@ -31,7 +32,7 @@ const Header = ({ className, userStore }: IProps) => {
     <header className={className}>
       {/* <BackgroundDesc>Eo eoeo eo</BackgroundDesc> */}
       <Content>
-        <Logo size="big" squareColor="dark" />
+        <HeaderLogo />
         <Title>Masz w szafie pełno starych, nie noszonych ubrań?</Title>
         <Description>
           W takim razie trafiłeś w odpowiednie miejsce, gdzie możesz dać im

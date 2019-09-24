@@ -1,8 +1,9 @@
 import styled from "styled-components";
 
 export const Content = styled.div`
-  width: 35rem;
+  max-width: 35rem;
   padding: 2rem;
+  border-radius: .3rem;
 `;
 
 export const ErrorMessage = styled.span`

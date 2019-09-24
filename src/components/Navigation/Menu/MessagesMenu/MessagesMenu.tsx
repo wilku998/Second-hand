@@ -1,6 +1,5 @@
 import React from "react";
 import { inject, observer } from "mobx-react";
-import IInterlocutor from "../../../../interfaces/IInterlocutor";
 import {
   ButtonIcon,
   SubMenuList,
@@ -29,7 +28,7 @@ const MessagesMenu = React.forwardRef(
     { isVisible, closeMenu, openMenu, interlocutorsStore, userStore }: IProps,
     ref
   ) => {
-    const interlocutors = interlocutorsStore.getInterlocutors;
+    const interlocutors = interlocutorsStore.getInterlocutorsWithMessage;
     const user = userStore.getUser;
     const unreadedMessagesQuantity =
       interlocutorsStore.unreadedMessagesQuantity;
@@ -41,6 +40,7 @@ const MessagesMenu = React.forwardRef(
         openMenu("messagesMenu");
       }
     };
+
     return (
       <SubMenu onClick={onClick} ref={ref}>
         <SubMenuIconContainer>
@@ -58,7 +58,11 @@ const MessagesMenu = React.forwardRef(
                     <SubMenuListButton
                       as={Link}
                       to={`/messenger/${e.interlocutor._id}`}
-                      color={e.isReaded && e.lastMessage.senderID !== user._id}
+                      color={
+                        e.isReaded && e.lastMessage.senderID !== user._id
+                          ? "dark"
+                          : "light"
+                      }
                     >
                       <UserLabel>
                         <Avatar size="small" src={e.interlocutor.avatar} />

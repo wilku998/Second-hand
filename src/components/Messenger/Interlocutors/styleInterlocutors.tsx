@@ -2,6 +2,7 @@ import { FunctionComponent } from "react";
 import styled from "styled-components";
 import { IProps } from "./Interlocutors";
 import { Link } from "react-router-dom";
+import media from '../../../styles/media';
 
 export default (Interlocutors: FunctionComponent<IProps>) => styled(
   Interlocutors
@@ -12,6 +13,10 @@ export default (Interlocutors: FunctionComponent<IProps>) => styled(
     border-bottom: ${theme.lightBorder2};
     border-left: ${theme.lightBorder2};
   `}
+
+  ${media.medium`
+    display: none;
+  `}
 `;
 
 export const InterlocutorsContainer = styled.div`
@@ -19,9 +24,6 @@ export const InterlocutorsContainer = styled.div`
   overflow: auto;
   display: flex;
   flex-direction: column;
-  ${({ theme }) => `
-    height: calc(${theme.chatHeight} + 4rem);
-  `}
 `;
 
 export const Interlocutor = styled(Link)`
@@ -35,7 +37,7 @@ export const Interlocutor = styled(Link)`
   }
 `;
 
-export const LastMessage = styled.p<{isUnreaded: boolean}>`
+export const LastMessage = styled.p<{ isUnreaded: boolean }>`
   display: block;
   line-height: 1;
   font-size: 1.3rem;
@@ -56,4 +58,4 @@ export const NoMessages = styled.span`
   text-align: center;
   margin-top: 2rem;
   font-size: 1.2rem;
-`
+`;

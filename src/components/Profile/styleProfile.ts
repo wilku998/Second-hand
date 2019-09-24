@@ -2,20 +2,19 @@ import { FunctionComponent } from "react";
 import styled from "styled-components";
 import { IProps } from "./Profile";
 import Button_2 from "../Abstracts/Button_2";
+import media from "../../styles/media";
 
 export default (Profile: FunctionComponent<IProps>) => styled(Profile)`
-  display: flex;
-  justify-content: center;
-  margin-top: 4rem;
-`;
-
-export const Content = styled.div`
+  margin-top: 2rem;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   ${({ theme }) => `
       width: ${theme.rowWidth};
     `}
+  ${media.big`
+    width: 100%;
+  `}
 `;
 
 export const Avatar = styled.img`
@@ -29,6 +28,16 @@ export const Avatar = styled.img`
 export const AvatarContainer = styled.div`
   position: relative;
   width: 20rem;
+  ${({ theme }) => `
+    border: ${theme.lightBorder2};
+  `}
+
+  ${media.small`
+    height: 20rem;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto 2rem auto;
+  `}
 `;
 
 export const UserLabel = styled.div`
@@ -38,17 +47,42 @@ export const UserLabel = styled.div`
   ${({ theme }) => `
     border-bottom: ${theme.lightBorder2};
   `}
+
+  ${media.small`
+    flex-direction: column;
+  `}
 `;
 
 export const UserInfo = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: 2rem;
+  ${media.small`
+    margin-left: 0;
+    text-align: center;
+  `}
 `;
 
 export const Name = styled.h1`
   font-weight: 400;
   font-size: 3rem;
+  line-height: 1.2;
+`;
+
+export const DesktopName = styled(Name)`
+  margin-bottom: 0.5rem;
+  ${media.small`
+    display: none;
+  `}
+`;
+
+export const MobileName = styled(Name)`
+  display: none;
+  text-align: center;
+  margin-bottom: 2rem;
+  ${media.small`
+    display: block;
+  `}
 `;
 
 export const Button = styled(Button_2)`

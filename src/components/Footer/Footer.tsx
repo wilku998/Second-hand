@@ -1,5 +1,5 @@
 import React from "react";
-import style, { List, Text } from "./styleFooter";
+import style, { List, About, ListItem } from "./styleFooter";
 
 export interface IProps {
   className?: string;
@@ -7,14 +7,14 @@ export interface IProps {
 
 const Footer = ({ className }: IProps) => (
   <footer className={className}>
-    <Text>Aplikacja została stworzona w celach edukacyjnych</Text>
+    <About>Aplikacja została stworzona w celach edukacyjnych</About>
     <List>
-      <Text as="li">Bartosz Wilk</Text>
-      <Text as="li">Wszelkie prawa zastrzeżone &copy;</Text>
-      <Text as="li">Kontakt: bartoszwilk98@wp.pl</Text>
-      <Text as="li">
+      <ListItem>Bartosz Wilk</ListItem>
+      <ListItem>Wszelkie prawa zastrzeżone &copy;</ListItem>
+      <ListItem>Kontakt: bartoszwilk98@wp.pl</ListItem>
+      <ListItem>
         <a target="_blank" href="https://github.com/wilku998/Second-hand">Kod aplikacji na github</a>
-      </Text>
+      </ListItem>
     </List>
   </footer>
 );

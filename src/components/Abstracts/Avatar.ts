@@ -5,7 +5,7 @@ export default styled.img<{ size: string }>`
   object-position: center;
   border-radius: 50%;
   margin-right: 1rem;
-
+  
   ${({ size, theme }) => `
     border: ${theme.lightBorder2};
     ${

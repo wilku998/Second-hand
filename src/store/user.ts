@@ -1,7 +1,7 @@
 import { observable, computed, autorun, toJS } from "mobx";
 import IUser from "../interfaces/IUser";
 import IItem from "../interfaces/IItem";
-import { IUpdate, IItemKeys } from "../components/Item/CreateItem/interfaces";
+import { IUpdate, IItemKeys } from "../components/CreateItem/interfaces";
 
 export interface IUserStore {
   user: IUser;

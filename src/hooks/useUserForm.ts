@@ -4,7 +4,7 @@ import validator from "validator";
 const validate = (property: string, value: string, otherValue?: string) => {
   switch (property) {
     case "name":
-      return value.length >= 6;
+      return value.length >= 6 && value.length <= 20;
     case "password":
       return value.length >= 6;
     case "confirmPassword":

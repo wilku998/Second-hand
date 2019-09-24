@@ -175,9 +175,10 @@ io.on("connection", (socket: Socket) => {
   socket.on(
     "sendNewRoom",
     async (room: IMessangerRoom, userID: string, interlocutorID: string) => {
+      const interlocutor = await createInterlocutor(userID, room);
+      socket.emit("newInterlocutor", interlocutor);
+
       emitToUser(interlocutorID, async (socketsToEmit: any) => {
-        const interlocutor = await createInterlocutor(userID, room);
-        socket.emit("newInterlocutor", interlocutor);
         socketsToEmit.map(async (socketId: string) => {
           const interlocutor = await createInterlocutor(interlocutorID, room);
           io.to(socketId).emit("newInterlocutor", interlocutor);
@@ -226,7 +227,7 @@ io.on("connection", (socket: Socket) => {
     if (room) {
       room.isReaded = true;
       room.save();
-      io.sockets.in(roomName).emit("messageReaded");
+      io.sockets.in(roomName).emit("messageReaded", roomName);
     }
   });
 

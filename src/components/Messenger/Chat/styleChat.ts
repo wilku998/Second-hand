@@ -1,13 +1,18 @@
 import styled from "styled-components";
 import Button_2 from "../../Abstracts/Button_2";
 import { Link } from "react-router-dom";
+import media from "../../../styles/media";
 
 export const StyledChat = styled.section`
   display: flex;
   flex-direction: column;
   ${({ theme }) => `
-        border: ${theme.lightBorder2};
-    `}
+    border: ${theme.lightBorder2};
+  `}
+
+  ${media.medium`
+    flex: 1;
+  `}
 `;
 
 export const Messages = styled.div`
@@ -17,9 +22,10 @@ export const Messages = styled.div`
   background-color: white;
   word-break: break-word;
   overflow: auto;
-  ${({ theme }) => `
-    flex: 0 0 ${theme.chatHeight};
-  `}
+  flex: 1;
+  /* ${({ theme }) => `
+    flex: 0 1 ${theme.chatHeight};
+  `} */
 `;
 
 export const Message = styled.span<{ isOwn: boolean }>`
@@ -47,7 +53,6 @@ export const Message = styled.span<{ isOwn: boolean }>`
 
 export const Form = styled.form`
   padding: 0.5rem 2rem;
-  height: 4rem;
   ${({ theme }) => `
         border-top: ${theme.lightBorder2};
         background-color: ${theme.colorGreyLight1};

@@ -1,6 +1,5 @@
 import React, { useState, ChangeEvent, useRef, useEffect } from "react";
 import ReactSVG from "react-svg";
-import { Link } from "react-router-dom";
 import { inject, observer } from "mobx-react";
 import {
   Content,
@@ -12,15 +11,15 @@ import {
   SearchCat,
   StyledNavigation,
   LogoContainer,
-  Login
+  Login,
+  NavigationLogo,
+  MobileSearchIcon
 } from "./styleNavigation";
-import Logo from "../Abstracts/Logo";
 import CollapseIcon from "../Abstracts/CollapseIcon";
-import { getUsersRequest, getUsersCountRequest } from "../../API/users";
-import { getItemsRequest, getItemsCountRequest } from "../../API/items";
-import { searchStore, history } from "../../app";
+import { history } from "../../app";
 import Menu from "./Menu/Menu";
 import { IUserStore } from "../../store/user";
+import { ButtonIcon, SubMenuIconContainer } from "./Menu/styleMenu";
 
 export interface IProps {
   userStore?: IUserStore;
@@ -32,10 +31,13 @@ const Navigation = ({ userStore }: IProps) => {
   const [searchCat, setSearchCat] = useState("Przedmioty");
   const [searchCatListVisible, setSearchCatListVisible] = useState(false);
   const [closeSubmenuRequest, setCloseSubmenuRequest] = useState(false);
+  const [mobileSearchVisible, setMobileSearchVisible] = useState(false);
   const searchCatRef = useRef();
   const userMenuRef = useRef();
   const messagesMenuRef = useRef();
   const notificationsMenuRef = useRef();
+  const mobileSearchRef = useRef();
+  const mobileSearchButtonRef = useRef();
 
   const onCatChange = (e: any) => {
     const { name } = e.target;
@@ -63,6 +65,9 @@ const Navigation = ({ userStore }: IProps) => {
     }
   };
 
+  const onMobileSearchClick = () =>
+    setMobileSearchVisible(!mobileSearchVisible);
+
   useEffect(() => {
     const clickLisiner = (e: Event) => {
       const refs = [userMenuRef, messagesMenuRef, notificationsMenuRef];
@@ -70,13 +75,22 @@ const Navigation = ({ userStore }: IProps) => {
         setSearchCatListVisible(false);
       }
       if (
-        isAuth
-          ? refs.every(ref => {
-              return !ref.current || !ref.current.contains(e.target);
-            })
-          : false
+        !mobileSearchRef.current.contains(e.target) &&
+        !mobileSearchButtonRef.current.contains(e.target)
       ) {
-        setCloseSubmenuRequest(true);
+        setMobileSearchVisible(false);
+      }
+      if (isAuth) {
+        if (
+          refs.every(ref => {
+            return !ref.current || !ref.current.contains(e.target);
+          })
+        ) {
+          setCloseSubmenuRequest(true);
+        } else {
+          setMobileSearchVisible(false);
+          setSearchCatListVisible(false);
+        }
       }
     };
     window.addEventListener("click", clickLisiner);
@@ -89,9 +103,12 @@ const Navigation = ({ userStore }: IProps) => {
     <StyledNavigation>
       <Content>
         <LogoContainer to="/">
-          <Logo size="small" squareColor="light" />
+          <NavigationLogo />
         </LogoContainer>
-        <SearchContainer>
+        <SearchContainer
+          ref={mobileSearchRef}
+          mobileSearchVisible={mobileSearchVisible}
+        >
           <SearchCat ref={searchCatRef}>
             <SearchCatButton onClick={onSearchCatButtonClick}>
               <span>{searchCat}</span>
@@ -116,7 +133,6 @@ const Navigation = ({ userStore }: IProps) => {
               </SearchCatButtonList>
             )}
           </SearchCat>
-
           <SearchInput
             onChange={onSearchInputChange}
             type="text"
@@ -127,6 +143,12 @@ const Navigation = ({ userStore }: IProps) => {
             <ReactSVG src="/svg/search.svg" />
           </SearchButton>
         </SearchContainer>
+        <MobileSearchIcon
+          ref={mobileSearchButtonRef}
+          onClick={onMobileSearchClick}
+        >
+          <ButtonIcon src="/svg/search.svg" />
+        </MobileSearchIcon>
         {!isAuth ? (
           <Login to="/login">Zaloguj się</Login>
         ) : (

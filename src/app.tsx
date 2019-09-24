@@ -14,20 +14,14 @@ import ViewStore from "./store/view";
 import InterlocutorsStore from "./store/interlocutors";
 import IMessage from "./interfaces/IMessage";
 import IUser from "./interfaces/IUser";
-import { IInterlocutorsStore } from "./store/interlocutors";
+import IInterlocutor from "./interfaces/IInterlocutor";
 
 export const socket = io();
 
-socket.on(
-  "newInterlocutor",
-  (interlocutor: IInterlocutorsStore["interlocutors"][0]) => {
-    socket.emit("join", interlocutor.roomName);
-    interlocutorsStore.interlocutors = [
-      ...interlocutorsStore.getInterlocutors,
-      interlocutor
-    ];
-  }
-);
+socket.on("newInterlocutor", (interlocutor: IInterlocutor) => {
+  socket.emit("join", interlocutor.roomName);
+  interlocutorsStore.addInterlocutor(interlocutor);
+});
 
 socket.on("message", (newMessage: IMessage, roomName: string) => {
   interlocutorsStore.interlocutors = interlocutorsStore.getInterlocutors.map(
@@ -56,8 +50,11 @@ socket.on("unfollow", (userID: string) => {
 });
 
 socket.on("notification", (notification: any) => {
-  console.log('!!!')
-  console.log(notification)
+  //add notification
+});
+
+socket.on("messageReaded", (roomName: string) => {
+  interlocutorsStore.readMessage(roomName);
 });
 
 export const userStore = new UserStore();

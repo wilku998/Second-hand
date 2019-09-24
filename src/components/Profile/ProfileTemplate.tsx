@@ -2,17 +2,18 @@ import React, { useEffect, useState } from "react";
 import style, {
   UserLabel,
   UserInfo,
-  Name,
-  Content,
   Button,
   Avatar,
-  AvatarContainer
+  AvatarContainer,
+  MobileName,
+  DesktopName
 } from "./styleProfile";
 import IUser from "../../interfaces/IUser";
 import IItem from "../../interfaces/IItem";
 import ItemsSection from "../Section/ItemsSection/ItemsSection";
 import { getFollowsAndLikes } from "../../API/users";
 import UsersSection from "../Section/UsersSection/UsersSection";
+import Container from "../Abstracts/Container";
 
 export interface IProps {
   className?: string;
@@ -60,15 +61,16 @@ const ProfileTemplate = ({
   }, [user]);
 
   return (
-    <section className={className}>
+    <Container>
       {user ? (
-        <Content>
+        <div className={className}>
           <UserLabel>
+            <MobileName>{name}</MobileName>
             <AvatarContainer>
               <Avatar src={avatar} />
             </AvatarContainer>
             <UserInfo>
-              <Name>{name}</Name>
+              <DesktopName>{name}</DesktopName>
               <span>Przedmiotów na sprzedaż: {ownItems.length}</span>
               <span>Oberwujących: {followedBy.length}</span>
               <span>Obeserwuje: {follows.length}</span>
@@ -105,11 +107,11 @@ const ProfileTemplate = ({
           {followedBy.length > 0 && (
             <UsersSection limit={3} users={followedBy} title="Obserwujący" />
           )}
-        </Content>
+        </div>
       ) : (
         <span>użytkownik nie został odnaleziony</span>
       )}
-    </section>
+    </Container>
   );
 };
 

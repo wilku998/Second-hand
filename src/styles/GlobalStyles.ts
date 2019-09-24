@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components";
+import media from "./media";
 
 export default createGlobalStyle`
     * {
@@ -17,7 +18,10 @@ export default createGlobalStyle`
 
     html {
         font-size: 62.5%;
-        scroll-behavior: smooth;
+
+        /* ${media.big`
+            font-size: 50%;
+        `} */
     }
 
 
@@ -28,7 +32,8 @@ export default createGlobalStyle`
         position: relative;
         ${({ theme }) => `
             color: ${theme.colorGreyDark2};
-            background-color: ${theme.colorGreyLight2};
+            // background-color: ${theme.colorGreyLight2};
+            background: linear-gradient(to right bottom, ${theme.colorGreyLight1}, ${theme.colorGreyLight2});
             padding-top: ${theme.navigationHeight};
         `}
     }

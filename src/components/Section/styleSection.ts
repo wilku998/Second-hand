@@ -1,24 +1,32 @@
 import styled from "styled-components";
 import Button_1 from "../Abstracts/Button_1";
+import media from "../../styles/media";
 
 export const StyledUsersSection = styled.div`
- margin-top: 4rem;
+  margin-top: 4rem;
+  width: ${({ theme }) => theme.rowWidth};
+  ${media.big`
+    width: 100%;
+  `}
 `;
 
 export const StyledItemSection = styled.section`
   width: ${({ theme }) => theme.rowWidth};
+  ${media.big`
+    width: 100%;
+  `}
   margin-top: 4rem;
 `;
 
 export const UserSection = styled.section`
-  width: ${({ theme }) => theme.rowWidth};
+  width: 100%;
   &:not(:first-of-type) {
     margin-top: 4rem;
   }
 `;
 
 export const Title = styled.h1`
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: 400;
   margin-bottom: 1rem;
 `;
@@ -29,6 +37,20 @@ export const ItemsContainer = styled.div`
   grid-gap: 4rem;
   align-items: flex-start;
   width: 100%;
+  ${media.big`
+    grid-gap: 2rem;
+  `}
+  ${media.medium`
+    grid-template-columns: repeat(3, 1fr);
+  `}
+
+  ${media.medium_2`
+    grid-template-columns: repeat(2, 1fr);
+  `}
+  
+  ${media.smallest`
+    grid-template-columns: repeat(1,1fr);
+  `}
 `;
 
 export const Info = styled.span`

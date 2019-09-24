@@ -2,7 +2,7 @@ import IItem from "../interfaces/IItem";
 import ajax from "./ajax";
 import { userStore, socket } from "../app";
 import fetchData from "./fetchData";
-import { IUpdate } from "../components/Item/CreateItem/interfaces";
+import { IUpdate } from "../components/CreateItem/interfaces";
 import { addImagesRequest, removeImageRequest } from "./images";
 
 export const addItemRequest = async (item: IItem, images: Array<string>) => {

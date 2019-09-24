@@ -3,17 +3,27 @@ import styled from "styled-components";
 import { IProps } from "./Item";
 import Button_2 from "../Abstracts/Button_2";
 import InvisibleButton from "../Abstracts/InvisibleButton";
+import media, { sizes } from "../../styles/media";
 
 export default (Item: FunctionComponent<IProps>) => styled(Item)`
-  display: grid;
+  margin-top: 2rem;
+  display: flex;
   align-items: start;
-  grid-template-columns: calc(100% - 35rem) 35rem;
+  flex-wrap: wrap;
   ${({ theme }) => `
     width: ${theme.rowWidth};
   `}
+  ${media.big`
+    width: 100%;
+  `}
+  ${media.medium`
+    flex-direction: column;
+    align-items: stretch;
+  `}
 `;
 
-export const Content = styled.div`
+export const ItemLabel = styled.div`
+  flex: 0 0 35rem;
   padding: 2rem;
   margin-left: 2rem;
   display: flex;
@@ -24,8 +34,12 @@ export const Content = styled.div`
     border: ${theme.lightBorder2};
     box-shadow: ${theme.lightShadow};
   `}
+  ${media.medium`
+    margin-left: 0;
+    margin-bottom: 2rem;
+    order: 0;
+  `}
 `;
-
 
 export const ItemInfo = styled.ul`
   margin-top: 1rem;
@@ -50,15 +64,22 @@ export const Button = styled(Button_2)`
 `;
 
 export const ImagesGrid = styled.div`
-  grid-column: 1/2;
+  flex: 1;
   display: grid;
   grid-auto-rows: 1fr;
   grid-auto-columns: 1fr;
   height: 60rem;
   grid-gap: 0.2rem;
-  margin-bottom: 4rem;
   ${({ theme }) => `
     box-shadow: ${theme.lightShadow};
+  `}
+  ${media.medium`
+    order: 1;
+  `}
+  ${media.medium_2`
+    height: initial;
+    grid-gap: 2rem;
+    box-shadow: none;
   `}
 `;
 
@@ -89,6 +110,9 @@ export const ImageContainer = styled.div<{
         ? `
       grid-row: 1/3;
       grid-column: 1/2;
+      @media only screen and (max-width: ${sizes.medium_2}em) {
+        grid-row: 1/2;
+      }
     `
         : ""
     }
@@ -97,6 +121,9 @@ export const ImageContainer = styled.div<{
         ? `
     grid-column: 2/3;
     grid-row: ${imagesQuantity > 2 ? "1/2" : "1/3"};
+    @media only screen and (max-width: ${sizes.medium_2}em) {
+      grid-row: 2/3;
+    }
     `
         : ""
     }
@@ -105,8 +132,21 @@ export const ImageContainer = styled.div<{
         ? `
     grid-column: 2/3;
     grid-row: 2/3;
+    @media only screen and (max-width: ${sizes.medium_2}em) {
+      grid-row: 3/4;
+    }
     `
         : ""
     }
+  `}
+  ${media.medium_2`
+    grid-column: 1/3;
+    height: 30rem;
+  `}
+`;
+
+export const SellerOtherItemsContainer = styled.div`
+  ${media.medium`
+    order: 2;
   `}
 `;

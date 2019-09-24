@@ -11,7 +11,7 @@ export default {
     valid: true,
     label: "Imię",
     type: "text",
-    errorMessage: "Imię powinno mieć co najmniej 6 znaków"
+    errorMessage: "Imię powinno mieć co najmniej 6 znaków oraz mniej niż 20"
   },
   password: {
     value: "123456",

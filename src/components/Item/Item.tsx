@@ -3,14 +3,15 @@ import moment from "moment";
 import { inject, observer } from "mobx-react";
 import { history, viewStore } from "../../app";
 import style, {
-  Content,
+  ItemLabel,
   Button,
   ItemInfo,
   ItemAbout,
   ImagesGrid,
   Image,
   ImageContainer,
-  ImageButton
+  ImageButton,
+  SellerOtherItemsContainer
 } from "./styleItem";
 import Avatar from "../Abstracts/Avatar";
 import Container from "../Abstracts/Container";
@@ -18,7 +19,7 @@ import { getItemRequest, getItemsRequest } from "../../API/items";
 import IItem from "../../interfaces/IItem";
 import { IUserStore } from "../../store/user";
 import { unlikeItemRequest, likeItemRequest } from "../../API/users";
-import { SellerProfile } from "./CreateItem/styleCreateItem";
+import { SellerProfile } from "../CreateItem/styleCreateItem";
 import ItemsSection from "../Section/ItemsSection/ItemsSection";
 
 export interface IProps {
@@ -135,7 +136,7 @@ const Item = ({ className, match, userStore }: IProps) => {
               </ImageContainer>
             ))}
           </ImagesGrid>
-          <Content>
+          <ItemLabel>
             <SellerProfile to={`/users/${owner._id}`}>
               <Avatar size="big" src={owner.avatar} />
               <span>{owner.name}</span>
@@ -162,12 +163,14 @@ const Item = ({ className, match, userStore }: IProps) => {
             <Button onClick={sendMessage}>
               Napisz wiadomość do sprzedawcy
             </Button>
-          </Content>
-          <ItemsSection
-            limit={8}
-            title="Inne przedmioty sprzedającego"
-            items={sellerOtherItems}
-          />
+          </ItemLabel>
+          <SellerOtherItemsContainer>
+            <ItemsSection
+              limit={8}
+              title="Inne przedmioty sprzedającego"
+              items={sellerOtherItems}
+            />
+          </SellerOtherItemsContainer>
         </div>
       )}
     </Container>

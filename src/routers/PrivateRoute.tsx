@@ -13,7 +13,7 @@ export default ({
   <Route
     path={path}
     component={(props: any) =>
-      !isAuth ? <Redirect to="/" /> : <Component {...props} />
+      !isAuth ? <Redirect to="/login" /> : <Component {...props} />
     }
   />
 );

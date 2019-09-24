@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Avatar from "../../../Abstracts/Avatar";
 import { logoutRequest } from "../../../../API/users";
-import { Label } from "./styleUserMenu";
+import { Label, UserName } from "./styleUserMenu";
 import CollapseIcon from "../../../Abstracts/CollapseIcon";
 import { viewStore } from "../../../../app";
 import { SubMenuList, SubMenuListButton, SubMenu } from "../styleMenu";
@@ -30,7 +30,7 @@ const UserMenu = observer(
       <SubMenu onClick={onClick} ref={ref}>
         <Label>
           <Avatar src={user.avatar} size="small" />
-          <span>{user.name}</span>
+          <UserName>{user.name}</UserName>
           <CollapseIcon width="1rem" listvisible={isVisible.toString()} />
           {isVisible && (
             <SubMenuList>
