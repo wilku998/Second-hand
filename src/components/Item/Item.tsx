@@ -21,6 +21,7 @@ import { IUserStore } from "../../store/user";
 import { unlikeItemRequest, likeItemRequest } from "../../API/users";
 import { SellerProfile } from "../CreateItem/styleCreateItem";
 import ItemsSection from "../Section/ItemsSection/ItemsSection";
+import getItemTitle from "../../functions/getItemTitle";
 
 export interface IProps {
   className: string;
@@ -89,7 +90,7 @@ const Item = ({ className, match, userStore }: IProps) => {
       isOpen: true,
       defaultPosition: index,
       images,
-      title: "title"
+      title: getItemTitle(item)
     };
   };
 

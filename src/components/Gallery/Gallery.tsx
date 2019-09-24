@@ -4,15 +4,15 @@ import { inject, observer } from "mobx-react";
 import { IViewStore } from "../../store/view";
 import styles, {
   Content,
-  MoveButtonContainer,
   Image,
   PositionContainer,
   Circle,
-  ButtonsContainer,
   MoveIcon,
-  CloseIcon
+  CloseIcon,
+  Title,
+  Button,
+  Nav
 } from "./styleGallery";
-import InvisibleButton from "../Abstracts/InvisibleButton";
 
 interface IProps {
   viewStore?: IViewStore;
@@ -38,7 +38,7 @@ const Gallery = ({ viewStore }: IProps) => {
   useEffect(() => {
     setPosition(defaultPosition);
   }, [defaultPosition]);
-  
+
   return (
     <Modal
       style={styles}
@@ -46,23 +46,19 @@ const Gallery = ({ viewStore }: IProps) => {
       onRequestClose={viewStore.closeGallery}
     >
       <Content>
-        <ButtonsContainer>
-          <span>{title}</span>
-          <InvisibleButton onClick={viewStore.closeGallery}>
-            <CloseIcon src="/svg/close.svg" />
-          </InvisibleButton>
-        </ButtonsContainer>
-        <MoveButtonContainer>
-          <InvisibleButton onClick={decreasePosition}>
-            <MoveIcon src="/svg/left.svg" />
-          </InvisibleButton>
-        </MoveButtonContainer>
+        <Nav>
+          <Title>{title}</Title>
+            <Button onClick={decreasePosition}>
+              <MoveIcon src="/svg/left.svg" />
+            </Button>
+            <Button onClick={increasePosition}>
+              <MoveIcon isright="true" src="/svg/left.svg" />
+            </Button>
+            <Button onClick={viewStore.closeGallery}>
+              <CloseIcon src="/svg/close.svg" />
+            </Button>
+        </Nav>
         <Image src={images[position]} />
-        <MoveButtonContainer>
-          <InvisibleButton onClick={increasePosition}>
-            <MoveIcon isright="true" src="/svg/left.svg" />
-          </InvisibleButton>
-        </MoveButtonContainer>
         <PositionContainer>
           {images.map((e, i) => (
             <Circle key={e} isActive={i === position} />
