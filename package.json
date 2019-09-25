@@ -4,17 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "server:build": "tsc -p .",
-    "server:dev": "nodemon server/server.ts",
     "db": "C:/Users/HP/mongodb/bin/mongod.exe --dbpath=C:/Users/HP/mongodb-data",
-    "dev-server": "webpack-dev-server",
-    "build:watch": "webpack --watch --d"
+    "server:dev": "nodemon server/server.ts",
+    "server:prod": "tsc --outDir server-prod",
+    "client:dev": "webpack --watch --d",
+    "client:prod": "webpack -p --env production",
+    "heroku-postbuild": "npm run client:prod",
+    "start": "cross-env NODE_ENV=production node server-prod/server"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "chalk": "^2.4.2",
+    "concurrently": "^4.1.2",
     "cookie-parser": "^1.4.4",
     "express": "^4.17.1",
     "history": "^4.9.0",
@@ -37,12 +40,15 @@
     "socket.io-client": "^2.2.0",
     "styled-components": "^4.3.1",
     "ts-node": "^8.3.0",
-    "validator": "^11.1.0"
+    "validator": "^11.1.0",
+    "cross-env": "^6.0.0",
+    "dotenv": "^8.0.0"
+
   },
   "devDependencies": {
-    "@babel/plugin-proposal-decorators": "^7.4.4",
     "@babel/core": "^7.3.4",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-decorators": "^7.4.4",
     "@babel/preset-env": "^7.3.4",
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.3.3",
@@ -73,7 +79,6 @@
     "babel-plugin-syntax-object-rest-spread": "^6.13.0",
     "babel-polyfill": "^6.26.0",
     "css-loader": "^1.0.1",
-    "dotenv": "^8.0.0",
     "mini-css-extract-plugin": "^0.5.0",
     "mobx-react-devtools": "^6.1.1",
     "node-sass": "^4.11.0",
@@ -82,7 +87,7 @@
     "sass-loader": "^7.1.0",
     "source-map-loader": "^0.2.4",
     "style-loader": "^0.23.1",
-    "typescript": "^3.4.5",
+    "typescript": "^3.6.3",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.2.3",
     "webpack-dev-server": "^3.2.1"

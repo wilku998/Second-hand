@@ -1,6 +1,7 @@
+import path from "path";
+require('dotenv').config({path: path.resolve(__dirname, '.env.all')});
 import express from "express";
 import http from "http";
-import path from "path";
 import cookieParser from "cookie-parser";
 import itemsRouter from "./routers/items";
 import usersRouter from "./routers/users";

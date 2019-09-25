@@ -11,10 +11,10 @@
         "esModuleInterop": true,
         "experimentalDecorators":true,
     },
-    // "include": [
-    //     "./src/**/*"
-    // ],
+    "include": [
+        "./server/**/*"
+    ],
     "exclude": [
-        "node_modules"
+        "./node_modules/**/*"
     ]
 }

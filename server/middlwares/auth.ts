@@ -1,8 +1,5 @@
 import jwt from "jsonwebtoken";
-import path from 'path';
 import User from "../models/user";
-
-require('dotenv').config({path: path.resolve(__dirname, '..', '.env.all')});
 
 export default async (req: any, res: any, next: any) => {
   try {

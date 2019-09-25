@@ -1,4 +1,6 @@
 node_modules
 public/static/bundle.js
-public/static/bundle.map.js
+public/static/bundle.js.map
+public/static/style.css
+public/static/style.css.map
 server/.env.all
