@@ -32,7 +32,7 @@ const ItemInput = forwardRef(
     return (
       <Item ref={ref}>
         <SearchMenuButton name={name} onClick={onSearchMenuButtonClick}>
-          {label}
+          <span>{label}</span>
         </SearchMenuButton>
         {isVisible && (
           <InputContainer>

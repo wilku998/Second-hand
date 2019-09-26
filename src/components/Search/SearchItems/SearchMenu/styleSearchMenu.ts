@@ -2,6 +2,7 @@ import { FunctionComponent } from "react";
 import styled from "styled-components";
 import InvisibleButton from "../../../Abstracts/InvisibleButton";
 import Button_2 from "../../../Abstracts/Button_2";
+import media from "../../../../styles/media";
 
 export default (SearchMenu: FunctionComponent<IProps>) => styled(SearchMenu)`
   margin-bottom: 2rem;
@@ -13,6 +14,21 @@ export const ItemsContainer = styled.div`
   grid-auto-columns: 1fr;
   grid-gap: 1rem;
   margin-bottom: 1rem;
+
+  ${media.medium`
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, max-content);
+  `}
+
+  ${media.medium_2`
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, max-content);
+  `}
+
+  ${media.tiny`
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(6, max-content);
+  `}
 `;
 
 export const Item = styled.div`
@@ -36,7 +52,9 @@ export const Input = styled.input`
 
 export const SearchMenuButton = styled(InvisibleButton)`
   width: 100%;
+  height: 100%;
   padding: 0.75rem 1.5rem;
+  text-align: center;
 `;
 
 export const InputContainer = styled.div`

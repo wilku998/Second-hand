@@ -13,6 +13,7 @@ import parsePolishChars from "../../../functions/parsePolishChars";
 import { createQueryArr, createPageButtons } from "../functions/functions";
 import useSearch from "../hooks/useSearch";
 import SortContainer from "../SortContainer/SortContainer";
+import Container from "../../Abstracts/Container";
 
 const SearchItems = () => {
   const sortByOptions = [
@@ -208,36 +209,38 @@ const SearchItems = () => {
   );
 
   return (
-    <StyledSearch>
-      <SearchMenu
-        count={count}
-        sortByOptions={sortByOptions}
-        sortBy={sortBy}
-        onSortByChange={onSortByChange}
-        form={form}
-        setForm={setForm}
-        searchItems={searchItems}
-        activeFilters={activeFilters}
-        limit={limit}
-      />
-      <SortContainer
-        limit={limit}
-        sortBy={sortBy}
-        sortByOptions={sortByOptions}
-        onSortByChange={onSortByChange}
-        onLimitChange={onLimitChange}
-        resultsCountOptions={resultsCountOptions}
-      />
-      <ItemsSection items={items} />
-      {pages > 1 && (
-        <MoveButtons
-          page={page}
-          pages={pages}
-          pageButtons={pageButtons}
-          onMoveButtonClick={onMoveButtonClick}
+    <Container>
+      <StyledSearch>
+        <SearchMenu
+          count={count}
+          sortByOptions={sortByOptions}
+          sortBy={sortBy}
+          onSortByChange={onSortByChange}
+          form={form}
+          setForm={setForm}
+          searchItems={searchItems}
+          activeFilters={activeFilters}
+          limit={limit}
         />
-      )}
-    </StyledSearch>
+        <SortContainer
+          limit={limit}
+          sortBy={sortBy}
+          sortByOptions={sortByOptions}
+          onSortByChange={onSortByChange}
+          onLimitChange={onLimitChange}
+          resultsCountOptions={resultsCountOptions}
+        />
+        <ItemsSection items={items} />
+        {pages > 1 && (
+          <MoveButtons
+            page={page}
+            pages={pages}
+            pageButtons={pageButtons}
+            onMoveButtonClick={onMoveButtonClick}
+          />
+        )}
+      </StyledSearch>
+    </Container>
   );
 };
 

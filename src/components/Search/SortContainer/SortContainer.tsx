@@ -1,5 +1,5 @@
 import React from "react";
-import style, { ResultsCountButton, ResultsCount } from "./styleSortContainer";
+import style, { ResultsCountButton, ResultsCount, SortBy } from "./styleSortContainer";
 
 export interface IProps {
   limit: number;
@@ -29,7 +29,7 @@ const SortContainer = ({
         ))}
       </div>
     </ResultsCount>
-    <label>
+    <SortBy>
       Sortuj od
       <select value={sortBy} onChange={onSortByChange}>
         {sortByOptions.map(e => (
@@ -38,7 +38,7 @@ const SortContainer = ({
           </option>
         ))}
       </select>
-    </label>
+    </SortBy>
   </div>
 );
 

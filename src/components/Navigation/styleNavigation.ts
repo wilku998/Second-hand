@@ -144,9 +144,12 @@ export const LogoContainer = styled(Link)`
 `;
 
 export const Login = styled(Link)`
-  margin-left: auto;
   display: flex;
   align-items: center;
+  margin-left: auto;
+  ${media.medium`
+    margin-left: 1rem;
+  `}
 `;
 
 export const NavigationLogo = styled(Logo)`

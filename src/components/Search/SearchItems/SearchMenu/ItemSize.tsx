@@ -34,7 +34,7 @@ const ItemSize = forwardRef(({
   return (
     <Item ref={ref}>
       <SearchMenuButton name="size" onClick={onSearchMenuButtonClick}>
-        {label}
+        <span>{label}</span>
       </SearchMenuButton>
       {isVisible && (
         <InputContainer>

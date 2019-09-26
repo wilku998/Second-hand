@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { FunctionComponent } from "react";
 import { IProps } from "./SortContainer";
 import InvisibleButton from "../../Abstracts/InvisibleButton";
+import media from "../../../styles/media";
 
 export default (SortContainer: FunctionComponent<IProps>) => styled(
   SortContainer
@@ -12,11 +13,12 @@ export default (SortContainer: FunctionComponent<IProps>) => styled(
   margin-top: 1rem;
   padding-top: 1rem;
   ${({ theme }) => `
-  border-top: ${theme.lightBorder2};
-`}
-  & select {
-    margin-left: 1rem;
-  }
+    border-top: ${theme.lightBorder2};
+  `}
+
+  ${media.medium_2`
+    flex-direction: column-reverse;
+  `}
 `;
 
 export const ResultsCount = styled.div`
@@ -25,6 +27,10 @@ export const ResultsCount = styled.div`
   & > span {
     margin-bottom: 0.5rem;
   }
+
+  ${media.medium_2`
+    margin-top: 1rem;
+  `}
 `;
 
 export const ResultsCountButton = styled(InvisibleButton)<{
@@ -41,6 +47,21 @@ export const ResultsCountButton = styled(InvisibleButton)<{
     }
     &:not(:last-child){
         border-right: ${theme.lightBorder2};
+    }
+  `}
+`;
+
+export const SortBy = styled.label`
+  & > select {
+    margin-left: 1rem;
+  }
+
+  ${media.tiny`
+    display: flex;
+    flex-direction: column;
+
+    & > select{
+      margin: .5rem 0 0 0;
     }
   `}
 `;

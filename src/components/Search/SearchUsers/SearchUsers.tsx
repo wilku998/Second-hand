@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent, useEffect } from "react";
 import { StyledSearch } from "../styleSearch";
-import { SearchMenu, SearchContainer } from "./styleSearchUsers";
+import { SearchMenu, SearchContainer, NameInput } from "./styleSearchUsers";
 import UsersSection from "../../Section/UsersSection/UsersSection";
 import { getUsersRequest, getUsersCountRequest } from "../../../API/users";
 import { history } from "../../../app";
@@ -16,6 +16,7 @@ import SortContainer from "../SortContainer/SortContainer";
 import Button_2 from "../../Abstracts/Button_2";
 import IItem from "../../../interfaces/IItem";
 import parsePolishChars from "../../../functions/parsePolishChars";
+import Container from "../../Abstracts/Container";
 
 const SearchUsers = () => {
   const sortByOptions = [
@@ -24,12 +25,11 @@ const SearchUsers = () => {
     "Popularność rosnąco",
     "Popularność malejąco"
   ];
-  const resultsCountOptions = [1, 2, 3, 12, 14];
-  // const resultsCountOptions = [3, 6, 9, 12, 14];
+  const resultsCountOptions = [1, 3, 6, 9, 12];
 
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
-  const [limit, setLimit] = useState(resultsCountOptions[0]);
+  const [limit, setLimit] = useState(resultsCountOptions[1]);
   const [users, setUsers]: [
     { user: IUser[]; ownItems: IItem[] },
     any
@@ -144,34 +144,36 @@ const SearchUsers = () => {
   );
 
   return (
-    <StyledSearch>
-      <SearchMenu>
-        <SearchContainer>
-          <label>
-            Nazwa użytkownika
-            <input type="text" value={name} onChange={onNameChange} />
-          </label>
-          <Button_2 onClick={onSearchClick}>Szukaj użytkowników</Button_2>
-        </SearchContainer>
-        <SortContainer
-          count={count}
-          sortBy={sortBy}
-          sortByOptions={sortByOptions}
-          onSortByChange={onSortByChange}
-          onLimitChange={onLimitChange}
-          resultsCountOptions={resultsCountOptions}
-        />
-      </SearchMenu>
-      <UsersSection users={users} />
-      {pages > 1 && (
-        <MoveButtons
-          page={page}
-          pages={pages}
-          pageButtons={pageButtons}
-          onMoveButtonClick={onMoveButtonClick}
-        />
-      )}
-    </StyledSearch>
+    <Container>
+      <StyledSearch>
+        <SearchMenu>
+          <SearchContainer>
+            <NameInput>
+              Nazwa użytkownika
+              <input type="text" value={name} onChange={onNameChange} />
+            </NameInput>
+            <Button_2 onClick={onSearchClick}>Szukaj użytkowników</Button_2>
+          </SearchContainer>
+          <SortContainer
+            count={count}
+            sortBy={sortBy}
+            sortByOptions={sortByOptions}
+            onSortByChange={onSortByChange}
+            onLimitChange={onLimitChange}
+            resultsCountOptions={resultsCountOptions}
+          />
+        </SearchMenu>
+        <UsersSection users={users} />
+        {pages > 1 && (
+          <MoveButtons
+            page={page}
+            pages={pages}
+            pageButtons={pageButtons}
+            onMoveButtonClick={onMoveButtonClick}
+          />
+        )}
+      </StyledSearch>
+    </Container>
   );
 };
 
