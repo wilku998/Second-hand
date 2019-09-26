@@ -6,6 +6,7 @@ import media from "../../../styles/media";
 export const StyledChat = styled.section`
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
   ${({ theme }) => `
     border: ${theme.lightBorder2};
   `}
@@ -23,9 +24,6 @@ export const Messages = styled.div`
   word-break: break-word;
   overflow: auto;
   flex: 1;
-  /* ${({ theme }) => `
-    flex: 0 1 ${theme.chatHeight};
-  `} */
 `;
 
 export const Message = styled.span<{ isOwn: boolean }>`

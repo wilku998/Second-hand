@@ -58,8 +58,7 @@ const Messanger = ({ match, userStore, interlocutorsStore }: IProps) => {
         try {
           room = await createMessangerRoomRequest(interlocutorID);
           socket.emit("sendNewRoom", room, user._id, interlocutorID);
-        } catch (e) {
-        }
+        } catch (e) {}
       } else {
         room = await getMessangerRoomRequest(interlocutorFromStore.roomName);
       }
@@ -72,6 +71,7 @@ const Messanger = ({ match, userStore, interlocutorsStore }: IProps) => {
   }, [interlocutorID]);
 
   const onMessage = (message: IMessage, messageRoomName: string) => {
+    console.log({ roomName }, { messageRoomName });
     if (roomName === messageRoomName) {
       setMessages([...messages, message]);
     }
@@ -80,44 +80,42 @@ const Messanger = ({ match, userStore, interlocutorsStore }: IProps) => {
   useEffect(() => {
     socket.on("message", onMessage);
 
-    return () => {
-      socket.off("message", onMessage);
-    };
-  }, [roomName]);
-
-  useEffect(() => {
     if (
-      roomName &&
       messages.length > 0 &&
-      messages[messages.length - 1].senderID !== user._id
+      messages[messages.length - 1].senderID !== user._id &&
+      messages[messages.length - 1].senderID === interlocutorID
     ) {
       socket.emit("sendMessageReaded", roomName);
     }
-  }, [messages]);
+
+    return () => {
+      socket.off("message", onMessage);
+    };
+  }, [messages, roomName]);
 
   return (
     <MessangerContainer>
-        <StyledMessanger>
-          <InterlocutorsTitle>Twoje rozmowy</InterlocutorsTitle>
-          <UserLabel
-            user={interlocutor}
-            additionalStyles={`
+      <StyledMessanger>
+        <InterlocutorsTitle>Twoje rozmowy</InterlocutorsTitle>
+        <UserLabel
+          user={interlocutor}
+          additionalStyles={`
           border-top: ${theme.lightBorder2};
           border-left: ${theme.lightBorder2};
           border-right: ${theme.lightBorder2};
         `}
-          />
-          <Interlocutors
-            interlocutors={interlocutorsStore.getInterlocutorsWithMessage}
-          />
-          <Chat
-            isReaded={isReaded}
-            user={user}
-            interlocutor={interlocutor}
-            messages={messages}
-            roomName={roomName}
-          />
-        </StyledMessanger>
+        />
+        <Interlocutors
+          interlocutors={interlocutorsStore.getInterlocutorsWithMessage}
+        />
+        <Chat
+          isReaded={isReaded}
+          user={user}
+          interlocutor={interlocutor}
+          messages={messages}
+          roomName={roomName}
+        />
+      </StyledMessanger>
     </MessangerContainer>
   );
 };

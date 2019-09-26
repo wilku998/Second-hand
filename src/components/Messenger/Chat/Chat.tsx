@@ -33,13 +33,7 @@ interface IProps {
   isReaded: boolean;
 }
 
-const Chat = ({
-  user,
-  interlocutor,
-  roomName,
-  messages,
-  isReaded
-}: IProps) => {
+const Chat = ({ user, interlocutor, roomName, messages, isReaded }: IProps) => {
   const [message, setMessage] = useState("");
   const messagesRef = useRef();
 
@@ -75,7 +69,7 @@ const Chat = ({
     const messagesElement: any = messagesRef.current;
     messagesElement.scrollTop =
       messagesElement.scrollHeight - messagesElement.clientHeight;
-  }, [interlocutor]);
+  }, [messages, roomName]);
 
   return (
     <StyledChat>

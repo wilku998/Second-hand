@@ -74,6 +74,7 @@ export const ImagesGrid = styled.div`
     box-shadow: ${theme.lightShadow};
   `}
   ${media.medium`
+    flex: initial;
     order: 1;
   `}
   ${media.medium_2`
