@@ -45,6 +45,7 @@ export const ResultsCountButton = styled(InvisibleButton)<{
     `
         : "font-weight: 300;"
     }
+
     &:not(:last-child){
         border-right: ${theme.lightBorder2};
     }
