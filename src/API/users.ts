@@ -16,7 +16,6 @@ export const loginRequest = async (data: {
     const response: any = await ajax("POST", "/api/users/login", data, 200);
     setUserStore(response);
   } catch (e) {
-    console.log(e);
     return "Podane dane są nieprawidłowe";
   }
 };
@@ -27,7 +26,6 @@ export const getProfileRequest = async () => {
     const data = await response.json();
     await setUserStore(data);
   } catch (e) {
-    console.log(e);
   }
 };
 

@@ -19,7 +19,6 @@ export const addItemRequest = async (item: IItem, images: Array<string>) => {
     userStore.addItem(response);
     socket.emit("sendNewItem", userStore.getMinifiedUser, response._id);
   } catch (e) {
-    console.log(e);
   }
 };
 

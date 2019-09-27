@@ -71,7 +71,6 @@ const Messanger = ({ match, userStore, interlocutorsStore }: IProps) => {
   }, [interlocutorID]);
 
   const onMessage = (message: IMessage, messageRoomName: string) => {
-    console.log({ roomName }, { messageRoomName });
     if (roomName === messageRoomName) {
       setMessages([...messages, message]);
     }

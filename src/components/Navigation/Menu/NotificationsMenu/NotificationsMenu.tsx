@@ -81,7 +81,6 @@ const NotificationsMenu = React.forwardRef(
       }
       return object;
     });
-    console.log({ unreadedNotificationsQuantity });
 
     return (
       <MenuItem onClick={onClick} ref={ref}>

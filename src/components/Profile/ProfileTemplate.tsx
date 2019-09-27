@@ -51,7 +51,6 @@ const ProfileTemplate = ({
           follows: fetchedFollows,
           followedBy: fetchedFollowedBy
         } = await getFollowsAndLikes(_id);
-        console.log({ fetchedFollows, fetchedLikedItems });
         setLikedItems(fetchedLikedItems);
         setFollows(fetchedFollows);
         setFollowedBy(fetchedFollowedBy);
