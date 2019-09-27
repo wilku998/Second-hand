@@ -7,5 +7,9 @@ export default styled.button`
         background-color: ${theme.colorBlue3};
         color: ${theme.colorGreyLight2};
         border: ${theme.lightBorder};
+
+        &:disabled{
+          background-color: ${theme.colorBlue2};
+        }
     `}
 `;

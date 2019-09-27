@@ -5,6 +5,7 @@ import Loader from "../Abstracts/Loader";
 import { IProps } from "./ComponentTemplate";
 import { Link } from "react-router-dom";
 import media from "../../styles/media";
+import Button_2 from "../Abstracts/Button_2";
 
 export default (CreateItem: FunctionComponent<IProps>) => styled(CreateItem)`
   display: flex;
@@ -152,4 +153,17 @@ export const Info = styled.span`
   ${({ theme }) => `
     border-top: ${theme.lightBorder};
   `}
+`;
+
+export const Button = styled(Button_2)`
+  &:first-of-type {
+    margin-top: auto;
+  }
+`;
+
+export const AddLoader = styled(Loader)`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `;

@@ -9,7 +9,7 @@ export const StyledUserLabel = styled.div<{ additionalStyles?: string }>`
   ${({ theme, additionalStyles }) => `
     background-color: ${theme.colorGreyLight1};
     ${additionalStyles ? additionalStyles : ""}
-    border: ${theme.lightBorder1};
+    border: ${theme.darkBorder};
   `}
 
   ${media.small`

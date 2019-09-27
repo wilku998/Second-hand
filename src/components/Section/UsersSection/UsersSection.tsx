@@ -1,39 +1,33 @@
-import React, { Fragment, useState } from "react";
-import { inject, observer } from "mobx-react";
+import React, { useState } from "react";
 import UserLabel from "../../UserLabel/UserLabel";
 import IUser from "../../../interfaces/IUser";
 import IItem from "../../../interfaces/IItem";
 import {
   Title,
-  ItemsContainer,
   Info,
   ButtonShowMore,
   StyledUsersSection,
   UserSection
 } from "../styleSection";
-import Item from "../ItemsSection/ItemSmall/ItemSmall";
 import { IUserStore } from "../../../store/user";
-import prepareItemProperties from "../../../functions/prepareItemProperties";
+import Items from "../Items/Items";
 
 export interface IUserProps {
   users: Array<{ user: IUser; ownItems: Array<IItem> }>;
   title?: string;
   userStore?: IUserStore;
   limit?: number;
-}
-const UsersSection = ({ users, title, userStore, limit }: IUserProps) => {
-  const [allShowed, setAllShowed] = useState(false);
-  const ownItems = userStore.getOwnItems;
-  const ownProfile = userStore.getUser;
-  const likedItems = ownProfile ? ownProfile.likedItems : [];
+};
 
+const UsersSection = ({ users, title, limit }: IUserProps) => {
+  const [allShowed, setAllShowed] = useState(false);
   const onShowAllClick = () => setAllShowed(!allShowed);
 
   return (
     <StyledUsersSection>
       {title && <Title>{title}</Title>}
       {users.length > 0 ? (
-        <Fragment>
+        <>
           {(!limit || allShowed ? users : users.slice(0, limit)).map(user => (
             <UserSection key={user.user._id}>
               <UserLabel
@@ -41,15 +35,7 @@ const UsersSection = ({ users, title, userStore, limit }: IUserProps) => {
                 user={user.user}
               />
               {user.ownItems.length > 0 ? (
-                <ItemsContainer>
-                  {prepareItemProperties(
-                    user.ownItems.slice(0, 4),
-                    ownItems,
-                    likedItems
-                  ).map(item => (
-                    <Item item={item} key={item._id} />
-                  ))}
-                </ItemsContainer>
+                <Items limit={4} items={user.ownItems} />
               ) : (
                 <Info>
                   Użytkownik nie posiada żadnych przedmiotów na sprzedaż.
@@ -60,11 +46,12 @@ const UsersSection = ({ users, title, userStore, limit }: IUserProps) => {
 
           {users.length > limit && (
             <ButtonShowMore onClick={onShowAllClick}>
-              {allShowed ? "Ukryj resztę" : "Pokaż resztę"}
+              {allShowed
+                ? "Ukryj resztę użytkowników"
+                : "Pokaż resztę użytkowników"}
             </ButtonShowMore>
           )}
-
-        </Fragment>
+        </>
       ) : (
         <Info>Nie znaleziono użytkowinków</Info>
       )}
@@ -72,4 +59,4 @@ const UsersSection = ({ users, title, userStore, limit }: IUserProps) => {
   );
 };
 
-export default inject("userStore")(observer(UsersSection));
+export default UsersSection;

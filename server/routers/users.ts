@@ -197,7 +197,7 @@ router.get("/api/users", async (req, res) => {
   const query = createQueryUsers(name);
   try {
     const foundedUsers = await User.find(query)
-      .sort({ [sortBy]: parseNumber(order) })
+      .sort({ [sortBy ? sortBy : "_id"]: parseNumber(order) })
       .skip(parseNumber(skip))
       .limit(parseNumber(limit));
 

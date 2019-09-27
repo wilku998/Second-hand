@@ -1,12 +1,23 @@
+const getValueFromQueryArr = (queryArr: string[], string: string) => {
+  const parsedString = string + "=";
+  const indexOfElement = queryArr.findIndex(e => e.includes(parsedString));
+  const value = queryArr[indexOfElement];
+  return value ? value.replace(parsedString, "") : undefined;
+};
+
+export const getPage = (queryArr, value, limit) => {
+  const limitFromQuery = getValueFromQueryArr(queryArr, "limit");
+  return (
+    parseInt(value) / (limitFromQuery ? parseInt(limitFromQuery) : limit) + 1
+  );
+};
+
 export const createQueryArr = (search: string) =>
   search.replace("?", "").split("&");
 
 export const getValueFromQueryString = (search: string, string: string) => {
-  const parsedString = string + "=";
   const queryArr = createQueryArr(search);
-  const indexOfElement = queryArr.findIndex(e => e.includes(parsedString));
-  const value = queryArr[indexOfElement];
-  return value ? value.replace(parsedString, "") : undefined;
+  return getValueFromQueryArr(queryArr, string);
 };
 
 export const createPageButtons = (page: number, pages: number) => {
@@ -32,5 +43,5 @@ export const createPageButtons = (page: number, pages: number) => {
       break;
     }
   }
-  return pageButtons
+  return pageButtons;
 };

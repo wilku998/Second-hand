@@ -36,7 +36,7 @@ router.get("/api/items", async (req, res) => {
 
   try {
     const items = await Item.find(query)
-      .sort({ [sortBy]: parseNumber(order) })
+      .sort({ [sortBy ? sortBy : "_id"]: parseNumber(order) })
       .skip(parseNumber(skip))
       .limit(parseNumber(limit));
 

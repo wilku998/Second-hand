@@ -7,7 +7,7 @@ import { IProps } from "./MoveButtons";
 export default (MoveButtons: FunctionComponent<IProps>) => styled(MoveButtons)`
   display: flex;
   justify-content: center;
-  margin-top: 4rem;
+  margin-top: 6rem;
 `;
 
 export const MoveButton = styled(InvisibleButton)<{ isselected?: string }>`

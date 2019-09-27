@@ -5,6 +5,7 @@ export default styled.main`
   ${({ theme }) => `
       min-height: calc(100vh - ${theme.navigationHeight});
   `}
+  position: relative;
   padding: 2rem;
   display: flex;
   flex-direction: column;

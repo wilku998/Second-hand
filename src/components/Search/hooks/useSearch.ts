@@ -12,14 +12,13 @@ export default (
   return useEffect(() => {
     const fetchData = async () => {
       let search = history.location.search;
-      const limitFromSearch = parseInt(
-        getValueFromQueryString(search, "limit")
-      );
+      const limitFromSearch = getValueFromQueryString(search, "limit");
       if (!limitFromSearch) {
         search = search.concat(
           `${search.split("?")[1] !== "" ? "&" : ""}limit=${defaultLimit}`
         );
       }
+      console.log(search);
       const newCount: number = await getCountRequest(search);
       const newItems = await getItemsRequest(search);
 

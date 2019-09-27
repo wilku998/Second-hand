@@ -346,7 +346,7 @@ router.get("/api/users", function (req, res) { return __awaiter(void 0, void 0, 
             case 1:
                 _c.trys.push([1, 4, , 5]);
                 return [4 /*yield*/, user_1.default.find(query)
-                        .sort((_b = {}, _b[sortBy] = other_1.parseNumber(order), _b))
+                        .sort((_b = {}, _b[sortBy ? sortBy : "_id"] = other_1.parseNumber(order), _b))
                         .skip(other_1.parseNumber(skip))
                         .limit(other_1.parseNumber(limit))];
             case 2:

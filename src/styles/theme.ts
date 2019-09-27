@@ -2,7 +2,7 @@ export default {
 	navigationHeight: '4.5rem',
 	rowWidth: '109rem',
 	chatHeight: '45rem',
-	darkBorder: '1px solid #666',
+	darkBorder: '1px solid #999',
 	lightBorder: '1px solid #f0eeee',
 	lightBorder2: '1px solid #e2e2e2',
 	lightShadow: '0 2rem 2rem rgba(0,0,0,.05)',

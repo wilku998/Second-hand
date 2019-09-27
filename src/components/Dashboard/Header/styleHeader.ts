@@ -12,6 +12,19 @@ export default (Header: FunctionComponent<IProps>) => styled(Header)`
   align-items: flex-start;
   position: relative;
   background: url("/images/header_background.jpg") center/cover no-repeat fixed;
+  &:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(
+      to right bottom,
+      rgba(0, 0, 0, 0.05),
+      rgba(0, 0, 0, 0.2)
+    );
+  }
 
   ${media.small`
     justify-content: center;
@@ -28,6 +41,7 @@ export const Button = styled(Button_1)`
 `;
 
 export const Content = styled.div`
+  z-index: 10;
   display: grid;
   grid-template-columns: min-content;
   background-color: ${({ theme }) => theme.colorWhiteTransparent};

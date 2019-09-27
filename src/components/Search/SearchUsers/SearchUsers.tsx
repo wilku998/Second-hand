@@ -1,4 +1,10 @@
-import React, { useState, ChangeEvent, useEffect } from "react";
+import React, {
+  useState,
+  ChangeEvent,
+  useEffect,
+  Dispatch,
+  SetStateAction
+} from "react";
 import { StyledSearch } from "../styleSearch";
 import { SearchMenu, SearchContainer, NameInput } from "./styleSearchUsers";
 import UsersSection from "../../Section/UsersSection/UsersSection";
@@ -9,7 +15,8 @@ import useSearch from "../hooks/useSearch";
 import {
   getValueFromQueryString,
   createPageButtons,
-  createQueryArr
+  createQueryArr,
+  getPage
 } from "../functions/functions";
 import MoveButtons from "../MoveButtons/MoveButtons";
 import SortContainer from "../SortContainer/SortContainer";
@@ -25,14 +32,14 @@ const SearchUsers = () => {
     "Popularność rosnąco",
     "Popularność malejąco"
   ];
-  const resultsCountOptions = [3, 6, 9, 12, 15];
+  const resultsCountOptions = [1, 6, 9, 12, 15];
 
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
   const [limit, setLimit] = useState(resultsCountOptions[0]);
   const [users, setUsers]: [
-    { user: IUser[]; ownItems: IItem[] },
-    any
+    { user: IUser; ownItems: IItem[] }[],
+    Dispatch<SetStateAction<any[]>>
   ] = useState([]);
   const [name, setName] = useState("");
   const [searchRequest, setSearchRequest] = useState(false);
@@ -92,7 +99,7 @@ const SearchUsers = () => {
 
       const query = `?name=${name}&skip=${(page - 1) *
         limit}&limit=${limit}&sortBy=${sort}&order=${order}`;
-
+        
       history.push(`/search/users${query}`);
       setSearchRequest(false);
     }
@@ -127,8 +134,8 @@ const SearchUsers = () => {
         case "limit":
           setLimit(parseInt(value));
           break;
-        case "page":
-          setPage(parseInt(value));
+        case "skip":
+          setPage(getPage(queryArr, value, limit));
           break;
       }
     });

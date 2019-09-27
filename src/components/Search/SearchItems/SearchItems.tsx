@@ -10,7 +10,11 @@ import MoveButtons from "../MoveButtons/MoveButtons";
 import IItem from "../../../interfaces/IItem";
 import { history } from "../../../app";
 import parsePolishChars from "../../../functions/parsePolishChars";
-import { createQueryArr, createPageButtons } from "../functions/functions";
+import {
+  createQueryArr,
+  createPageButtons,
+  getPage
+} from "../functions/functions";
 import useSearch from "../hooks/useSearch";
 import SortContainer from "../SortContainer/SortContainer";
 import Container from "../../Abstracts/Container";
@@ -22,14 +26,14 @@ const SearchItems = () => {
     "Od najniższej ceny",
     "Od najwyższej ceny"
   ];
-  const resultsCountOptions = [4, 8, 12, 16, 20];
+  const resultsCountOptions = [4, 12, 16, 20, 24];
   const [searchRequest, setSearchRequest] = useState(false);
   const [form, setForm] = useState(initialFormState);
   const [page, setPage] = useState(1);
   const [sortBy, setSortBy] = useState(sortByOptions[0]);
   const [items, setItems]: [IItem[], any] = useState([]);
   const [count, setCount] = useState(0);
-  const [limit, setLimit] = useState(resultsCountOptions[1]);
+  const [limit, setLimit] = useState(resultsCountOptions[0]);
   const pages = Math.ceil(count / limit);
   const pageButtons = createPageButtons(page, pages);
   const { name, price, gender, category, condition, size } = form;
@@ -121,8 +125,8 @@ const SearchItems = () => {
       const value = stringArr[1];
       if (property === "limit") {
         setLimit(parseInt(value));
-      } else if (property === "page") {
-        setPage(parseInt(value));
+      } else if (property === "skip") {
+        setPage(getPage(queryArr, value, limit));
       } else if (property === "sortBy") {
         const indexOfOrder = queryArr.findIndex(e => e.includes("order"));
 
@@ -203,7 +207,7 @@ const SearchItems = () => {
     history,
     getItemsRequest,
     getItemsCountRequest,
-    resultsCountOptions[1],
+    resultsCountOptions[0],
     setCount,
     setItems
   );

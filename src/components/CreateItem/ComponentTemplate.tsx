@@ -17,8 +17,10 @@ import style, {
   CreatedAt,
   Image,
   SellerProfile,
+  Button,
   GridContainer,
-  Info
+  Info,
+  AddLoader
 } from "./styleCreateItem";
 import { isSelectSize, onCategory_SizeChange } from "./functions";
 import validation from "./validaton";
@@ -26,7 +28,6 @@ import { getImageBase64Request } from "../../API/images";
 import { history } from "../../app";
 import IItem from "../../interfaces/IItem";
 import { Iimages, IForm, IItemKeys } from "./interfaces";
-import Button_2 from "../Abstracts/Button_2";
 
 export interface IProps {
   className?: string;
@@ -56,6 +57,7 @@ const ComponentTemplate = ({
   const [error, setError] = useState("");
   const [imagesError, setImagesError] = useState("");
   const [imageLoading, setImageLoading] = useState(false);
+  const [addLoading, setAddLoading] = useState(false);
   const parsedCreatedAt = moment(createdAt).format("DD-MM-YYYY");
 
   const {
@@ -147,6 +149,7 @@ const ComponentTemplate = ({
       isValid = false;
     }
     if (isValid) {
+      setAddLoading(true);
       const item: any = {};
       [...inputs, ...selectors, description].forEach(e => {
         if (e.value) {
@@ -171,95 +174,99 @@ const ComponentTemplate = ({
 
   return (
     <Container>
-      <div className={className}>
-        <AddPhotosContainer>
-          <SellerProfile as="div">
-            <Avatar size="big" src={user.avatar} />
-            <span>{user.name}</span>
-          </SellerProfile>
-          <Info>Dodaj zdjęcia przedmiotu</Info>
-          {imagesError !== "" && (
-            <ImagesErrorMessage>{imagesError}</ImagesErrorMessage>
-          )}
-          <GridContainer>
-            {images.map(image => (
-              <Image key={image.image}>
-                <img src={image.image} />
-                <RemoveImageButton name={image.name} onClick={removeImage}>
-                  Usuń
-                </RemoveImageButton>
-              </Image>
-            ))}
-            {images.length < 3 && !resettingFileInput && (
-              <PhotoButton>
-                {imageLoading ? (
-                  <ImageLoader size={6} />
-                ) : (
-                  <CameraIcon src="/svg/camera.svg" />
-                )}
-                <input
-                  type="file"
-                  accept="image/png, image/jpeg, image/jpg"
-                  onChange={imageUpload}
-                  disabled={imageLoading}
-                />
-              </PhotoButton>
+      {addLoading ? (
+        <AddLoader size={6} />
+      ) : (
+        <div className={className}>
+          <AddPhotosContainer>
+            <SellerProfile as="div">
+              <Avatar size="big" src={user.avatar} />
+              <span>{user.name}</span>
+            </SellerProfile>
+            <Info>Dodaj zdjęcia przedmiotu</Info>
+            {imagesError !== "" && (
+              <ImagesErrorMessage>{imagesError}</ImagesErrorMessage>
             )}
-          </GridContainer>
-        </AddPhotosContainer>
-        <ItemForm onSubmit={onSubmit}>
-          {isEdit && <CreatedAt>Dodano w dniu: {parsedCreatedAt}</CreatedAt>}
-          {selectors.map(e => (
-            <Label key={e.name}>
-              {e.label}
-              <select name={e.name} value={e.value} onChange={onFormChange}>
-                {e.options.map(option => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-            </Label>
-          ))}
-          {inputs.map(e => (
-            <Label key={e.name} isColumn={e.isOptional}>
+            <GridContainer>
+              {images.map(image => (
+                <Image key={image.image}>
+                  <img src={image.image} />
+                  <RemoveImageButton name={image.name} onClick={removeImage}>
+                    Usuń
+                  </RemoveImageButton>
+                </Image>
+              ))}
+              {images.length < 3 && !resettingFileInput && (
+                <PhotoButton>
+                  {imageLoading ? (
+                    <ImageLoader size={6} />
+                  ) : (
+                    <CameraIcon src="/svg/camera.svg" />
+                  )}
+                  <input
+                    type="file"
+                    accept="image/png, image/jpeg, image/jpg"
+                    onChange={imageUpload}
+                    disabled={imageLoading}
+                  />
+                </PhotoButton>
+              )}
+            </GridContainer>
+          </AddPhotosContainer>
+          <ItemForm onSubmit={onSubmit}>
+            {isEdit && <CreatedAt>Dodano w dniu: {parsedCreatedAt}</CreatedAt>}
+            {selectors.map(e => (
+              <Label key={e.name}>
+                {e.label}
+                <select name={e.name} value={e.value} onChange={onFormChange}>
+                  {e.options.map(option => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </Label>
+            ))}
+            {inputs.map(e => (
+              <Label key={e.name} isColumn={e.isOptional}>
+                <span>
+                  {e.label} {e.name === "size" ? "EU" : ""}
+                  {e.isOptional && <Optional>*niewymagane</Optional>}
+                </span>
+                <FormInput
+                  valid={e.valid}
+                  type={e.type}
+                  name={e.name}
+                  onChange={onFormChange}
+                  value={e.value}
+                />
+              </Label>
+            ))}
+            <Label isColumn={true}>
               <span>
-                {e.label} {e.name === "size" ? "EU" : ""}
-                {e.isOptional && <Optional>*niewymagane</Optional>}
+                Opis <Optional>*niewymagane</Optional>
               </span>
               <FormInput
-                valid={e.valid}
-                type={e.type}
-                name={e.name}
+                as="textarea"
+                rows={4}
+                name="description"
+                value={description.value}
+                valid={description.valid}
                 onChange={onFormChange}
-                value={e.value}
               />
             </Label>
-          ))}
-          <Label isColumn={true}>
-            <span>
-              Opis <Optional>*niewymagane</Optional>
-            </span>
-            <FormInput
-              as="textarea"
-              rows={4}
-              name="description"
-              value={description.value}
-              valid={description.valid}
-              onChange={onFormChange}
-            />
-          </Label>
-          {error !== "" && <ErrorMessage>{error}</ErrorMessage>}
-          <Button_2 disabled={imageLoading}>
-            {isEdit ? "Edytuj" : "Dodaj"} przedmiot
-          </Button_2>
-          {isEdit && (
-            <Button_2 type="button" onClick={onRemoveItemClick}>
-              Usuń przedmiot
-            </Button_2>
-          )}
-        </ItemForm>
-      </div>
+            {error !== "" && <ErrorMessage>{error}</ErrorMessage>}
+            <Button disabled={imageLoading}>
+              {isEdit ? "Edytuj" : "Dodaj"} przedmiot
+            </Button>
+            {isEdit && (
+              <Button type="button" onClick={onRemoveItemClick}>
+                Usuń przedmiot
+              </Button>
+            )}
+          </ItemForm>
+        </div>
+      )}
     </Container>
   );
 };

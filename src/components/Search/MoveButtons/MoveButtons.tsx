@@ -15,34 +15,36 @@ const MoveButtons = ({
   pages,
   pageButtons,
   onMoveButtonClick
-}: IProps) => (
-  <div className={className}>
-    <MoveButton
-      disabled={page === 1}
-      data-goto={page - 1}
-      onClick={onMoveButtonClick}
-    >
-      <MoveIcon src="/svg/left.svg" />
-    </MoveButton>
-    {pageButtons.map(e => (
+}: IProps) => {
+  return (
+    <div className={className}>
       <MoveButton
-        data-goto={e}
+        disabled={page === 1}
+        data-goto={page - 1}
         onClick={onMoveButtonClick}
-        disabled={e === page}
-        isselected={(e === page).toString()}
-        key={e}
       >
-        {e}
+        <MoveIcon src="/svg/left.svg" />
       </MoveButton>
-    ))}
-    <MoveButton
-      disabled={page === pages}
-      data-goto={page + 1}
-      onClick={onMoveButtonClick}
-    >
-      <MoveIcon isright={"true"} src="/svg/left.svg" />
-    </MoveButton>
-  </div>
-);
+      {pageButtons.map(e => (
+        <MoveButton
+          data-goto={e}
+          onClick={onMoveButtonClick}
+          disabled={e === page}
+          isselected={(e === page).toString()}
+          key={e}
+        >
+          {e}
+        </MoveButton>
+      ))}
+      <MoveButton
+        disabled={page === pages}
+        data-goto={page + 1}
+        onClick={onMoveButtonClick}
+      >
+        <MoveIcon isright={"true"} src="/svg/left.svg" />
+      </MoveButton>
+    </div>
+  );
+};
 
 export default style(MoveButtons);
