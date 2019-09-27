@@ -94,7 +94,7 @@ export default class UserStore {
   }
 
   addToArray(property: "follows" | "likedItems" | "followedBy" | "notifications", any: any) {
-    this.user[property] = [...this.user[property], any];
+    this.user[property] = [any, ...this.user[property]];
   }
 
   ownItemLikedBySomeone(_id: string, user: IUser) {

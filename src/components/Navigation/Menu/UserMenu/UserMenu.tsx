@@ -5,7 +5,7 @@ import { logoutRequest } from "../../../../API/users";
 import { Label, UserName } from "./styleUserMenu";
 import CollapseIcon from "../../../Abstracts/CollapseIcon";
 import { viewStore } from "../../../../app";
-import { SubMenuList, SubMenuListButton, SubMenu } from "../styleMenu";
+import { SubMenuList, SubMenuListButton, MenuItem } from "../styleMenu";
 import { IUserStore } from "../../../../store/user";
 import { inject } from "mobx-react";
 import { observer } from "mobx-react-lite";
@@ -27,7 +27,7 @@ const UserMenu = observer(
       }
     };
     return (
-      <SubMenu onClick={onClick} ref={ref}>
+      <MenuItem onClick={onClick} ref={ref}>
         <Label>
           <Avatar src={user.avatar} size="small" />
           <UserName>{user.name}</UserName>
@@ -62,7 +62,7 @@ const UserMenu = observer(
             </SubMenuList>
           )}
         </Label>
-      </SubMenu>
+      </MenuItem>
     );
   },
   { forwardRef: true }

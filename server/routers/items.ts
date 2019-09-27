@@ -2,7 +2,8 @@ import express from "express";
 import Item from "../models/item";
 import AuthMiddleware from "../middlwares/auth";
 import { IAuthRequest } from "./interfaces";
-import { parseItem, createQueryItems, parseNumber } from "./functions";
+import { parseItem } from "./functions/parseItems";
+import { createQueryItems, parseNumber } from "./functions/other";
 const router = express.Router();
 
 router.post("/api/items", AuthMiddleware, async (req: IAuthRequest, res) => {

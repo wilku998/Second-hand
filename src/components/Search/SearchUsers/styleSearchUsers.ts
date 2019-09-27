@@ -11,8 +11,8 @@ export const SearchContainer = styled.div`
   align-items: center;
   margin-bottom: 1rem;
   padding: 0.7rem 2rem;
+  background-color: white;
   ${({ theme }) => `
-    background-color: ${theme.colorGreyLight1};
     border: ${theme.lightBorder2};
   `}
 

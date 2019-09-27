@@ -29,7 +29,7 @@ const SearchItems = () => {
   const [sortBy, setSortBy] = useState(sortByOptions[0]);
   const [items, setItems]: [IItem[], any] = useState([]);
   const [count, setCount] = useState(0);
-  const [limit, setLimit] = useState(resultsCountOptions[0]);
+  const [limit, setLimit] = useState(resultsCountOptions[1]);
   const pages = Math.ceil(count / limit);
   const pageButtons = createPageButtons(page, pages);
   const { name, price, gender, category, condition, size } = form;
@@ -203,7 +203,7 @@ const SearchItems = () => {
     history,
     getItemsRequest,
     getItemsCountRequest,
-    resultsCountOptions[0],
+    resultsCountOptions[1],
     setCount,
     setItems
   );

@@ -4,7 +4,6 @@ import MessangerRoom from "./models/messangerRoom";
 import { IMessangerRoom, IUser, INotification } from "./models/interfaces";
 import createInterlocutor from "./functions/createInterlocutor";
 import User from "./models/user";
-import { getFollowedBy } from "./routers/functions";
 import {
   getMinifedItem,
   getMinifedUser,
@@ -13,6 +12,7 @@ import {
 } from "./functions/getMinifed";
 import checkIfNotificationsExist from "./functions/checkIfNotificationsExist";
 import { server } from "./server";
+import { getFollowedBy } from "./routers/functions/parseUser";
 
 const io = socketio(server);
 

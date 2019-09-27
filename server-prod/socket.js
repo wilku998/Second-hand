@@ -62,10 +62,10 @@ var mongoose_1 = require("mongoose");
 var messangerRoom_1 = __importDefault(require("./models/messangerRoom"));
 var createInterlocutor_1 = __importDefault(require("./functions/createInterlocutor"));
 var user_1 = __importDefault(require("./models/user"));
-var functions_1 = require("./routers/functions");
 var getMinifed_1 = require("./functions/getMinifed");
 var checkIfNotificationsExist_1 = __importDefault(require("./functions/checkIfNotificationsExist"));
 var server_1 = require("./server");
+var parseUser_1 = require("./routers/functions/parseUser");
 var io = socket_io_1.default(server_1.server);
 var clients = [];
 var findClients = function (userID) {
@@ -124,7 +124,7 @@ var emitNotificationForFollowedBy = function (kind, user, propertyForNotificatio
     var userToEmitFollowedBy;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, functions_1.getFollowedBy(user._id)];
+            case 0: return [4 /*yield*/, parseUser_1.getFollowedBy(user._id)];
             case 1:
                 userToEmitFollowedBy = _a.sent();
                 return [4 /*yield*/, Promise.all(userToEmitFollowedBy.map(function (e, i) { return __awaiter(void 0, void 0, void 0, function () {

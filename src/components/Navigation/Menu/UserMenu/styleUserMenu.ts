@@ -2,6 +2,7 @@ import styled from "styled-components";
 import media from "../../../../styles/media";
 
 export const Label = styled.div`
+  height: 100%;
   display: flex;
   align-items: center;
   & > span {

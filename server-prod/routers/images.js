@@ -42,10 +42,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var sharp_1 = __importDefault(require("sharp"));
 var auth_1 = __importDefault(require("../middlwares/auth"));
-var functions_1 = require("./functions");
 var image_1 = __importDefault(require("../models/image"));
+var other_1 = require("./functions/other");
 var router = express_1.default.Router();
-router.post("/api/images/getbase64", auth_1.default, functions_1.uploadImage.single("itemImage"), function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+router.post("/api/images/getbase64", auth_1.default, other_1.uploadImage.single("itemImage"), function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var buffer;
     return __generator(this, function (_a) {
         switch (_a.label) {

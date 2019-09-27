@@ -64,6 +64,7 @@ export const SubMenuList = styled.ul`
   `}
   & > li {
     width: 100%;
+    position: relative;
   }
   ${media.small`
     position: fixed;
@@ -73,14 +74,16 @@ export const SubMenuList = styled.ul`
   `}
 `;
 
-export const SubMenuListButton = styled(InvisibleButton)<{color: string}>`
+export const SubMenuListButton = styled(InvisibleButton)<{
+  isunreaded?: boolean;
+}>`
   padding: 0.7rem 1rem;
   width: 100%;
   line-height: 1.15;
-  ${({ theme, color }) => `
+  ${({ theme, isunreaded }) => `
       border-bottom: ${theme.lightBorder};
       background-color: ${
-        color === "dark" ? theme.colorGreyLight2 : theme.colorGreyLight1
+        isunreaded ? theme.colorGreyLight3 : theme.colorGreyLight1
       };
     `}
 `;
@@ -103,12 +106,7 @@ export const Info = styled.span`
   }
 `;
 
-export const SubMenu = styled.div`
-  height: 100%;
-  display: flex;
-  align-items: center;
-`;
-
 export const SubMenuIconContainer = styled.div`
+  height: 100%;
   position: relative;
 `;

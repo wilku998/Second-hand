@@ -25,11 +25,11 @@ const SearchUsers = () => {
     "Popularność rosnąco",
     "Popularność malejąco"
   ];
-  const resultsCountOptions = [1, 3, 6, 9, 12];
+  const resultsCountOptions = [3, 6, 9, 12, 15];
 
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
-  const [limit, setLimit] = useState(resultsCountOptions[1]);
+  const [limit, setLimit] = useState(resultsCountOptions[0]);
   const [users, setUsers]: [
     { user: IUser[]; ownItems: IItem[] },
     any
@@ -155,7 +155,7 @@ const SearchUsers = () => {
             <Button_2 onClick={onSearchClick}>Szukaj użytkowników</Button_2>
           </SearchContainer>
           <SortContainer
-            count={count}
+            limit={limit}
             sortBy={sortBy}
             sortByOptions={sortByOptions}
             onSortByChange={onSortByChange}

@@ -5,17 +5,9 @@ import User from "../models/user";
 import { IAuthRequest, IUserRequest } from "./interfaces";
 import AuthMiddleware from "../middlwares/auth";
 import FindUserMiddleware from "../middlwares/findUser";
-import {
-  uploadImage,
-  createRegexObj,
-  parseUser,
-  parseFollowsAndLikes,
-  getFollowedBy,
-  createQueryUsers,
-  parseNumber,
-  parseUsers
-} from "./functions";
 import Item from "../models/item";
+import { parseUser, parseFollowsAndLikes, parseUsers, getFollowedBy } from "./functions/parseUser";
+import { uploadImage, createQueryUsers, parseNumber } from "./functions/other";
 
 const router = express.Router();
 

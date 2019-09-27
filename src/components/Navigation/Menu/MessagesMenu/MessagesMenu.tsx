@@ -5,9 +5,9 @@ import {
   SubMenuList,
   UserLabel,
   Info,
-  SubMenu,
   SubMenuListButton,
-  SubMenuIconContainer
+  SubMenuIconContainer,
+  MenuItem
 } from "../styleMenu";
 import { Link } from "react-router-dom";
 import Avatar from "../../../Abstracts/Avatar";
@@ -42,46 +42,42 @@ const MessagesMenu = React.forwardRef(
     };
 
     return (
-      <SubMenu onClick={onClick} ref={ref}>
-        <SubMenuIconContainer>
-          {unreadedMessagesQuantity > 0 && (
-            <AlertCircle number={unreadedMessagesQuantity} />
-          )}
-          <ButtonIcon src="/svg/mail.svg" />
-        </SubMenuIconContainer>
-        {isVisible && (
-          <SubMenuList>
-            {interlocutors.length > 0 ? (
-              <>
-                {interlocutors.map(e => (
-                  <li key={e.interlocutor._id}>
-                    <SubMenuListButton
-                      as={Link}
-                      to={`/messenger/${e.interlocutor._id}`}
-                      color={
-                        e.isReaded && e.lastMessage.senderID !== user._id
-                          ? "dark"
-                          : "light"
-                      }
-                    >
-                      <UserLabel>
-                        <Avatar size="small" src={e.interlocutor.avatar} />
-                        <span>{e.interlocutor.name}</span>
-                      </UserLabel>
-                      <Info>
-                        {e.lastMessage.message}
-                        <div>{parseDate(e.lastMessage.sendedAt)}</div>
-                      </Info>
-                    </SubMenuListButton>
-                  </li>
-                ))}
-              </>
-            ) : (
-              <span>Brak wiadomości</span>
+      <MenuItem onClick={onClick} ref={ref}>
+          <SubMenuIconContainer>
+            {unreadedMessagesQuantity > 0 && (
+              <AlertCircle number={unreadedMessagesQuantity} />
             )}
-          </SubMenuList>
-        )}
-      </SubMenu>
+            <ButtonIcon src="/svg/mail.svg" />
+          </SubMenuIconContainer>
+          {isVisible && (
+            <SubMenuList>
+              {interlocutors.length > 0 ? (
+                <>
+                  {interlocutors.map(e => (
+                    <li key={e.interlocutor._id}>
+                      <SubMenuListButton
+                        as={Link}
+                        to={`/messenger/${e.interlocutor._id}`}
+                        isunreaded={!e.isReaded && e.lastMessage.senderID !== user._id}
+                      >
+                        <UserLabel>
+                          <Avatar size="small" src={e.interlocutor.avatar} />
+                          <span>{e.interlocutor.name}</span>
+                        </UserLabel>
+                        <Info>
+                          {e.lastMessage.message}
+                          <div>{parseDate(e.lastMessage.sendedAt)}</div>
+                        </Info>
+                      </SubMenuListButton>
+                    </li>
+                  ))}
+                </>
+              ) : (
+                <span>Brak wiadomości</span>
+              )}
+            </SubMenuList>
+          )}
+      </MenuItem>
     );
   }
 );

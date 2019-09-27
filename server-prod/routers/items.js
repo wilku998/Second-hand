@@ -53,7 +53,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var item_1 = __importDefault(require("../models/item"));
 var auth_1 = __importDefault(require("../middlwares/auth"));
-var functions_1 = require("./functions");
+var parseItems_1 = require("./functions/parseItems");
+var other_1 = require("./functions/other");
 var router = express_1.default.Router();
 router.post("/api/items", auth_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var item, _a, _b, e_1;
@@ -68,7 +69,7 @@ router.post("/api/items", auth_1.default, function (req, res) { return __awaiter
             case 2:
                 _c.sent();
                 _b = (_a = res.status(201)).send;
-                return [4 /*yield*/, functions_1.parseItem(item)];
+                return [4 /*yield*/, parseItems_1.parseItem(item)];
             case 3:
                 _b.apply(_a, [_c.sent()]);
                 return [3 /*break*/, 5];
@@ -85,7 +86,7 @@ router.get("/api/items/count", function (req, res) { return __awaiter(void 0, vo
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                query = functions_1.createQueryItems(req.query);
+                query = other_1.createQueryItems(req.query);
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
@@ -109,20 +110,20 @@ router.get("/api/items", function (req, res) { return __awaiter(void 0, void 0, 
         switch (_c.label) {
             case 0:
                 _a = req.query, skip = _a.skip, limit = _a.limit, order = _a.order, sortBy = _a.sortBy;
-                query = functions_1.createQueryItems(req.query);
+                query = other_1.createQueryItems(req.query);
                 _c.label = 1;
             case 1:
                 _c.trys.push([1, 4, , 5]);
                 return [4 /*yield*/, item_1.default.find(query)
-                        .sort((_b = {}, _b[sortBy] = functions_1.parseNumber(order), _b))
-                        .skip(functions_1.parseNumber(skip))
-                        .limit(functions_1.parseNumber(limit))];
+                        .sort((_b = {}, _b[sortBy] = other_1.parseNumber(order), _b))
+                        .skip(other_1.parseNumber(skip))
+                        .limit(other_1.parseNumber(limit))];
             case 2:
                 items = _c.sent();
                 return [4 /*yield*/, Promise.all(items.map(function (item) { return __awaiter(void 0, void 0, void 0, function () {
                         return __generator(this, function (_a) {
                             switch (_a.label) {
-                                case 0: return [4 /*yield*/, functions_1.parseItem(item)];
+                                case 0: return [4 /*yield*/, parseItems_1.parseItem(item)];
                                 case 1: return [2 /*return*/, _a.sent()];
                             }
                         });
@@ -152,7 +153,7 @@ router.get("/api/items/:id", function (req, res) { return __awaiter(void 0, void
                     throw new Error("Unable to find item!");
                 }
                 _b = (_a = res).send;
-                return [4 /*yield*/, functions_1.parseItem(item)];
+                return [4 /*yield*/, parseItems_1.parseItem(item)];
             case 2:
                 _b.apply(_a, [_c.sent()]);
                 return [3 /*break*/, 4];
@@ -174,7 +175,7 @@ router.patch("/api/items/:id", auth_1.default, function (req, res) { return __aw
             case 1:
                 updatedItem = _c.sent();
                 _b = (_a = res).send;
-                return [4 /*yield*/, functions_1.parseItem(updatedItem)];
+                return [4 /*yield*/, parseItems_1.parseItem(updatedItem)];
             case 2:
                 _b.apply(_a, [_c.sent()]);
                 return [3 /*break*/, 4];

@@ -56,8 +56,9 @@ var bcryptjs_1 = __importDefault(require("bcryptjs"));
 var user_1 = __importDefault(require("../models/user"));
 var auth_1 = __importDefault(require("../middlwares/auth"));
 var findUser_1 = __importDefault(require("../middlwares/findUser"));
-var functions_1 = require("./functions");
 var item_1 = __importDefault(require("../models/item"));
+var parseUser_1 = require("./functions/parseUser");
+var other_1 = require("./functions/other");
 var router = express_1.default.Router();
 router.post("/api/users", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var user, token, parsedUser, e_1;
@@ -73,7 +74,7 @@ router.post("/api/users", function (req, res) { return __awaiter(void 0, void 0,
             case 2:
                 token = _a.sent();
                 res.cookie("jwtToken", token, { maxAge: 108000000, httpOnly: true });
-                return [4 /*yield*/, functions_1.parseUser(user)];
+                return [4 /*yield*/, parseUser_1.parseUser(user)];
             case 3:
                 parsedUser = _a.sent();
                 res.status(201).send(parsedUser);
@@ -100,7 +101,7 @@ router.post("/api/users/login", function (req, res) { return __awaiter(void 0, v
             case 2:
                 token = _b.sent();
                 res.cookie("jwtToken", token, { maxAge: 108000000, httpOnly: true });
-                return [4 /*yield*/, functions_1.parseUser(user)];
+                return [4 /*yield*/, parseUser_1.parseUser(user)];
             case 3:
                 parsedUser = _b.sent();
                 res.send(parsedUser);
@@ -120,7 +121,7 @@ router.get("/api/users/me", auth_1.default, function (req, res) { return __await
             case 0:
                 _a.trys.push([0, 2, , 3]);
                 user = req.user;
-                return [4 /*yield*/, functions_1.parseUser(user)];
+                return [4 /*yield*/, parseUser_1.parseUser(user)];
             case 1:
                 parsedUser = _a.sent();
                 res.send(parsedUser);
@@ -154,7 +155,7 @@ router.post("/api/users/logout", auth_1.default, function (req, res) { return __
         }
     });
 }); });
-router.post("/users/me/avatar", auth_1.default, functions_1.uploadImage.single("avatar"), function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+router.post("/users/me/avatar", auth_1.default, other_1.uploadImage.single("avatar"), function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var buffer;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -316,7 +317,7 @@ router.get("/api/users/count", function (req, res) { return __awaiter(void 0, vo
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                query = functions_1.createQueryUsers(req.query.name);
+                query = other_1.createQueryUsers(req.query.name);
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
@@ -340,17 +341,17 @@ router.get("/api/users", function (req, res) { return __awaiter(void 0, void 0, 
         switch (_c.label) {
             case 0:
                 _a = req.query, name = _a.name, skip = _a.skip, limit = _a.limit, order = _a.order, sortBy = _a.sortBy;
-                query = functions_1.createQueryUsers(name);
+                query = other_1.createQueryUsers(name);
                 _c.label = 1;
             case 1:
                 _c.trys.push([1, 4, , 5]);
                 return [4 /*yield*/, user_1.default.find(query)
-                        .sort((_b = {}, _b[sortBy] = functions_1.parseNumber(order), _b))
-                        .skip(functions_1.parseNumber(skip))
-                        .limit(functions_1.parseNumber(limit))];
+                        .sort((_b = {}, _b[sortBy] = other_1.parseNumber(order), _b))
+                        .skip(other_1.parseNumber(skip))
+                        .limit(other_1.parseNumber(limit))];
             case 2:
                 foundedUsers = _c.sent();
-                return [4 /*yield*/, functions_1.parseUsers(foundedUsers)];
+                return [4 /*yield*/, parseUser_1.parseUsers(foundedUsers)];
             case 3:
                 users = _c.sent();
                 res.send(users);
@@ -370,7 +371,7 @@ router.get("/api/users/:id", findUser_1.default, function (req, res) { return __
             case 0:
                 _a.trys.push([0, 2, , 3]);
                 user = req.user;
-                return [4 /*yield*/, functions_1.parseUser(user, true)];
+                return [4 /*yield*/, parseUser_1.parseUser(user, true)];
             case 1:
                 parsedUser = _a.sent();
                 res.send(parsedUser);
@@ -432,17 +433,17 @@ router.get("/api/users/followsAndLikes/:id", function (req, res) { return __awai
             case 3:
                 _d.sent();
                 follows = user.follows, likedItems = user.likedItems;
-                return [4 /*yield*/, functions_1.getFollowedBy(user._id)];
+                return [4 /*yield*/, parseUser_1.getFollowedBy(user._id)];
             case 4:
                 followedBy = _d.sent();
                 _b = (_a = res).send;
                 _c = {
-                    likedItems: functions_1.parseFollowsAndLikes(likedItems, "item")
+                    likedItems: parseUser_1.parseFollowsAndLikes(likedItems, "item")
                 };
-                return [4 /*yield*/, functions_1.parseUsers(functions_1.parseFollowsAndLikes(follows, "user"))];
+                return [4 /*yield*/, parseUser_1.parseUsers(parseUser_1.parseFollowsAndLikes(follows, "user"))];
             case 5:
                 _c.follows = _d.sent();
-                return [4 /*yield*/, functions_1.parseUsers(followedBy)];
+                return [4 /*yield*/, parseUser_1.parseUsers(followedBy)];
             case 6:
                 _b.apply(_a, [(_c.followedBy = _d.sent(),
                         _c)]);

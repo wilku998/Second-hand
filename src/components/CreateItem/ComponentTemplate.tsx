@@ -91,7 +91,7 @@ const ComponentTemplate = ({
         ]);
         setImagesError("");
       } catch (e) {
-        setImagesError("Zdjęcie nie może być większe niż 1mb");
+        setImagesError("Zdjęcie nie może być większe niż 10mb");
       }
     } else {
       setImagesError("Nie możesz dodać tego samego zdjęcia dwa razy");

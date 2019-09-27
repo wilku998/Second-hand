@@ -19,7 +19,7 @@ import CollapseIcon from "../Abstracts/CollapseIcon";
 import { history } from "../../app";
 import Menu from "./Menu/Menu";
 import { IUserStore } from "../../store/user";
-import { ButtonIcon, SubMenuIconContainer } from "./Menu/styleMenu";
+import { ButtonIcon } from "./Menu/styleMenu";
 
 export interface IProps {
   userStore?: IUserStore;

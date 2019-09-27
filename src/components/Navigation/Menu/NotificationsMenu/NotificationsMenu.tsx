@@ -6,8 +6,8 @@ import {
   SubMenuListButton,
   UserLabel,
   Info,
-  SubMenu,
-  SubMenuIconContainer
+  SubMenuIconContainer,
+  MenuItem
 } from "../styleMenu";
 import Avatar from "../../../Abstracts/Avatar";
 import getItemTitle from "../../../../functions/getItemTitle";
@@ -81,9 +81,10 @@ const NotificationsMenu = React.forwardRef(
       }
       return object;
     });
+    console.log({ unreadedNotificationsQuantity });
 
     return (
-      <SubMenu onClick={onClick} ref={ref}>
+      <MenuItem onClick={onClick} ref={ref}>
         <SubMenuIconContainer>
           {unreadedNotificationsQuantity > 0 && (
             <AlertCircle number={unreadedNotificationsQuantity} />
@@ -100,7 +101,7 @@ const NotificationsMenu = React.forwardRef(
                       data-link={e.link}
                       data-id={e._id}
                       onClick={onNotificationClick}
-                      color={e.isReaded ? "light" : "dark"}
+                      isunreaded={!e.isReaded}
                     >
                       <UserLabel>
                         <Avatar size="small" src={e.user.avatar} />
@@ -119,7 +120,7 @@ const NotificationsMenu = React.forwardRef(
             )}
           </SubMenuList>
         )}
-      </SubMenu>
+      </MenuItem>
     );
   }
 );

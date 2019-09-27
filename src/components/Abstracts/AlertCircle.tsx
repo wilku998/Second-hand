@@ -1,14 +1,20 @@
 import React from "react";
 import styled from "styled-components";
 
-const AlertCircle = ({ number }: { number: number }) => (
-  <Base>{number > 9 ? 9 : number}</Base>
+const AlertCircle = ({
+  number,
+}: {
+  number?: number;
+}) => (
+  <Base>
+    {!number || number > 9 ? " " : number}
+  </Base>
 );
 
 const Base = styled.span`
+  right: -0.5rem;
+  top: 0.5rem;
   position: absolute;
-  top: -1.6rem;
-  left: 1rem;
   width: 1.2rem;
   height: 1.2rem;
   border-radius: 50%;
@@ -21,6 +27,7 @@ const Base = styled.span`
   line-height: 1;
   ${({ theme }) => `
     background-color: ${theme.colorRed};
+
   `}
 `;
 

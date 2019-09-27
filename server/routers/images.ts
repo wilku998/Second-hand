@@ -1,9 +1,9 @@
 import express from "express";
 import sharp from 'sharp';
 import authMiddleware from "../middlwares/auth";
-import { uploadImage } from "./functions";
 import { IAuthRequest } from "./interfaces";
 import Image from "../models/image";
+import { uploadImage } from "./functions/other";
 
 const router = express.Router();
 

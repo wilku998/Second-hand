@@ -95,7 +95,7 @@ const EditProfile = ({ viewStore, userStore }: IProps) => {
       setAvatar(`data:image/jpeg;base64, ${base64}`);
       setError("");
     } catch (e) {
-      setError("Zdjęcie nie może być większe niż 1mb");
+      setError("Zdjęcie nie może być większe niż 10mb");
     }
     setAvatarLoading(false);
   };

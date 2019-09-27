@@ -42,9 +42,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var auth_1 = __importDefault(require("../middlwares/auth"));
 var messangerRoom_1 = __importDefault(require("../models/messangerRoom"));
-var functions_1 = require("./functions");
 var createInterlocutor_1 = __importDefault(require("../functions/createInterlocutor"));
 var user_1 = __importDefault(require("../models/user"));
+var other_1 = require("./functions/other");
 var router = express_1.default.Router();
 router.get("/api/messangerRooms/interlocutors", auth_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var userIDString_1, messangerRooms, interlocutors, e_1;
@@ -54,7 +54,7 @@ router.get("/api/messangerRooms/interlocutors", auth_1.default, function (req, r
                 _a.trys.push([0, 3, , 4]);
                 userIDString_1 = req.user._id.toString();
                 return [4 /*yield*/, messangerRoom_1.default.find({
-                        roomName: functions_1.createRegexObj(userIDString_1)
+                        roomName: other_1.createRegexObj(userIDString_1)
                     })];
             case 1:
                 messangerRooms = _a.sent();
@@ -71,7 +71,7 @@ router.get("/api/messangerRooms/interlocutors", auth_1.default, function (req, r
                     }); }))];
             case 2:
                 interlocutors = _a.sent();
-                res.send(interlocutors.filter(function (e) { return e.interlocutor; }));
+                res.send(interlocutors.filter(function (e) { return e.interlocutor; }).reverse());
                 return [3 /*break*/, 4];
             case 3:
                 e_1 = _a.sent();

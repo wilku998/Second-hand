@@ -35,8 +35,8 @@ export const Item = styled.div`
   text-transform: uppercase;
   display: inline-block;
   position: relative;
+  background-color: white;
   ${({ theme }) => `
-    background-color: ${theme.colorGreyLight1};
     border: ${theme.lightBorder2};
   `}
 `;

@@ -2,9 +2,9 @@ import express from "express";
 import { IAuthRequest } from "./interfaces";
 import authMiddleware from "../middlwares/auth";
 import MessangerRoom from "../models/messangerRoom";
-import { createRegexObj } from "./functions";
 import createInterlocutor from "../functions/createInterlocutor";
 import User from "../models/user";
+import { createRegexObj } from "./functions/other";
 
 const router = express.Router();
 
@@ -25,7 +25,7 @@ router.get(
         })
       );
 
-      res.send(interlocutors.filter(e => e.interlocutor));
+      res.send(interlocutors.filter(e => e.interlocutor).reverse());
     } catch (e) {
       console.log(e);
       res.status(500).send();
