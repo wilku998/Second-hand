@@ -2,13 +2,13 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Avatar from "../../../Abstracts/Avatar";
 import { logoutRequest } from "../../../../API/users";
-import { Label, UserName } from "./styleUserMenu";
-import CollapseIcon from "../../../Abstracts/CollapseIcon";
+import { UserMenuContent, UserName } from "./styleUserMenu";
 import { viewStore } from "../../../../app";
-import { SubMenuList, SubMenuListButton, MenuItem } from "../styleMenu";
+import { SubMenuList, SubMenuListItem, SubMenuIconContainer } from "../styleMenu";
 import { IUserStore } from "../../../../store/user";
 import { inject } from "mobx-react";
 import { observer } from "mobx-react-lite";
+import CollapseIcon from "../../../Abstracts/CollapseIcon";
 
 export interface IProps {
   userStore?: IUserStore;
@@ -27,42 +27,36 @@ const UserMenu = observer(
       }
     };
     return (
-      <MenuItem onClick={onClick} ref={ref}>
-        <Label>
-          <Avatar src={user.avatar} size="small" />
-          <UserName>{user.name}</UserName>
+      <UserMenuContent onClick={onClick} ref={ref}>
+        <Avatar src={user.avatar} size="small" />
+        <UserName>{user.name}</UserName>
+        <SubMenuIconContainer isselected={isVisible.toString()}>
           <CollapseIcon width="1rem" listvisible={isVisible.toString()} />
-          {isVisible && (
-            <SubMenuList>
-              <li>
-                <SubMenuListButton as={Link} to="/users/myProfile">
-                  Twój profil
-                </SubMenuListButton>
-              </li>
-              <li>
-                <SubMenuListButton as={Link} to="/items/create">
-                  Dodaj przedmiot
-                </SubMenuListButton>
-              </li>
-              <li>
-                <SubMenuListButton onClick={viewStore.toggleEditProfile}>
-                  Edytuj profil
-                </SubMenuListButton>
-              </li>
-              <li>
-                <SubMenuListButton onClick={viewStore.toggleRemoveProfile}>
-                  Usuń profil
-                </SubMenuListButton>
-              </li>
-              <li>
-                <SubMenuListButton onClick={logoutRequest}>
-                  Wyloguj się
-                </SubMenuListButton>
-              </li>
-            </SubMenuList>
-          )}
-        </Label>
-      </MenuItem>
+        </SubMenuIconContainer>
+        {isVisible && (
+          <SubMenuList>
+            <SubMenuListItem as={Link} to="/users/myProfile">
+              Twój profil
+            </SubMenuListItem>
+
+            <SubMenuListItem as={Link} to="/items/create">
+              Dodaj przedmiot
+            </SubMenuListItem>
+
+            <SubMenuListItem onClick={viewStore.toggleEditProfile}>
+              Edytuj profil
+            </SubMenuListItem>
+
+            <SubMenuListItem onClick={viewStore.toggleRemoveProfile}>
+              Usuń profil
+            </SubMenuListItem>
+
+            <SubMenuListItem onClick={logoutRequest}>
+              Wyloguj się
+            </SubMenuListItem>
+          </SubMenuList>
+        )}
+      </UserMenuContent>
     );
   },
   { forwardRef: true }

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export default styled.img<{ size: string }>`
+export default styled.img<{ size?: string }>`
   object-fit: cover;
   object-position: center;
   border-radius: 50%;

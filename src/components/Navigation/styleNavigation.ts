@@ -55,6 +55,7 @@ export const SearchContainer = styled.div<{ mobileSearchVisible: boolean }>`
   
   ${({ theme }) => `
     background-color: ${theme.colorGreyLight1};
+    fill: ${theme.colorGreyDark3};
   `}
 
   ${media.medium`
@@ -174,11 +175,13 @@ export const NavigationLogo = styled(Logo)`
   `}
 `;
 
-export const MobileSearchIcon = styled(InvisibleButton)`
+export const MobileSearchIcon = styled(SubMenuIconContainer)`
   height: 4.5rem;
   padding: 0 1rem;
   margin-left: auto;
   display: none;
+  cursor: pointer;
+  
   ${({ theme }) => `
     border-right: ${theme.lightBorder2};
   `}

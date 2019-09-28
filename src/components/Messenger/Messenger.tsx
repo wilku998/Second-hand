@@ -105,7 +105,7 @@ const Messanger = ({ match, userStore, interlocutorsStore }: IProps) => {
         `}
         />
         <Interlocutors
-          interlocutors={interlocutorsStore.getInterlocutorsWithMessage}
+          interlocutors={interlocutorsStore.getSortedAndFilteredInterlocutors}
         />
         <Chat
           isReaded={isReaded}

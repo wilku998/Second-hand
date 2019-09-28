@@ -3,16 +3,25 @@ import ReactSVG from "react-svg";
 import styled from "styled-components";
 
 const CollapseIcon = ({ className }: { className?: string }) => (
-  <ReactSVG className={className} src="/svg/left.svg" />
+  <div className={className}>
+    <ReactSVG src="/svg/left.svg" />
+  </div>
 );
 
-export default styled(CollapseIcon)<{ listvisible: string, width: string }>`
+export default styled(CollapseIcon)<{ listvisible: string; width: string }>`
+  height: 100%;
+  position: relative;
   margin-left: auto;
-  & > div > svg {
-    ${({ theme, listvisible, width }) => `
+
+  ${({ listvisible, width }) => `
     width: ${width};
-    fill: ${theme.colorGreyDark3};
-    transform: ${listvisible === "true" ? "rotate(90deg)" : "rotate(270deg)"};
+    & svg {
+      width: ${width};
+      height: ${width};
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) ${listvisible === "true" ? "rotate(90deg)" : "rotate(270deg)"};
+    }
   `};
-  }
 `;

@@ -3,19 +3,19 @@ import { inject, observer } from "mobx-react";
 import {
   SubMenuList,
   ButtonIcon,
-  SubMenuListButton,
-  UserLabel,
-  Info,
+  SubMenuListItemContent,
   SubMenuIconContainer,
-  MenuItem
+  MenuItem,
+  SubMenuListItemNotification
 } from "../styleMenu";
-import Avatar from "../../../Abstracts/Avatar";
 import getItemTitle from "../../../../functions/getItemTitle";
 import { readNotificationRequest } from "../../../../API/users";
-import { history } from "../../../../app";
 import AlertCircle from "../../../Abstracts/AlertCircle";
 import { IUserStore } from "../../../../store/user";
-import parseDate from "../../../../functions/parseDate";
+import { Link } from "react-router-dom";
+import Date from "../../../Abstracts/Date";
+import { IMinifedUser } from "../../../../interfaces/IUser";
+import { IMinifedItem } from "../../../../interfaces/IItem";
 
 export interface IProps {
   isVisible: boolean;
@@ -26,10 +26,9 @@ export interface IProps {
 
 const NotificationsMenu = React.forwardRef(
   ({ isVisible, closeMenu, openMenu, userStore }: IProps, ref) => {
-    const user = userStore.getUser;
+    const notifications = userStore.getSortedNotifications;
     const unreadedNotificationsQuantity =
       userStore.unreadedNotificationsQuantity;
-    const { notifications } = user;
 
     const onClick = () => {
       if (isVisible) {
@@ -40,43 +39,53 @@ const NotificationsMenu = React.forwardRef(
     };
 
     const onNotificationClick = async (e: any) => {
-      const { link, id } = e.currentTarget.dataset;
-      await readNotificationRequest(id);
-      history.push(link);
+      const { id } = e.currentTarget.dataset;
+      readNotificationRequest(id);
     };
 
     const parsedNotifications = notifications.map(notification => {
       const { user, isReaded, addedAt } = notification;
-      const object: any = {
+      const object: {
+        user: IMinifedUser;
+        _id: string;
+        isReaded: boolean;
+        addedAt: string;
+        info?: string;
+        secondLink?: { name: string; link: string };
+      } = {
         user,
         _id: notification._id,
         isReaded,
-        addedAt: parseDate(addedAt)
+        addedAt
       };
+
+      const createSecondLinkForItem = (item: IMinifedItem) => ({
+        link: `/items/${item._id}`,
+        name: getItemTitle(item)
+      });
+
       switch (notification.kind) {
         case `follow`:
-          (object.info = `Zabserwował cię`),
-            (object.link = `/users/${notification.user._id}`);
+          object.info = ` zabserwował cię`;
           break;
         case `followedUserAddedItem`:
-          (object.info = `Dodał przedmiot ${getItemTitle(notification.item)}`),
-            (object.link = `/items/${notification.item._id}`);
+          object.info = " dodał przedmiot ";
+          object.secondLink = createSecondLinkForItem(notification.item);
           break;
         case `followedUserLiked`:
-          (object.info = `Polubił przedmiot ${getItemTitle(
-            notification.item
-          )}`),
-            (object.link = `/items/${notification.item._id}`);
+          object.info = ` polubił przedmiot `;
+          object.secondLink = createSecondLinkForItem(notification.item);
           break;
         case `followedUserFollows`:
-          (object.info = `Zabserwował użytkownika ${notification.userWhoGotFollow.name}`),
-            (object.link = `/users/${notification.userWhoGotFollow._id}`);
+          object.info = ` zabserwował użytkownika `;
+          object.secondLink = {
+            link: `/users/${notification.userWhoGotFollow._id}`,
+            name: notification.userWhoGotFollow.name
+          };
           break;
         case `ownItemLikedBySomeone`:
-          (object.info = `Polubił twój przedmiot ${getItemTitle(
-            notification.item
-          )}`),
-            (object.link = `/users/${notification.user._id}`);
+          object.info = ` polubił twój przedmiot `;
+          object.secondLink = createSecondLinkForItem(notification.item);
           break;
       }
       return object;
@@ -84,7 +93,7 @@ const NotificationsMenu = React.forwardRef(
 
     return (
       <MenuItem onClick={onClick} ref={ref}>
-        <SubMenuIconContainer>
+        <SubMenuIconContainer isselected={isVisible.toString()}>
           {unreadedNotificationsQuantity > 0 && (
             <AlertCircle number={unreadedNotificationsQuantity} />
           )}
@@ -96,21 +105,23 @@ const NotificationsMenu = React.forwardRef(
               <>
                 {parsedNotifications.map(e => (
                   <li key={e._id}>
-                    <SubMenuListButton
-                      data-link={e.link}
+                    <SubMenuListItemNotification
+                      as="div"
                       data-id={e._id}
                       onClick={onNotificationClick}
-                      isunreaded={!e.isReaded}
+                      isunreaded={(!e.isReaded).toString()}
                     >
-                      <UserLabel>
-                        <Avatar size="small" src={e.user.avatar} />
-                        <span>{e.user.name}</span>
-                      </UserLabel>
-                      <Info>
+                      <SubMenuListItemContent>
+                        <Date date={e.addedAt} />
+                        <Link to={`/users/${e.user._id}`}>{e.user.name}</Link>
                         {e.info}
-                        <div>{e.addedAt}</div>
-                      </Info>
-                    </SubMenuListButton>
+                        {e.secondLink && (
+                          <Link to={e.secondLink.link}>
+                            {e.secondLink.name}
+                          </Link>
+                        )}
+                      </SubMenuListItemContent>
+                    </SubMenuListItemNotification>
                   </li>
                 ))}
               </>

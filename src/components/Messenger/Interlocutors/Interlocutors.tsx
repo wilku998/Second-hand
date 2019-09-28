@@ -4,7 +4,6 @@ import style, {
   Interlocutor,
   LastMessage,
   User,
-  Title,
   InterlocutorsContainer,
   NoMessages
 } from "./styleInterlocutors";

@@ -2,6 +2,7 @@ import { observable, computed, autorun, toJS } from "mobx";
 import IUser from "../interfaces/IUser";
 import IItem from "../interfaces/IItem";
 import { IUpdate, IItemKeys } from "../components/CreateItem/interfaces";
+import INotification from "../interfaces/INotification";
 
 export interface IUserStore {
   user: IUser;
@@ -20,6 +21,7 @@ export interface IUserStore {
   ownItemLikedBySomeone: (_id: string, user: IUser) => void;
   ownItemUnlikedBySomeone: (_id: string, user: IUser) => void;
   readNotification: (id: string) => void;
+  getSortedNotifications: INotification[]
 }
 
 export default class UserStore {
@@ -56,6 +58,16 @@ export default class UserStore {
   @computed get unreadedNotificationsQuantity() {
     return this.user.notifications.filter(e => !e.isReaded).length
   };
+
+  @computed get getSortedNotifications(){
+    return this.user.notifications.sort((a, b) => {
+      if (a.isReaded === b.isReaded) {
+        return parseInt(b.addedAt) - parseInt(a.addedAt)
+      } else {
+        return a.isReaded ? 2 : -2;
+      }
+    });
+  }
 
   updateUser(update: any) {
     this.user={

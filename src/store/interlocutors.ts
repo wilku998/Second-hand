@@ -6,7 +6,7 @@ export interface IInterlocutorsStore {
   interlocutors: Array<IInterlocutor>;
   getInterlocutors: IInterlocutorsStore["interlocutors"];
   getInterlocutor: (_id: string) => IInterlocutor;
-  getInterlocutorsWithMessage: IInterlocutorsStore["interlocutors"];
+  getSortedAndFilteredInterlocutors: IInterlocutorsStore["interlocutors"];
   unreadedMessagesQuantity: number;
   readMessage: (roomName: string) => void;
 }
@@ -24,8 +24,21 @@ export default class InterlocutorsStore {
     return toJS(this.interlocutors);
   }
 
-  @computed get getInterlocutorsWithMessage() {
-    return toJS(this.interlocutors.filter(e => e.lastMessage));
+  @computed get getSortedAndFilteredInterlocutors() {
+    return toJS(
+      this.interlocutors
+        .filter(e => e.lastMessage)
+        .sort((a, b) => {
+          if (a.isReaded === b.isReaded) {
+            return (
+              parseInt(b.lastMessage.sendedAt) -
+              parseInt(a.lastMessage.sendedAt)
+            );
+          } else {
+            return a.isReaded ? 2 : -2;
+          }
+        })
+    );
   }
 
   @computed get unreadedMessagesQuantity() {

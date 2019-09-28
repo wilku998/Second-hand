@@ -1,5 +1,5 @@
-import { IMinifedUser } from "../../server/functions/getMinifed";
 import { IMinifedItem } from "./IItem";
+import { IMinifedUser } from "./IUser";
 
 export default interface INotification {
     _id: string;
@@ -12,6 +12,6 @@ export default interface INotification {
     user: IMinifedUser;
     item?: IMinifedItem;
     userWhoGotFollow?: IMinifedUser;
-    addedAt: number;
+    addedAt: string;
     isReaded?: boolean;
 }

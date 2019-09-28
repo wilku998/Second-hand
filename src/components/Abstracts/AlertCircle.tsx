@@ -12,7 +12,7 @@ const AlertCircle = ({
 );
 
 const Base = styled.span`
-  right: -0.5rem;
+  right: 0.5rem;
   top: 0.5rem;
   position: absolute;
   width: 1.2rem;

@@ -15,11 +15,11 @@ import {
   NavigationLogo,
   MobileSearchIcon
 } from "./styleNavigation";
-import CollapseIcon from "../Abstracts/CollapseIcon";
 import { history } from "../../app";
 import Menu from "./Menu/Menu";
 import { IUserStore } from "../../store/user";
 import { ButtonIcon } from "./Menu/styleMenu";
+import CollapseIcon from "../Abstracts/CollapseIcon";
 
 export interface IProps {
   userStore?: IUserStore;
@@ -144,6 +144,8 @@ const Navigation = ({ userStore }: IProps) => {
           </SearchButton>
         </SearchContainer>
         <MobileSearchIcon
+          isselected={mobileSearchVisible.toString()}
+          role="button"
           ref={mobileSearchButtonRef}
           onClick={onMobileSearchClick}
         >

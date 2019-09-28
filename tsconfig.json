@@ -9,7 +9,7 @@
         "jsx": "react",
         "moduleResolution": "node",
         "esModuleInterop": true,
-        "experimentalDecorators":true,
+        "experimentalDecorators":true
     },
     "include": [
         "./server/**/*"
