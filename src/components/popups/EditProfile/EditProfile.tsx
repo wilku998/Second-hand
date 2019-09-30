@@ -12,13 +12,13 @@ import { ErrorMessage, Content } from "../styles";
 import Button_2 from "../../Abstracts/Button_2";
 import reactModalStyles from "../../../styles/reactModalStyles";
 import { getImageBase64Request } from "../../../API/images";
-import Avatar from "../../Abstracts/Avatar";
 import {
   AvatarFileInput,
   AvatarContainer,
   AvatarFakeButton,
-  AvatarLoader
+  AvatarLoader,
 } from "./styleEditProfile";
+import Avatar from "../../Abstracts/Avatar";
 
 Modal.setAppElement("#root");
 

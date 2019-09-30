@@ -13,7 +13,6 @@ import { history } from "../../../app";
 import IUser from "../../../interfaces/IUser";
 import useSearch from "../hooks/useSearch";
 import {
-  getValueFromQueryString,
   createPageButtons,
   createQueryArr,
   getPage
@@ -32,7 +31,7 @@ const SearchUsers = () => {
     "Popularność rosnąco",
     "Popularność malejąco"
   ];
-  const resultsCountOptions = [1, 6, 9, 12, 15];
+  const resultsCountOptions = [3, 6, 9, 12, 15];
 
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
@@ -99,7 +98,7 @@ const SearchUsers = () => {
 
       const query = `?name=${name}&skip=${(page - 1) *
         limit}&limit=${limit}&sortBy=${sort}&order=${order}`;
-        
+
       history.push(`/search/users${query}`);
       setSearchRequest(false);
     }
@@ -155,10 +154,12 @@ const SearchUsers = () => {
       <StyledSearch>
         <SearchMenu>
           <SearchContainer>
-            <NameInput>
-              Nazwa użytkownika
-              <input type="text" value={name} onChange={onNameChange} />
-            </NameInput>
+            <NameInput
+              placeholder="Nazwa użytkownika"
+              type="text"
+              value={name}
+              onChange={onNameChange}
+            />
             <Button_2 onClick={onSearchClick}>Szukaj użytkowników</Button_2>
           </SearchContainer>
           <SortContainer

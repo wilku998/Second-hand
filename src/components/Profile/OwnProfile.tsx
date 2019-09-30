@@ -3,6 +3,7 @@ import { observer, inject } from "mobx-react";
 import ProfileTemplate from "./ProfileTemplate";
 import { IUserStore } from "../../store/user";
 import { history, viewStore } from "../../app";
+import useFollowsAndLikes from "./hooks/useFollowsAndLikes";
 
 interface IProps {
   userStore: IUserStore;
@@ -10,6 +11,9 @@ interface IProps {
 const ForeignProfile = ({ userStore }: IProps) => {
   const user = userStore.getUser;
   const ownItems = userStore.getOwnItems;
+  const { likedItems, follows, followedBy, isFetching } = useFollowsAndLikes(
+    user
+  );
 
   const buttons = [
     {
@@ -32,6 +36,11 @@ const ForeignProfile = ({ userStore }: IProps) => {
       ownItems={ownItems}
       buttons={buttons}
       isOwnProfile={true}
+      follows={follows}
+      followedBy={followedBy}
+      likedItems={likedItems}
+      isFetching={isFetching}
+      shouldRender={true}
     />
   );
 };

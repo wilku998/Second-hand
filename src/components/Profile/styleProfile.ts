@@ -1,10 +1,9 @@
 import { FunctionComponent } from "react";
 import styled from "styled-components";
-import { IProps } from "./Profile";
 import Button_2 from "../Abstracts/Button_2";
 import media from "../../styles/media";
 
-export default (Profile: FunctionComponent<IProps>) => styled(Profile)`
+export const StyledProfile = styled.section`
   margin-top: 2rem;
   display: flex;
   flex-direction: column;

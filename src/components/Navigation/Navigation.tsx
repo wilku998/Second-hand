@@ -18,7 +18,7 @@ import {
 import { history } from "../../app";
 import Menu from "./Menu/Menu";
 import { IUserStore } from "../../store/user";
-import { ButtonIcon } from "./Menu/styleMenu";
+import { ButtonIcon, MenuItem } from "./Menu/styleMenu";
 import CollapseIcon from "../Abstracts/CollapseIcon";
 
 export interface IProps {
@@ -143,25 +143,17 @@ const Navigation = ({ userStore }: IProps) => {
             <ReactSVG src="/svg/search.svg" />
           </SearchButton>
         </SearchContainer>
-        <MobileSearchIcon
-          isselected={mobileSearchVisible.toString()}
-          role="button"
-          ref={mobileSearchButtonRef}
-          onClick={onMobileSearchClick}
-        >
-          <ButtonIcon src="/svg/search.svg" />
-        </MobileSearchIcon>
-        {!isAuth ? (
-          <Login to="/login">Zaloguj się</Login>
-        ) : (
-          <Menu
-            userMenuRef={userMenuRef}
-            messagesMenuRef={messagesMenuRef}
-            notificationsMenuRef={notificationsMenuRef}
-            setCloseSubmenuRequest={setCloseSubmenuRequest}
-            closeSubmenuRequest={closeSubmenuRequest}
-          />
-        )}
+        <Menu
+          userMenuRef={userMenuRef}
+          messagesMenuRef={messagesMenuRef}
+          notificationsMenuRef={notificationsMenuRef}
+          mobileSearchButtonRef={mobileSearchButtonRef}
+          setCloseSubmenuRequest={setCloseSubmenuRequest}
+          closeSubmenuRequest={closeSubmenuRequest}
+          onMobileSearchClick={onMobileSearchClick}
+          isAuth={isAuth}
+          mobileSearchVisible={mobileSearchVisible}
+        />
       </Content>
     </StyledNavigation>
   );

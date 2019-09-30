@@ -3,10 +3,10 @@ import { inject, observer } from "mobx-react";
 import {
   SubMenuList,
   ButtonIcon,
-  SubMenuListItemContent,
-  SubMenuIconContainer,
+  SubMenuButton,
   MenuItem,
-  SubMenuListItemNotification
+  NotificationInfo,
+  NoNotificationsInfo
 } from "../styleMenu";
 import getItemTitle from "../../../../functions/getItemTitle";
 import { readNotificationRequest } from "../../../../API/users";
@@ -16,6 +16,7 @@ import { Link } from "react-router-dom";
 import Date from "../../../Abstracts/Date";
 import { IMinifedUser } from "../../../../interfaces/IUser";
 import { IMinifedItem } from "../../../../interfaces/IItem";
+import { SubMenuListItemNotification } from "./styleNotificationsMenu";
 
 export interface IProps {
   isVisible: boolean;
@@ -92,41 +93,41 @@ const NotificationsMenu = React.forwardRef(
     });
 
     return (
-      <MenuItem onClick={onClick} ref={ref}>
-        <SubMenuIconContainer isselected={isVisible.toString()}>
+      <MenuItem isselected={isVisible.toString()} onClick={onClick} ref={ref}>
+        <SubMenuButton>
           {unreadedNotificationsQuantity > 0 && (
             <AlertCircle number={unreadedNotificationsQuantity} />
           )}
           <ButtonIcon src="/svg/bell.svg" />
-        </SubMenuIconContainer>
+        </SubMenuButton>
         {isVisible && (
           <SubMenuList>
             {notifications.length > 0 ? (
               <>
                 {parsedNotifications.map(e => (
-                  <li key={e._id}>
-                    <SubMenuListItemNotification
-                      as="div"
-                      data-id={e._id}
-                      onClick={onNotificationClick}
-                      isunreaded={(!e.isReaded).toString()}
-                    >
-                      <SubMenuListItemContent>
+                  <SubMenuListItemNotification
+                    key={e._id}
+                    data-id={e._id}
+                    onClick={onNotificationClick}
+                    isunreaded={(!e.isReaded).toString()}
+                  >
+                    <div>
+                      <NotificationInfo>
                         <Date date={e.addedAt} />
-                        <Link to={`/users/${e.user._id}`}>{e.user.name}</Link>
-                        {e.info}
-                        {e.secondLink && (
-                          <Link to={e.secondLink.link}>
-                            {e.secondLink.name}
-                          </Link>
-                        )}
-                      </SubMenuListItemContent>
-                    </SubMenuListItemNotification>
-                  </li>
+                      </NotificationInfo>
+                      <Link to={`/users/${e.user._id}`}>{e.user.name}</Link>
+                      {e.info}
+                      {e.secondLink && (
+                        <Link to={e.secondLink.link}>{e.secondLink.name}</Link>
+                      )}
+                    </div>
+                  </SubMenuListItemNotification>
                 ))}
               </>
             ) : (
-              <span>Brak powiadomień</span>
+              <SubMenuListItemNotification>
+                <NoNotificationsInfo>Brak powiadomień</NoNotificationsInfo>
+              </SubMenuListItemNotification>
             )}
           </SubMenuList>
         )}

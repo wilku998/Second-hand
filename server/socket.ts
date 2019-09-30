@@ -221,7 +221,7 @@ io.on("connection", (socket: Socket) => {
         const messageObject = {
           message,
           senderID,
-          sendedAt: Date.now().toString()
+          sendedAt: Date.now()
         };
 
         room.messages = [...room.messages, messageObject];

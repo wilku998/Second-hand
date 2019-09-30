@@ -1,20 +1,25 @@
 import React from "react";
 import Avatar from "../Abstracts/Avatar";
-import IUser from "../../interfaces/IUser";
+import IUser, { IMinifedUser } from "../../interfaces/IUser";
 import { Name, Button, StyledUserLabel, NameContainer } from "./styleUserLabel";
 import { inject, observer } from "mobx-react";
 import { IUserStore } from "../../store/user";
 import { history } from "../../app";
 import checkIfIsFollowed from "../../functions/checkIfIsFollowed";
 import { followUserRequest, unfollowUserRequest } from "../../API/users";
+import { StyledComponent } from "styled-components";
 
 export interface IProps {
-  user: IUser;
+  user: IUser | IMinifedUser;
   userStore?: IUserStore;
-  additionalStyles?: string;
+  baseStyledComponent: StyledComponent<"div", any>;
 }
 
-const UserLabel = ({ user, userStore, additionalStyles }: IProps) => {
+const UserLabel = ({
+  user,
+  userStore,
+  baseStyledComponent: BaseStyledComponent
+}: IProps) => {
   const ownProfile = userStore.getUser;
   if (user) {
     var { _id, name, avatar } = user;
@@ -42,7 +47,7 @@ const UserLabel = ({ user, userStore, additionalStyles }: IProps) => {
   };
 
   return (
-    <StyledUserLabel additionalStyles={additionalStyles}>
+    <BaseStyledComponent>
       {user ? (
         <>
           <NameContainer>
@@ -61,8 +66,12 @@ const UserLabel = ({ user, userStore, additionalStyles }: IProps) => {
       ) : (
         <span>Użytkownik nie istnieje</span>
       )}
-    </StyledUserLabel>
+    </BaseStyledComponent>
   );
+};
+
+UserLabel.defaultProps = {
+  baseStyledComponent: StyledUserLabel
 };
 
 export default inject("userStore")(observer(UserLabel));

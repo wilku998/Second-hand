@@ -1,33 +1,66 @@
+const navigationHeight = "4.5rem";
+const rowWidth = "109rem";
+const chatHeight = "45rem";
+const lightShadow = "0 2rem 2rem rgba(0,0,0,.05)";
+const lightShadow2 = "0 0.5rem 0.5rem rgba(0, 0, 0, 0.05)";
+const background = "#d1d1d1";
+const colorRed = "#BF2E21";
+const colorRedLight = "#FFC1B4";
+const colorGreenLight = "#C9FFB0";
+const colorBlue1 = "rgb(107, 164, 218)";
+const colorBlue2 = "rgb(90, 139, 185)";
+const colorBlue3 = "#1890ff";
+const colorBlue4 = "#084074";
+const colorBlue5 = "#06325a";
+const colorBlue6 = "#001529";
+const colorWhiteTransparent = "rgba(255,255,255, .7)";
+const colorGreyLight1 = "#faf9f9";
+const colorGreyLight2 = "#f4f2f2";
+const colorGreyLight3 = "#f0eeee";
+const colorGreyLight4 = "#e9e9e9";
+const colorGreyLight5 = "#e2e2e2";
+const colorGreyLight6 = "#ccc";
+const colorGreyDark0 = "#202020";
+const colorGreyDark1 = "#252525";
+const colorGreyDark2 = "#333";
+const colorGreyDark3 = "#444";
+const colorGreyDark4 = "#555";
+const colorGreyDark5 = "#999";
+const colorGreyDark6 = "rgb(173, 173, 173)";
+
 export default {
-	navigationHeight: '4.5rem',
-	rowWidth: '109rem',
-	chatHeight: '45rem',
-	darkBorder: '1px solid #999',
-	lightBorder: '1px solid #f0eeee',
-	lightBorder2: '1px solid #e2e2e2',
-	lightShadow: '0 2rem 2rem rgba(0,0,0,.05)',
-	background: '#d1d1d1',
-	colorRed: '#BF2E21',
-	colorRedLight: '#FFC1B4',
-	colorGreenLight: '#C9FFB0',
-	colorBlue1: 'rgb(107, 164, 218)',
-	colorBlue2: 'rgb(90, 139, 185)',
-	colorBlue3: '#1890ff', //standard
-	colorBlue4: '#084074',
-	colorBlue5: '#06325a',
-	colorBlue6: '#001529',
-	colorWhiteTransparent: 'rgba(255,255,255, .7)',
-	colorGreyLight1: '#faf9f9',
-	colorGreyLight2: '#f4f2f2',
-	colorGreyLight3: '#f0eeee',
-	colorGreyLight4: '#e9e9e9',
-	colorGreyLight5: '#e2e2e2',
-	colorGreyLight6: '#ccc',
-	colorGreyDark0: '#272727',
-	colorGreyDark1: '#333',
-	colorGreyDark2: 'rgb(59, 59, 59)',
-	colorGreyDark3: '#444',
-	colorGreyDark4: '#555',
-	colorGreyDark5: '#999',
-	colorGreyDark6: 'rgb(173, 173, 173)'
+  navigationHeight,
+  rowWidth,
+  chatHeight,
+  darkBorder: `1px solid ${colorGreyDark3}`,
+  darkBorder2: `1px solid ${colorGreyDark5}`,
+  darkBorder3: `1px solid ${colorGreyLight6}`,
+  lightBorder: `1px solid ${colorGreyLight3}`,
+  lightBorder2: `1px solid ${colorGreyLight5}`,
+  lightShadow,
+  lightShadow2,
+  background,
+  colorRed,
+  colorRedLight,
+  colorGreenLight,
+  colorBlue1,
+  colorBlue2,
+  colorBlue3,
+  colorBlue4,
+  colorBlue5,
+  colorBlue6,
+  colorWhiteTransparent,
+  colorGreyLight1,
+  colorGreyLight2,
+  colorGreyLight3,
+  colorGreyLight4,
+  colorGreyLight5,
+  colorGreyLight6,
+  colorGreyDark0,
+  colorGreyDark1,
+  colorGreyDark2,
+  colorGreyDark3,
+  colorGreyDark4,
+  colorGreyDark5,
+  colorGreyDark6
 };

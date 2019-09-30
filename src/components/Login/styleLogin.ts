@@ -1,5 +1,16 @@
 import styled from "styled-components";
 import Button_2 from "../Abstracts/Button_2";
+import media from "../../styles/media";
+
+export const LoginContainer = styled.main`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  ${({ theme }) => `
+    height: calc(100vh - ${theme.navigationHeight});
+  `}
+`;
 
 export const Content = styled.div`
   padding: 2rem;
@@ -10,15 +21,12 @@ export const Content = styled.div`
   flex-direction: column;
 
   ${({ theme }) => `
-        background-color: ${theme.colorGreyLight1};
-    `}
-`;
+    background-color: ${theme.colorGreyLight1};
+  `}
 
-export const Container = styled.div`
-  height: calc(100vh - 4.5rem);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${media.tiny`
+    width: 100%;
+  `}
 `;
 
 export const Button = styled(Button_2)`
@@ -38,5 +46,5 @@ export const RadioGroup = styled.div`
 `;
 
 export const ErrorMessage = styled.span`
-  color: ${({theme}) => theme.colorRed}
-`
+  color: ${({ theme }) => theme.colorRed};
+`;

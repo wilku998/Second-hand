@@ -3,12 +3,11 @@ import { inject, observer } from "mobx-react";
 import {
   ButtonIcon,
   SubMenuList,
-  SubMenuListItemContent,
-  SubMenuListItem,
-  SubMenuIconContainer,
+  SubMenuButton,
   MenuItem,
-  MessageInfo,
-  InterlocutorName
+  NotificationInfo,
+  SubMenuListItem,
+  NoNotificationsInfo
 } from "../styleMenu";
 import { Link } from "react-router-dom";
 import Avatar from "../../../Abstracts/Avatar";
@@ -17,6 +16,7 @@ import { IInterlocutorsStore } from "../../../../store/interlocutors";
 import parseDate from "../../../../functions/parseDate";
 import { IUserStore } from "../../../../store/user";
 import Date from "../../../Abstracts/Date";
+import { InterlocutorName } from "./styleMessagesMenu";
 
 export interface IProps {
   isVisible: boolean;
@@ -44,41 +44,40 @@ const MessagesMenu = React.forwardRef(
     };
 
     return (
-      <MenuItem onClick={onClick} ref={ref}>
-        <SubMenuIconContainer isselected={isVisible.toString()}>
+      <MenuItem onClick={onClick} isselected={isVisible.toString()} ref={ref}>
+        <SubMenuButton>
           {unreadedMessagesQuantity > 0 && (
             <AlertCircle number={unreadedMessagesQuantity} />
           )}
           <ButtonIcon src="/svg/mail.svg" />
-        </SubMenuIconContainer>
+        </SubMenuButton>
         {isVisible && (
           <SubMenuList>
             {interlocutors.length > 0 ? (
               <>
                 {interlocutors.map(e => (
-                  <li key={e.interlocutor._id}>
-                    <SubMenuListItem
-                      as={Link}
-                      to={`/messenger/${e.interlocutor._id}`}
-                      isunreaded={(
-                        !e.isReaded && e.lastMessage.senderID !== user._id
-                      ).toString()}
-                    >
-                      <SubMenuListItemContent>
-                        <MessageInfo>
-                          <Date date={e.lastMessage.sendedAt} />
-                          <InterlocutorName>
-                            {e.interlocutor.name}
-                          </InterlocutorName>
-                        </MessageInfo>
-                        {e.lastMessage.message}
-                      </SubMenuListItemContent>
-                    </SubMenuListItem>
-                  </li>
+                  <SubMenuListItem
+                    key={e.interlocutor._id}
+                    isunreaded={(
+                      !e.isReaded && e.lastMessage.senderID !== user._id
+                    ).toString()}
+                  >
+                    <Link to={`/messenger/${e.interlocutor._id}`}>
+                      <NotificationInfo>
+                        <Date date={e.lastMessage.sendedAt} />
+                        <InterlocutorName>
+                          {e.interlocutor.name}
+                        </InterlocutorName>
+                      </NotificationInfo>
+                      {e.lastMessage.message}
+                    </Link>
+                  </SubMenuListItem>
                 ))}
               </>
             ) : (
-              <span>Brak wiadomości</span>
+              <SubMenuListItem>
+                <NoNotificationsInfo>Brak wiadomości</NoNotificationsInfo>
+              </SubMenuListItem>
             )}
           </SubMenuList>
         )}

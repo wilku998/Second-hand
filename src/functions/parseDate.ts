@@ -1,4 +1,4 @@
 import moment from "moment";
 moment.locale("pl");
 
-export default (date: string) => moment(parseInt(date)).calendar();
+export default (date: string | number) => moment(date).calendar();

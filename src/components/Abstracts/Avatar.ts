@@ -6,8 +6,7 @@ export default styled.img<{ size?: string }>`
   border-radius: 50%;
   margin-right: 1rem;
   
-  ${({ size, theme }) => `
-    border: ${theme.lightBorder2};
+  ${({ size }) => `
     ${
       size === "big"
         ? `  width: 3rem;

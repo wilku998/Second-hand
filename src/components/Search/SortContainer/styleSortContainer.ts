@@ -10,8 +10,8 @@ export default (SortContainer: FunctionComponent<IProps>) => styled(
   display: flex;
   justify-content: space-between;
   line-height: 1;
-  margin-top: 1rem;
-  padding-top: 1rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
   ${({ theme }) => `
     border-top: ${theme.lightBorder2};
   `}

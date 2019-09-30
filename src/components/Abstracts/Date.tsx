@@ -12,16 +12,19 @@ const Date = ({ date }: { date: string }) => (
 
 const StyledDate = styled.div`
   display: flex;
-  margin-bottom: 0.3rem;
+  align-items: center;
 `;
 
 const DateIcon = styled(ReactSVG)`
-  height: 1.2rem;
+  position: relative;
+  height: 100%;
   width: 1.2rem;
   margin-right: 0.5rem;
-  ${({ theme }) => `
-    fill: ${theme.colorGreyDark2};
-  `}
+
+  & svg {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
 `;
 
 export default Date;

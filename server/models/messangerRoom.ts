@@ -8,7 +8,7 @@ const messangerRoomSchema = new Schema({
     },
     messages: {
         type: Array,
-        default: []
+        default: [],
     },
     isReaded: {
         type: Boolean,

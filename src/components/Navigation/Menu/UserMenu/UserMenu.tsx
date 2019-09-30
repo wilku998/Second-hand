@@ -2,13 +2,16 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Avatar from "../../../Abstracts/Avatar";
 import { logoutRequest } from "../../../../API/users";
-import { UserMenuContent, UserName } from "./styleUserMenu";
+import { UserMenuContent, UserName, UserMenuList, UserMenuButton } from "./styleUserMenu";
 import { viewStore } from "../../../../app";
-import { SubMenuList, SubMenuListItem, SubMenuIconContainer } from "../styleMenu";
+import {
+  SubMenuListItem,
+} from "../styleMenu";
 import { IUserStore } from "../../../../store/user";
 import { inject } from "mobx-react";
 import { observer } from "mobx-react-lite";
 import CollapseIcon from "../../../Abstracts/CollapseIcon";
+import InvisibleButton from "../../../Abstracts/InvisibleButton";
 
 export interface IProps {
   userStore?: IUserStore;
@@ -27,34 +30,40 @@ const UserMenu = observer(
       }
     };
     return (
-      <UserMenuContent onClick={onClick} ref={ref}>
+      <UserMenuContent
+        isselected={isVisible.toString()}
+        onClick={onClick}
+        ref={ref}
+      >
         <Avatar src={user.avatar} size="small" />
         <UserName>{user.name}</UserName>
-        <SubMenuIconContainer isselected={isVisible.toString()}>
+        <UserMenuButton>
           <CollapseIcon width="1rem" listvisible={isVisible.toString()} />
-        </SubMenuIconContainer>
+        </UserMenuButton>
         {isVisible && (
-          <SubMenuList>
-            <SubMenuListItem as={Link} to="/users/myProfile">
-              Twój profil
+          <UserMenuList>
+            <SubMenuListItem>
+              <Link to="/users/myProfile">Twój profil</Link>
             </SubMenuListItem>
-
-            <SubMenuListItem as={Link} to="/items/create">
-              Dodaj przedmiot
+            <SubMenuListItem>
+              <Link to="/items/create">Dodaj przedmiot</Link>
             </SubMenuListItem>
-
-            <SubMenuListItem onClick={viewStore.toggleEditProfile}>
-              Edytuj profil
+            <SubMenuListItem>
+              <InvisibleButton onClick={viewStore.toggleEditProfile}>
+                Edytuj profil
+              </InvisibleButton>
             </SubMenuListItem>
-
-            <SubMenuListItem onClick={viewStore.toggleRemoveProfile}>
-              Usuń profil
+            <SubMenuListItem>
+              <InvisibleButton onClick={viewStore.toggleRemoveProfile}>
+                Usuń profil
+              </InvisibleButton>
             </SubMenuListItem>
-
-            <SubMenuListItem onClick={logoutRequest}>
-              Wyloguj się
+            <SubMenuListItem>
+              <InvisibleButton onClick={logoutRequest}>
+                Wyloguj się
+              </InvisibleButton>
             </SubMenuListItem>
-          </SubMenuList>
+          </UserMenuList>
         )}
       </UserMenuContent>
     );

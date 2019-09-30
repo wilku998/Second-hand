@@ -5,12 +5,15 @@ import {
   unfollowUserRequest,
   followUserRequest
 } from "../../API/users";
-import IUser from "../../interfaces/IUser";
+import IUser, { IProfile } from "../../interfaces/IUser";
 import IItem from "../../interfaces/IItem";
 import { observer, inject } from "mobx-react";
 import { IUserStore } from "../../store/user";
 import checkIfIsFollowed from "../../functions/checkIfIsFollowed";
 import { history } from "../../app";
+import setFollowsAndlikes from "./setFollowsAndlikes";
+import useFollowsAndLikes from "./hooks/useFollowsAndLikes";
+import Loader from "../Abstracts/Loader";
 
 export interface IProps {
   match: any;
@@ -20,10 +23,17 @@ export interface IProps {
 const ForeignProfile = ({ match, userStore }: IProps) => {
   const userID = match.params.id;
   const ownProfile = userStore.getUser;
-  const [user, setUser]: [
-    { user: IUser; ownItems: Array<IItem> },
-    (user: { user: IUser; ownItems: Array<IItem> }) => void
-  ] = useState({ user: undefined, ownItems: undefined });
+  const [user, setUser]: [IProfile, any] = useState({
+    user: undefined,
+    ownItems: undefined
+  });
+  const {
+    likedItems,
+    follows,
+    followedBy,
+    isFetching,
+    setIsFetching
+  } = useFollowsAndLikes(user.user);
 
   const isFollowed = userStore.getUser
     ? checkIfIsFollowed(ownProfile.follows, userID)
@@ -70,6 +80,7 @@ const ForeignProfile = ({ match, userStore }: IProps) => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsFetching(true);
       const foundedUser = await getUserRequest(userID);
       if (foundedUser) {
         setUser(foundedUser);
@@ -84,6 +95,12 @@ const ForeignProfile = ({ match, userStore }: IProps) => {
       user={user.user}
       ownItems={user.ownItems}
       isOwnProfile={false}
+      follows={follows}
+      followedBy={followedBy}
+      likedItems={likedItems}
+      isFetching={isFetching}
+      shouldRender={!!user.user}
+      notFoundMessage="Użytkownik nie został odnaleziony"
     />
   );
 };

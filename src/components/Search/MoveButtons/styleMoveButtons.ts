@@ -11,6 +11,7 @@ export default (MoveButtons: FunctionComponent<IProps>) => styled(MoveButtons)`
 `;
 
 export const MoveButton = styled(InvisibleButton)<{ isselected?: string }>`
+  position: relative;
   &:not(:last-child) {
     margin-right: 1rem;
   }

@@ -4,6 +4,7 @@ import { IProps } from "./Item";
 import Button_2 from "../Abstracts/Button_2";
 import InvisibleButton from "../Abstracts/InvisibleButton";
 import media, { sizes } from "../../styles/media";
+import { Link } from "react-router-dom";
 
 export default (Item: FunctionComponent<IProps>) => styled(Item)`
   margin-top: 2rem;
@@ -42,16 +43,15 @@ export const ItemLabel = styled.div`
 `;
 
 export const ItemInfo = styled.ul`
-  margin-top: 1rem;
-  padding-top: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
   list-style: none;
   ${({ theme }) => `
-    border-top: ${theme.lightBorder};
+    border-bottom: ${theme.lightBorder};
   `}
 `;
 
 export const ItemAbout = styled(ItemInfo)`
-  font-size: 1.2rem;
 `;
 
 export const Button = styled(Button_2)`
@@ -143,6 +143,18 @@ export const ImageContainer = styled.div<{
   ${media.medium_2`
     grid-column: 1/3;
     height: 30rem;
+  `}
+`;
+
+export const SellerProfile = styled(Link)`
+  height: initial;
+  display: flex;
+  align-items: center;
+  font-size: 1.4rem;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  ${({ theme }) => `
+    border-bottom: ${theme.lightBorder};
   `}
 `;
 

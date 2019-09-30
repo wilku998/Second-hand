@@ -1,8 +1,6 @@
 import React, { useState, useEffect, ChangeEvent } from "react";
-import moment from "moment";
 import { inject, observer } from "mobx-react";
 import Avatar from "../Abstracts/Avatar";
-import Container from "../Abstracts/Container";
 import { Label, FormInput } from "../Abstracts/Form";
 import style, {
   Optional,
@@ -13,14 +11,9 @@ import style, {
   RemoveImageButton,
   ImagesErrorMessage,
   CameraIcon,
-  ImageLoader,
-  CreatedAt,
   Image,
-  SellerProfile,
   Button,
   GridContainer,
-  Info,
-  AddLoader
 } from "./styleCreateItem";
 import { isSelectSize, onCategory_SizeChange } from "./functions";
 import validation from "./validaton";
@@ -28,6 +21,11 @@ import { getImageBase64Request } from "../../API/images";
 import { history } from "../../app";
 import IItem from "../../interfaces/IItem";
 import { Iimages, IForm, IItemKeys } from "./interfaces";
+import Date from "../Abstracts/Date";
+import { IMinifedUser } from "../../interfaces/IUser";
+import { ItemAbout, SellerProfile } from "../Item/styleItem";
+import Loader from "../Abstracts/Loader";
+import Container from "../Abstracts/Container";
 
 export interface IProps {
   className?: string;
@@ -38,6 +36,7 @@ export interface IProps {
   isEdit: boolean;
   onRemoveItemClick?: () => void;
   createdAt?: string;
+  likedBy?: IMinifedUser[];
 }
 
 const ComponentTemplate = ({
@@ -48,7 +47,8 @@ const ComponentTemplate = ({
   onSubmitRequest,
   isEdit,
   onRemoveItemClick,
-  createdAt
+  createdAt,
+  likedBy
 }: IProps) => {
   const user = userStore.getUser;
   const [itemForm, setItemForm] = useState(initialForm);
@@ -58,7 +58,6 @@ const ComponentTemplate = ({
   const [imagesError, setImagesError] = useState("");
   const [imageLoading, setImageLoading] = useState(false);
   const [addLoading, setAddLoading] = useState(false);
-  const parsedCreatedAt = moment(createdAt).format("DD-MM-YYYY");
 
   const {
     price,
@@ -175,15 +174,14 @@ const ComponentTemplate = ({
   return (
     <Container>
       {addLoading ? (
-        <AddLoader size={6} />
+        <Loader size={6} />
       ) : (
         <div className={className}>
           <AddPhotosContainer>
-            <SellerProfile as="div">
+            <SellerProfile to={`/users/myProfile`}>
               <Avatar size="big" src={user.avatar} />
               <span>{user.name}</span>
             </SellerProfile>
-            <Info>Dodaj zdjęcia przedmiotu</Info>
             {imagesError !== "" && (
               <ImagesErrorMessage>{imagesError}</ImagesErrorMessage>
             )}
@@ -199,7 +197,7 @@ const ComponentTemplate = ({
               {images.length < 3 && !resettingFileInput && (
                 <PhotoButton>
                   {imageLoading ? (
-                    <ImageLoader size={6} />
+                    <Loader size={4} />
                   ) : (
                     <CameraIcon src="/svg/camera.svg" />
                   )}
@@ -214,7 +212,17 @@ const ComponentTemplate = ({
             </GridContainer>
           </AddPhotosContainer>
           <ItemForm onSubmit={onSubmit}>
-            {isEdit && <CreatedAt>Dodano w dniu: {parsedCreatedAt}</CreatedAt>}
+            {isEdit && (
+              <ItemAbout>
+                <li>
+                  <Date date={createdAt} />
+                </li>
+                <li>
+                  Polubione przez {likedBy.length}{" "}
+                  {likedBy.length === 1 ? "osobę" : "osób"}
+                </li>
+              </ItemAbout>
+            )}
             {selectors.map(e => (
               <Label key={e.name}>
                 {e.label}

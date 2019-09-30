@@ -12,6 +12,6 @@ export default interface INotification {
     user: IMinifedUser;
     item?: IMinifedItem;
     userWhoGotFollow?: IMinifedUser;
-    addedAt: string;
+    addedAt: number;
     isReaded?: boolean;
 }

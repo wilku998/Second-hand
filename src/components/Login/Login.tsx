@@ -1,12 +1,6 @@
 import React, { useState, ChangeEvent } from "react";
 import { Link } from "react-router-dom";
-import {
-  Container,
-  Content,
-  Button,
-  RadioGroup,
-  ErrorMessage
-} from "./styleLogin";
+import { Content, Button, RadioGroup, ErrorMessage, LoginContainer } from "./styleLogin";
 import initialState from "./initialState";
 import { loginRequest, registerRequest } from "../../API/users";
 import { Form, Label, FormInput } from "../Abstracts/Form";
@@ -70,7 +64,7 @@ const Login = ({ className }: IProps) => {
   };
 
   return (
-    <Container>
+    <LoginContainer>
       <Content>
         <Form className={className} onSubmit={onSubmit}>
           {inputs.map(e => (
@@ -124,7 +118,7 @@ const Login = ({ className }: IProps) => {
           <Link to="/">Wróć się</Link>
         </Button>
       </Content>
-    </Container>
+    </LoginContainer>
   );
 };
 

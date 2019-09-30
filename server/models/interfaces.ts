@@ -77,7 +77,7 @@ export interface IMessangerRoom extends Document {
   roomName: string;
   messages: Array<{
     message: string;
-    sendedAt: string;
+    sendedAt: number;
     senderID: string;
   }>;
   isReaded: boolean;

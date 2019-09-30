@@ -36,5 +36,9 @@ export const AvatarFakeButton = styled.div`
 `;
 
 export const AvatarLoader = styled(Loader)`
+  position: relative;
+  top: 0;
+  left: 0;
+  transform: none;
   margin-right: 1.5rem;
 `;

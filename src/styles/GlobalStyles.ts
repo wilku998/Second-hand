@@ -19,9 +19,9 @@ export default createGlobalStyle`
     html {
         font-size: 62.5%;
 
-        /* ${media.big`
+        ${media.big`
             font-size: 50%;
-        `} */
+        `}
     }
 
 
@@ -84,4 +84,10 @@ export default createGlobalStyle`
         display: inline-block;
     };
 
+    svg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
 `;

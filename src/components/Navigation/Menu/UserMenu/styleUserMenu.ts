@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import media from "../../../../styles/media";
-import { MenuItem } from "../styleMenu";
+import { MenuItem, SubMenuList, SubMenuButton } from "../styleMenu";
 
 export const UserMenuContent = styled(MenuItem)`
   height: 100%;
@@ -10,6 +10,16 @@ export const UserMenuContent = styled(MenuItem)`
   & > span {
     text-transform: none;
   }
+`;
+
+export const UserMenuButton = styled(SubMenuButton)`
+  ${media.tiny`
+    padding-left: 0;
+  `}
+`;
+
+export const UserMenuList = styled(SubMenuList)`
+  text-align: center;
 `;
 
 export const UserName = styled.span`

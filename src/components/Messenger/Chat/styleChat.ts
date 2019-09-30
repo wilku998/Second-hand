@@ -8,7 +8,8 @@ export const StyledChat = styled.section`
   flex-direction: column;
   overflow-y: auto;
   ${({ theme }) => `
-    border: ${theme.lightBorder2};
+    border-top: ${theme.darkBorder3};
+    border-left: ${theme.darkBorder3};
   `}
 
   ${media.medium`
@@ -52,8 +53,8 @@ export const Message = styled.span<{ isOwn: boolean }>`
 export const Form = styled.form`
   padding: 0.5rem 2rem;
   ${({ theme }) => `
-        border-top: ${theme.lightBorder2};
-        background-color: ${theme.colorGreyLight1};
+        border-top: ${theme.darkBorder3};
+        background-color: ${theme.colorGreyLight5};
     `}
 `;
 
@@ -64,7 +65,7 @@ export const SendButton = styled(Button_2)`
   margin-left: -2.5rem;
   border: none;
   ${({ theme }) => `
-    border-left: ${theme.lightBorder2};
+    border-left: ${theme.darkBorder3};
   `}
 
   & svg {

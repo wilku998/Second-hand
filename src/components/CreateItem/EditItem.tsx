@@ -99,6 +99,7 @@ const EditItem = ({ userStore, match }: IProps) => {
             onSubmitRequest={onSubmitRequest}
             isEdit={true}
             createdAt={item.createdAt}
+            likedBy={item.likedBy}
             onRemoveItemClick={toggleRemoveItemIsOpen}
           />
           <RemoveProfile

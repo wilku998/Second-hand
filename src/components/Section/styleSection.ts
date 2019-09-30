@@ -40,16 +40,13 @@ export const ItemsContainer = styled.div`
   ${media.big`
     grid-gap: 2rem;
   `}
-  ${media.medium`
-    grid-template-columns: repeat(3, 1fr);
-  `}
 
   ${media.medium_2`
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   `}
   
-  ${media.smallest`
-    grid-template-columns: repeat(1,1fr);
+  ${media.small`
+    grid-template-columns: repeat(2,1fr);
   `}
 `;
 

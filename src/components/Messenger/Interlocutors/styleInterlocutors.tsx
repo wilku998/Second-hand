@@ -9,9 +9,7 @@ export default (Interlocutors: FunctionComponent<IProps>) => styled(
 )`
   ${({ theme }) => `
     background-color: ${theme.colorGreyLight1};
-    border-top: ${theme.lightBorder2};
-    border-bottom: ${theme.lightBorder2};
-    border-left: ${theme.lightBorder2};
+    border-top: ${theme.darkBorder3};
   `}
 
   ${media.medium`
@@ -32,7 +30,7 @@ export const Interlocutor = styled(Link)`
   cursor: pointer;
   &:not(:last-child) {
     ${({ theme }) => `
-        border-bottom: ${theme.lightBorder2};
+        border-bottom: ${theme.darkBorder3};
     `}
   }
 `;

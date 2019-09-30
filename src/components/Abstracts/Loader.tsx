@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-const Loader = ({ className }: { className?: string, size: number }) => (
+const LoaderBase = ({ className }: { className?: string, size: number }) => (
   <div className={className}>
     <div></div>
     <div></div>
@@ -10,9 +10,12 @@ const Loader = ({ className }: { className?: string, size: number }) => (
   </div>
 );
 
-export default styled(Loader)<{size: number}>`
+const Loader = styled(LoaderBase)<{size: number}>`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: inline-block;
-  position: relative;
   ${({ size }) => `
     width: ${size}rem;
     height: ${size}rem;
@@ -49,3 +52,5 @@ export default styled(Loader)<{size: number}>`
     }
   }
 `;
+
+export default Loader;

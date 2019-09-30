@@ -3,9 +3,9 @@ import styled from "styled-components";
 import InvisibleButton from "../../../Abstracts/InvisibleButton";
 import Button_2 from "../../../Abstracts/Button_2";
 import media from "../../../../styles/media";
+import { IProps } from "./SearchMenu";
 
 export default (SearchMenu: FunctionComponent<IProps>) => styled(SearchMenu)`
-  margin-bottom: 2rem;
 `;
 
 export const ItemsContainer = styled.div`
@@ -43,7 +43,6 @@ export const Item = styled.div`
 
 export const Button = styled(Button_2)`
   width: 100%;
-  font-size: 1.4rem;
 `;
 
 export const Input = styled.input`
@@ -66,10 +65,12 @@ export const InputContainer = styled.div`
   width: calc(100% + 2px);
   top: calc(100% - 1px);
   left: -1px;
-  background-color: white;
   padding: 1rem;
+  border-radius: 0 0 0.3rem 0.3rem;
   ${({ theme }) => `
     border: ${theme.lightBorder2};
+    background-color: ${theme.colorGreyLight1};
+    box-shadow: ${theme.lightShadow2};
   `}
   & input, select {
     width: 100%;

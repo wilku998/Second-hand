@@ -7,7 +7,8 @@ import { IUserStore } from "../../store/user";
 import {
   StyledMessanger,
   InterlocutorsTitle,
-  MessangerContainer
+  MessangerContainer,
+  MessagerStyledUserLabel
 } from "./styleMessanger";
 import { IInterlocutorsStore } from "../../store/interlocutors";
 import Interlocutors from "./Interlocutors/Interlocutors";
@@ -41,6 +42,7 @@ const Messanger = ({ match, userStore, interlocutorsStore }: IProps) => {
   const interlocutorFromStore = interlocutorsStore.getInterlocutor(
     interlocutorID
   );
+
   if (interlocutorFromStore) {
     isReaded = interlocutorFromStore.isReaded;
   }
@@ -97,12 +99,8 @@ const Messanger = ({ match, userStore, interlocutorsStore }: IProps) => {
       <StyledMessanger>
         <InterlocutorsTitle>Twoje rozmowy</InterlocutorsTitle>
         <UserLabel
+          baseStyledComponent={MessagerStyledUserLabel}
           user={interlocutor}
-          additionalStyles={`
-          border-top: ${theme.lightBorder2};
-          border-left: ${theme.lightBorder2};
-          border-right: ${theme.lightBorder2};
-        `}
         />
         <Interlocutors
           interlocutors={interlocutorsStore.getSortedAndFilteredInterlocutors}

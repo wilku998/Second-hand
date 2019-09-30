@@ -154,7 +154,7 @@ export const getUsersRequest = async (query: string) => {
   return users;
 };
 
-export const getMostPopularUsersRequest = async () => await getUsersRequest('?sortBy=followedByQuantity&order=-1');
+export const getMostPopularUsersRequest = async () => await getUsersRequest('?sortBy=followedByQuantity&order=-1&limit=3');
 
 export const getFollowsAndLikes = async (userID: string) =>
   await fetchData(userID, "/api/users/followsAndLikes/");

@@ -1,10 +1,7 @@
 import styled from "styled-components";
-import ReactSVG from "react-svg";
 import { Link } from "react-router-dom";
 import media from "../../styles/media";
 import Logo from "../Abstracts/Logo";
-import { SubMenuIconContainer, MenuItem } from "./Menu/styleMenu";
-import InvisibleButton from "../Abstracts/InvisibleButton";
 
 export const StyledNavigation = styled.nav`
   position: fixed;
@@ -12,29 +9,19 @@ export const StyledNavigation = styled.nav`
   left: 0;
   width: 100%;
   padding: 0 4rem;
-  z-index: 100;
+  z-index: 1000;
 
   ${({ theme }) => `
-    background-color: ${theme.colorGreyLight1};
-    border-bottom: ${theme.lightBorder2};
+    background-color: ${theme.colorGreyDark2};
     height: ${theme.navigationHeight};
+    color: ${theme.colorGreyLight4};
   `};
-
-  & li {
-    &:hover {
-      color: black;
-    }
-  }
 
   ${media.big`
     padding: 0 2rem;
   `}
 
   ${media.medium`
-    height: initial;
-  `}
-
-  ${media.small`
     padding: 0 1rem;
   `}
 `;
@@ -54,8 +41,8 @@ export const SearchContainer = styled.div<{ mobileSearchVisible: boolean }>`
   display: flex;
   
   ${({ theme }) => `
-    background-color: ${theme.colorGreyLight1};
     fill: ${theme.colorGreyDark3};
+    color: ${theme.colorGreyDark3};
   `}
 
   ${media.medium`
@@ -64,12 +51,12 @@ export const SearchContainer = styled.div<{ mobileSearchVisible: boolean }>`
     left: 0;
     width: 100%;
     padding: 1rem 0;
-    border-bottom: 1px solid #e2e2e2;
-    border-top: 1px solid #e2e2e2;
     display: none;
     margin: 0;
     padding: .5rem 2rem;
+    background-color: #252525;
   `}
+
   ${({ mobileSearchVisible }) =>
     mobileSearchVisible ? "display: flex !important;" : ""}
 `;
@@ -78,7 +65,6 @@ export const SearchCatButton = styled.button`
   width: 100%;
   height: 100%;
   padding: 0.3rem 1rem;
-  background-color: white;
   border-radius: 0.3rem 0 0 0.3rem;
   display: flex;
   align-items: center;
@@ -86,7 +72,8 @@ export const SearchCatButton = styled.button`
     margin-right: 0.8rem;
   }
   ${({ theme }) => `
-    border: ${theme.lightBorder2};
+    border: ${theme.darkBorder2};
+    background-color: ${theme.colorGreyLight3};
   `};
 `;
 
@@ -95,16 +82,21 @@ export const SearchCat = styled.div`
   width: 12rem;
   font-size: 1.2rem;
   margin-right: -2px;
+  ${({ theme }) => `
+    &:hover{
+      color: ${theme.colorGreyDark1};
+    }
+  `};
 `;
 
 export const SearchCatButtonList = styled.ul`
   position: absolute;
   top: calc(100% - 1px);
   width: 100%;
-  background-color: white;
   border-radius: 0 0 0.3rem 0.3rem;
   ${({ theme }) => `
-    border: ${theme.lightBorder2};
+    border: ${theme.darkBorder2};
+    background-color: ${theme.colorGreyLight3};
   `};
   & > li > button {
     width: 100%;
@@ -120,23 +112,31 @@ export const SearchInput = styled.input`
   height: initial;
   font-size: 1.4rem;
   flex: 1;
+  ${({ theme }) => `
+    background-color: ${theme.colorGreyLight3};
+    border: ${theme.darkBorder2};
+  `};
 `;
+
 export const SearchButton = styled.button`
   background: none;
   border: none;
   position: absolute;
-  top: 50%;
-  right: 1rem;
-  transform: translateY(-50%);
-  & > div > div {
-    height: 1.2rem;
-    width: 1.2rem;
-    fill: ${({ theme }) => theme.colorGreyDark5};
-  }
+  top: 0;
+  right: 0;
+  width: 3.4rem;
+  height: 100%;
 
   ${media.medium`
-    right: 3rem;
+    right: 2rem;
+    top: .5rem;
+    height: calc(100% - 1rem);
   `}
+
+  & svg {
+    height: 1.2rem;
+    width: 1.2rem;
+  }
 `;
 
 export const LogoContainer = styled(Link)`
@@ -147,7 +147,6 @@ export const LogoContainer = styled(Link)`
 export const Login = styled(Link)`
   display: flex;
   align-items: center;
-  margin-left: auto;
   ${media.medium`
     margin-left: 1rem;
   `}
@@ -156,11 +155,14 @@ export const Login = styled(Link)`
 export const NavigationLogo = styled(Logo)`
   margin-left: 1rem;
   font-size: 2.2rem;
+  font-weight: 300;
+  color: white;
+
   &:before {
     width: 3rem;
     height: 3rem;
     ${({ theme }) => `
-      background-image: linear-gradient(to right bottom,${theme.colorGreyLight2}, ${theme.colorGreyLight4});
+      background-image: linear-gradient(to right bottom,${theme.colorGreyDark5}, ${theme.colorGreyDark3});
     `}
   }
 
@@ -175,18 +177,3 @@ export const NavigationLogo = styled(Logo)`
   `}
 `;
 
-export const MobileSearchIcon = styled(SubMenuIconContainer)`
-  height: 4.5rem;
-  padding: 0 1rem;
-  margin-left: auto;
-  display: none;
-  cursor: pointer;
-  
-  ${({ theme }) => `
-    border-right: ${theme.lightBorder2};
-  `}
-
-  ${media.medium`
-    display: block;
-  `}
-`;

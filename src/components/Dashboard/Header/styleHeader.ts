@@ -13,6 +13,7 @@ export default (Header: FunctionComponent<IProps>) => styled(Header)`
   position: relative;
   background: url("/images/header_background.jpg") center/cover no-repeat fixed;
   &:after {
+    z-index: -1;
     content: "";
     position: absolute;
     top: 0;
@@ -41,7 +42,6 @@ export const Button = styled(Button_1)`
 `;
 
 export const Content = styled.div`
-  z-index: 10;
   display: grid;
   grid-template-columns: min-content;
   background-color: ${({ theme }) => theme.colorWhiteTransparent};

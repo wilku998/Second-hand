@@ -25,7 +25,7 @@ export default (CreateItem: FunctionComponent<IProps>) => styled(CreateItem)`
   ${media.medium`
     width: 100%;
   `}
-  ${media.small`
+  ${media.medium_2`
     margin-top: 2rem;
     flex-direction: column;
     align-items: stretch;
@@ -46,7 +46,7 @@ export const ItemForm = styled(Form)`
 export const AddPhotosContainer = styled.div`
   flex: 0 1 35rem;
 
-  ${media.small`
+  ${media.medium_2`
     flex: 0;
 
   `}
@@ -107,13 +107,6 @@ export const RemoveImageButton = styled.button`
   font-size: 1.2rem;
 `;
 
-export const ImageLoader = styled(Loader)`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-`;
-
 export const CreatedAt = styled.span`
   font-size: 1.2rem;
   margin-bottom: 0.5rem !important;
@@ -123,7 +116,6 @@ export const GridContainer = styled.div`
   display: grid;
   grid-gap: 2rem;
   grid-template-columns: repeat(2, 1fr);
-  margin-top: 2rem;
 `;
 
 export const Image = styled.div`
@@ -138,32 +130,8 @@ export const Image = styled.div`
   }
 `;
 
-export const SellerProfile = styled(Link)`
-  display: flex;
-  align-items: center;
-  font-size: 1.6rem;
-`;
-
-export const Info = styled.span`
-  display: block;
-  text-align: center;
-  font-size: 1.2rem;
-  padding-top: 2rem;
-  margin-top: 2rem;
-  ${({ theme }) => `
-    border-top: ${theme.lightBorder};
-  `}
-`;
-
 export const Button = styled(Button_2)`
   &:first-of-type {
     margin-top: auto;
   }
-`;
-
-export const AddLoader = styled(Loader)`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 `;

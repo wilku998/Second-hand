@@ -2,9 +2,8 @@ import { FunctionComponent } from "react";
 import styled from "styled-components";
 import ReactSVG from "react-svg";
 import { IProps } from "./Menu";
-import InvisibleButton from "../../Abstracts/InvisibleButton";
 import media from "../../../styles/media";
-import Avatar from "../../Abstracts/Avatar";
+import InvisibleButton from "../../Abstracts/InvisibleButton";
 
 export default (Menu: FunctionComponent<IProps>) => styled(Menu)`
   list-style: none;
@@ -12,35 +11,36 @@ export default (Menu: FunctionComponent<IProps>) => styled(Menu)`
   align-self: stretch;
   position: relative;
   margin-left: auto;
-  ${media.medium`
-    height: 4.5rem;
-    margin-left: 0;
-  `}
 `;
 
-export const MenuItem = styled.li`
-  text-transform: uppercase;
+export const MenuItem = styled.li<{ isselected: string }>`
   cursor: pointer;
-  &:not(:last-child) {
-    ${({ theme }) => `
-      border-right: ${theme.lightBorder2};
+  ${({ theme, isselected }) => `
+      ${
+        isselected === "true"
+          ? `fill: white;
+            color: white;
+          `
+          : `fill: ${theme.colorGreyLight6};`
+      }
+      &:hover{
+        fill: white;
+        color: white;
+      }
+      &:not(:last-child) {
+        border-right: ${theme.darkBorder};
+      }
     `}
-  }
+
   &:last-child {
     padding-right: 0;
   }
 `;
 
-export const SubMenuIconContainer = styled.div<{ isselected?: string }>`
+export const SubMenuButton = styled(InvisibleButton)`
   height: 100%;
   padding: 0 1rem;
   position: relative;
-  ${({ theme, isselected }) => `
-      fill: ${isselected === "true" ? `${theme.colorBlue3} !important` : theme.colorGreyDark3};
-      &:hover{
-        fill: ${theme.colorGreyDark1};
-      };
-    `}
 `;
 
 export const ButtonIcon = styled(ReactSVG)`
@@ -50,10 +50,6 @@ export const ButtonIcon = styled(ReactSVG)`
   & svg {
     width: 1.5rem;
     height: 1.5rem;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
   }
 `;
 
@@ -62,16 +58,18 @@ export const SubMenuList = styled.ul`
   top: 100%;
   right: 0;
   width: 30rem;
-  max-height: 20rem;
+  max-height: calc(100vh - 6.5rem);
   overflow-y: auto;
-  text-transform: none;
-  text-align: center;
   line-height: 1.4;
+  font-size: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  fill: white;
+  box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.2);
+  border-radius: 0 0 0.3rem 0.3rem;
   ${({ theme }) => `
-    background-color: ${theme.colorGreyLight1};
-    border: ${theme.lightBorder2};
-    color: ${theme.colorGreyDark1};
-  `}
+    color: ${theme.colorGreyLight4};
+  `};
 
   ${media.small`
     width: 100%;
@@ -85,42 +83,59 @@ export const SubMenuList = styled.ul`
 export const SubMenuListItem = styled.li<{
   isunreaded?: string;
 }>`
-  padding: 0.7rem 1rem;
-  width: 100%;
+  position: relative;
+
   ${({ theme, isunreaded }) => `
-      background-color: ${
-        isunreaded === "true" ? theme.colorGreyLight3 : theme.colorGreyLight1
-      };
-      &:not(:last-child){
-        border-bottom: ${theme.lightBorder};
+      ${
+        isunreaded === "true"
+          ? `background-color: ${theme.colorGreyDark0};`
+          : `background-color: ${theme.colorGreyDark1};`
       }
-    `}
-`;
 
-export const SubMenuListItemNotification = styled(SubMenuListItem)`
-  cursor: initial;
-`;
+      &:not(:last-child):after{
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        transform: translateX(-50%);
+        height: 1px;
+        width: calc(100% - 2rem);
+        background-color: ${theme.colorGreyDark3};
+      }
+  `}
 
-export const SubMenuListItemContent = styled.div`
-  font-size: 1.2rem;
-  display: block;
-  text-align: start;
-  margin-top: 0.3rem;
-  ${({ theme }) => `
-      color: ${theme.colorGreyDark2};
-    `}
+  &:before {
+    z-index: 0;
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.01);
+    opacity: 0;
+    transition: opacity .1s;
+  }
 
-  & a, & a:visited {
-    color: black;
-    display: inline;
+  &:hover:before {
+    opacity: 1;
+  }
+
+  & > * {
+    position: relative;
+    width: 100%;
+    padding: 1rem;
+    z-index: 1;
   }
 `;
 
-export const MessageInfo = styled.div`
+export const NotificationInfo = styled.div`
   display: flex;
   justify-content: space-between;
+  margin-bottom: 0.5rem;
+  color: white;
 `;
 
-export const InterlocutorName = styled.span`
-  margin-left: 1rem;
+export const NoNotificationsInfo = styled.div`
+  text-align: center;
 `;

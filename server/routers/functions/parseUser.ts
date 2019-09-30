@@ -100,7 +100,7 @@ export const parseUser = async (user: IUser, notificationsDelete?: boolean) => {
         ...parsedUser,
         user: {
           ...parsedUser.user,
-          notifications: notifications.reverse()
+          notifications: notifications.filter(e => e).reverse()
         }
       };
     }
