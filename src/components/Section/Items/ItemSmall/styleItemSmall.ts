@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { FunctionComponent } from "react";
 import { IProps } from "./ItemSmall";
-import InvisibleButton from "../../../Abstracts/InvisibleButton";
 
 export default (ItemSmall: FunctionComponent<IProps>) => styled(ItemSmall)`
   display: flex;
@@ -12,6 +11,10 @@ export default (ItemSmall: FunctionComponent<IProps>) => styled(ItemSmall)`
 
 export const Image = styled.img`
   height: 30rem;
+  border-radius: 0.1rem;
+  ${({ theme }) => `
+    box-shadow: ${theme.lightShadow2};
+  `}
 `;
 
 export const ItemDescription = styled.div`
@@ -19,11 +22,8 @@ export const ItemDescription = styled.div`
   text-align: center;
   display: flex;
   flex-direction: column;
-
-  & > div {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  & > span {
+    font-size: 1.2rem;
   }
 `;
 
@@ -32,24 +32,21 @@ export const Title = styled.h3`
   text-transform: uppercase;
 `;
 
-export const Button = styled(InvisibleButton)`
+export const Button = styled.button`
   position: absolute;
   z-index: 10;
   top: 1.5rem;
   right: 1.5rem;
   border-radius: 50%;
-  padding: 1rem;
-  background-color: ${({ theme }) => `${theme.colorGreyLight1}`};
+  border: none;
+  padding: 1.15rem;
+  background-color: rgba(255, 255, 255, 0.7);
   &:hover {
     cursor: pointer;
   }
-  & > div > div > svg {
-    position: absolute;
-    top: 50%;
-    left: 50;
-    transform: translate(-50%, -50%);
-    width: 1rem;
-    height: 1rem;
+  & svg {
+    width: 1.25rem;
+    height: 1.25rem;
     fill: ${({ theme }) => `${theme.colorGreyDark1}`};
   }
 `;

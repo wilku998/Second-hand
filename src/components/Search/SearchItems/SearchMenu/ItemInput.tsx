@@ -15,6 +15,7 @@ interface IProps {
   onInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onPriceChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onCleanFiltersClick: (e: any) => void;
+  closeFilters: () => void;
 }
 
 const ItemInput = forwardRef(
@@ -24,7 +25,8 @@ const ItemInput = forwardRef(
       onSearchMenuButtonClick,
       onInputChange,
       onCleanFiltersClick,
-      onPriceChange
+      onPriceChange,
+      closeFilters
     }: IProps,
     ref
   ) => {
@@ -73,6 +75,9 @@ const ItemInput = forwardRef(
             )}
             <ButtonCleanFilter name={name} onClick={onCleanFiltersClick}>
               Usuń filtr
+            </ButtonCleanFilter>
+            <ButtonCleanFilter onClick={closeFilters}>
+              Zamknij okienko
             </ButtonCleanFilter>
           </InputContainer>
         )}

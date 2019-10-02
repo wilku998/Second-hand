@@ -1,21 +1,48 @@
-import React from "react";
-import { IInterlocutorsStore } from "../../../store/interlocutors";
-import style, {
+import React, { useState } from "react";
+import {
   Interlocutor,
   LastMessage,
   User,
+  NoMessages,
+  InterlocutorAvatar,
   InterlocutorsContainer,
-  NoMessages
+  MobileBackground,
+  InterlocutorsList,
+  InterlocutorsSearchInputContainer,
+  InterlocutorsContent,
+  InterlocutorsSearchInput
 } from "./styleInterlocutors";
-import Avatar from "../../Abstracts/Avatar";
 import isUnreadedMessage from "../../../functions/isUnreadedMessage";
+import { Link } from "react-router-dom";
+import IInterlocutor from "../../../interfaces/IInterlocutor";
 
 export interface IProps {
-  interlocutors: IInterlocutorsStore["interlocutors"];
-  className?: string;
+  interlocutors: IInterlocutor[];
+  interlocutorsVisible: boolean;
+  onInterlocutorsButtonClick: () => void;
 }
 
-const Interlocutors = ({ interlocutors, className }: IProps) => {
+const Interlocutors = ({
+  interlocutors,
+  interlocutorsVisible,
+  onInterlocutorsButtonClick
+}: IProps) => {
+  const [filterString, setFilterString] = useState("");
+
+  const onSortChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setFilterString(e.target.value);
+
+  const filter = (interlocutors: IInterlocutor[]) =>
+    interlocutors.filter(interlocutor => {
+      const regExp = new RegExp(
+        filterString
+          .trim()
+          .toLowerCase()
+          .replace(/_/g, "|")
+      );
+      return regExp.test(interlocutor.interlocutor.name.toLowerCase());
+    });
+
   const limitMessage = (message: string) => {
     const arr: Array<string> = [];
     message.split(" ").forEach((word: string) => {
@@ -27,29 +54,49 @@ const Interlocutors = ({ interlocutors, className }: IProps) => {
   };
 
   return (
-    <section className={className}>
-      <InterlocutorsContainer>
+    <InterlocutorsContainer interlocutorsVisible={interlocutorsVisible}>
+      <MobileBackground
+        interlocutorsVisible={interlocutorsVisible}
+        onClick={onInterlocutorsButtonClick}
+      />
+      <InterlocutorsContent interlocutorsVisible={interlocutorsVisible}>
+        {interlocutorsVisible && (
+          <InterlocutorsSearchInputContainer>
+            <InterlocutorsSearchInput
+              placeholder="Szukaj rozmówców"
+              value={filterString}
+              onChange={onSortChange}
+            />
+          </InterlocutorsSearchInputContainer>
+        )}
         {interlocutors.length > 0 ? (
-          interlocutors.map(e => (
-            <Interlocutor
-              to={`/messenger/${e.interlocutor._id}`}
-              key={e.interlocutor._id}
-            >
-              <User>
-                <Avatar size="big" src={e.interlocutor.avatar} />
-                {e.interlocutor.name}
-              </User>
-              <LastMessage isUnreaded={isUnreadedMessage(e)}>
-                {limitMessage(e.lastMessage.message)}
-              </LastMessage>
-            </Interlocutor>
-          ))
+          <InterlocutorsList>
+            {filter(interlocutors).map(e => (
+              <Interlocutor key={e.interlocutor._id}>
+                <Link to={`/messenger/${e.interlocutor._id}`}>
+                  <User>
+                    <InterlocutorAvatar
+                      size="big"
+                      interlocutorsVisible={interlocutorsVisible}
+                      src={e.interlocutor.avatar}
+                    />
+                    {interlocutorsVisible && e.interlocutor.name}
+                  </User>
+                  {interlocutorsVisible && (
+                    <LastMessage isUnreaded={isUnreadedMessage(e)}>
+                      {limitMessage(e.lastMessage.message)}
+                    </LastMessage>
+                  )}
+                </Link>
+              </Interlocutor>
+            ))}
+          </InterlocutorsList>
         ) : (
           <NoMessages>Brak rozmów</NoMessages>
         )}
-      </InterlocutorsContainer>
-    </section>
+      </InterlocutorsContent>
+    </InterlocutorsContainer>
   );
 };
 
-export default style(Interlocutors);
+export default Interlocutors;

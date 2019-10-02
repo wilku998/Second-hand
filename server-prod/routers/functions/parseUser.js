@@ -148,7 +148,7 @@ exports.parseUser = function (user, notificationsDelete) { return __awaiter(void
                 }); }))];
             case 7:
                 notifications = _a.sent();
-                return [2 /*return*/, __assign(__assign({}, parsedUser), { user: __assign(__assign({}, parsedUser.user), { notifications: notifications.reverse() }) })];
+                return [2 /*return*/, __assign(__assign({}, parsedUser), { user: __assign(__assign({}, parsedUser.user), { notifications: notifications.filter(function (e) { return e; }).reverse() }) })];
         }
     });
 }); };

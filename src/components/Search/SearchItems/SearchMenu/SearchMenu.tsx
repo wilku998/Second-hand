@@ -27,7 +27,7 @@ const SearchMenu = ({
   form,
   setForm,
   searchItems,
-  activeFilters,
+  activeFilters
 }: IProps) => {
   const { category, condition, gender, price, name, size } = form;
 
@@ -61,6 +61,17 @@ const SearchMenu = ({
       newForm[key] = {
         ...form[key],
         isVisible: key === name ? !form[key].isVisible : false
+      };
+    });
+    setForm(newForm);
+  };
+
+  const closeFilters = () => {
+    const newForm: any = {};
+    Object.keys(form).forEach(key => {
+      newForm[key] = {
+        ...form[key],
+        isVisible: false
       };
     });
     setForm(newForm);
@@ -150,14 +161,7 @@ const SearchMenu = ({
       if (
         Object.keys(refs).every(key => !refs[key].current.contains(e.target))
       ) {
-        const newForm: any = {};
-        Object.keys(form).forEach(key => {
-          newForm[key] = {
-            ...form[key],
-            isVisible: false
-          };
-        });
-        setForm(newForm);
+        closeFilters();
       }
     };
     window.addEventListener("click", listner);
@@ -178,6 +182,7 @@ const SearchMenu = ({
             onPriceChange={onPriceChange}
             onCleanFiltersClick={onCleanFiltersClick}
             ref={refs[item.name]}
+            closeFilters={closeFilters}
           />
         ))}
         <ItemSize
@@ -189,6 +194,7 @@ const SearchMenu = ({
           onSearchMenuButtonClick={onSearchMenuButtonClick}
           onCleanFiltersClick={onCleanFiltersClick}
           ref={refs.size}
+          closeFilters={closeFilters}
         />
         {selectors.map(item => (
           <ItemSelector
@@ -198,6 +204,7 @@ const SearchMenu = ({
             onCleanFiltersClick={onCleanFiltersClick}
             onSelectorChange={onSelectorChange}
             ref={refs[item.name]}
+            closeFilters={closeFilters}
           />
         ))}
       </ItemsContainer>

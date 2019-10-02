@@ -12,7 +12,8 @@ export default {
   content: {
     ...reactModalStyles.content,
     border: "none",
-    background: "none"
+    background: "none",
+    boxShadow: "none"
   }
 };
 export const Content = styled.div`
@@ -34,7 +35,6 @@ export const Title = styled.h3`
 
 export const Image = styled.img`
   border-radius: 0.3rem;
-  box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.2);
   width: auto;
   max-width: 100%;
   overflow: hidden;
@@ -46,7 +46,7 @@ export const Nav = styled.nav`
   display: flex;
   align-items: flex-end;
   color: white;
-  padding: 1rem 0;
+  padding: 1rem;
   margin-bottom: 2rem;
   line-height: 1;
   ${({ theme }) => `
@@ -84,15 +84,16 @@ export const CloseIcon = styled(ReactSVG)`
     height: 1rem;
   `}
   & svg {
-    position: absolute;
-    top: 0;
-    left: 0;
+    width: 1.5rem;
+    height: 1.5rem;
   }
 `;
 
 export const MoveIcon = styled(CloseIcon)<{ isright?: string }>`
   ${({ isright }) => `
-    transform: rotate(${isright ? "180deg" : "0deg"});
+    & svg {
+      transform: translate(-50%, -50%) rotate(${isright ? "180deg" : "0deg"});
+    }
   `}
 `;
 

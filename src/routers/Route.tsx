@@ -1,18 +1,21 @@
 import React from "react";
 import { Route, Redirect } from "react-router";
+import Footer from "../components/Footer/Footer";
 
 export default ({
   component: Component,
   isAuth,
   path,
   type,
-  exact
+  exact,
+  displayFooter
 }: {
   component: any;
   isAuth?: boolean;
   path: string;
   type: "public" | "private" | "both";
   exact?: boolean;
+  displayFooter: boolean;
 }) => {
   let shoudRender = true;
   switch (type) {
@@ -32,7 +35,10 @@ export default ({
       path={path}
       component={(props: any) =>
         shoudRender ? (
-          <Component {...props} />
+          <>
+            <Component {...props} />
+            {displayFooter && <Footer />}
+          </>
         ) : (
           <Redirect to={type === "private" ? "/login" : "/"} />
         )

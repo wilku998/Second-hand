@@ -29,6 +29,7 @@ export const Title = styled.h1`
   font-size: 2.2rem;
   font-weight: 400;
   margin-bottom: 1rem;
+  text-shadow: 0 0.5rem 0.3rem rgba(0,0,0,.1);
 `;
 
 export const ItemsContainer = styled.div`

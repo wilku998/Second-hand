@@ -3,7 +3,7 @@ import media from "../../styles/media";
 
 export default styled.main`
   ${({ theme }) => `
-      min-height: calc(100vh - ${theme.navigationHeight});
+      min-height: calc(100vh - ${theme.navigationHeight} - ${theme.footerMarginTop});
   `}
   position: relative;
   padding: 2rem;

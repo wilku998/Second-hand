@@ -1,19 +1,17 @@
-import { IProps } from "./Footer";
-import { FunctionComponent } from "react";
 import styled from "styled-components";
 import media from "../../styles/media";
 
-export default (Footer: FunctionComponent<IProps>) => styled(Footer)`
-  margin-top: 10rem;
+export const StyledFooter = styled.footer<{marginTop: boolean}>`
   padding: 5rem 6rem 4rem 6rem;
   display: flex;
   justify-content: space-around;
   align-items: center;
   clip-path: polygon(0 2rem, 100% 0, 100% 100%, 0 100%);
   text-align: center;
-  ${({ theme }) => `
+  ${({ theme, marginTop }) => `
     background-image: linear-gradient(to right bottom, ${theme.colorGreyDark1}, ${theme.colorGreyDark0});
     color: ${theme.colorGreyLight3};
+    margin-top: ${marginTop ? theme.footerMarginTop : "0"};
   `}
   & > * {
     flex: 1;

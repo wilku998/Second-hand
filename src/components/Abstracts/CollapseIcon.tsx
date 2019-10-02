@@ -15,6 +15,7 @@ export default styled(CollapseIcon)<{ listvisible: string; width: string }>`
 
   ${({ listvisible, width }) => `
     width: ${width};
+    height: ${width};
     & svg {
       width: ${width};
       height: ${width};

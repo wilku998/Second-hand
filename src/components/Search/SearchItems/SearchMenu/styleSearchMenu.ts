@@ -13,7 +13,7 @@ export const ItemsContainer = styled.div`
   grid-auto-flow: column;
   grid-auto-columns: 1fr;
   grid-gap: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
 
   ${media.medium`
     grid-template-columns: repeat(3, 1fr);

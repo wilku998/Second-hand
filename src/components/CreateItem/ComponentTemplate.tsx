@@ -14,6 +14,7 @@ import style, {
   Image,
   Button,
   GridContainer,
+  CreateItemSellerProfile,
 } from "./styleCreateItem";
 import { isSelectSize, onCategory_SizeChange } from "./functions";
 import validation from "./validaton";
@@ -23,7 +24,7 @@ import IItem from "../../interfaces/IItem";
 import { Iimages, IForm, IItemKeys } from "./interfaces";
 import Date from "../Abstracts/Date";
 import { IMinifedUser } from "../../interfaces/IUser";
-import { ItemAbout, SellerProfile } from "../Item/styleItem";
+import { ItemAbout } from "../Item/styleItem";
 import Loader from "../Abstracts/Loader";
 import Container from "../Abstracts/Container";
 
@@ -178,10 +179,10 @@ const ComponentTemplate = ({
       ) : (
         <div className={className}>
           <AddPhotosContainer>
-            <SellerProfile to={`/users/myProfile`}>
+            <CreateItemSellerProfile to={`/users/myProfile`}>
               <Avatar size="big" src={user.avatar} />
               <span>{user.name}</span>
-            </SellerProfile>
+            </CreateItemSellerProfile>
             {imagesError !== "" && (
               <ImagesErrorMessage>{imagesError}</ImagesErrorMessage>
             )}

@@ -6,6 +6,7 @@ import { IProps } from "./ComponentTemplate";
 import { Link } from "react-router-dom";
 import media from "../../styles/media";
 import Button_2 from "../Abstracts/Button_2";
+import { SellerProfile } from "../Item/styleItem";
 
 export default (CreateItem: FunctionComponent<IProps>) => styled(CreateItem)`
   display: flex;
@@ -56,7 +57,7 @@ export const PhotoButton = styled.div`
   padding-top: 100%;
   position: relative;
   border-radius: 0.3rem;
-
+  background-color: white;
   &:hover {
     cursor: pointer;
   }
@@ -76,12 +77,10 @@ export const PhotoButton = styled.div`
 `;
 
 export const CameraIcon = styled(ReactSVG)`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 30%;
-  opacity: 0.5;
+  & svg {
+    width: 30%;
+    opacity: 0.5;
+  }
 `;
 
 export const ErrorMessage = styled.span`
@@ -134,4 +133,9 @@ export const Button = styled(Button_2)`
   &:first-of-type {
     margin-top: auto;
   }
+`;
+
+export const CreateItemSellerProfile = styled(SellerProfile)`
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
 `;

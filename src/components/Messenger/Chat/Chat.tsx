@@ -31,9 +31,17 @@ interface IProps {
   roomName: string;
   messages: IMessage[];
   isReaded: boolean;
+  interlocutorsVisible: boolean;
 }
 
-const Chat = ({ user, interlocutor, roomName, messages, isReaded }: IProps) => {
+const Chat = ({
+  user,
+  interlocutor,
+  roomName,
+  messages,
+  isReaded,
+  interlocutorsVisible
+}: IProps) => {
   const [message, setMessage] = useState("");
   const messagesRef = useRef();
 
@@ -72,31 +80,33 @@ const Chat = ({ user, interlocutor, roomName, messages, isReaded }: IProps) => {
   }, [messages, roomName]);
 
   return (
-    <StyledChat>
-      <Messages ref={messagesRef}>
-        {messages.map((e, i) => (
-          <Fragment key={e.message + e.sendedAt}>
-            {shouldRenderDate(e, messages[i - 1]) && (
-              <Info>{parseDate(e.sendedAt)}</Info>
-            )}
-            {e.senderID === user._id ? (
-              <Message isOwn={true}>{e.message}</Message>
-            ) : (
-              <>
-                <Message isOwn={false}>{e.message}</Message>
-                <SendedBy>Wysłane przez {interlocutor.name}</SendedBy>
-              </>
-            )}
-            {messages.length - 1 === i && (
-              <Info>
-                Wiadomość
-                {isReaded ? " przeczytana" : " nieprzeczytana"}
-              </Info>
-            )}
-          </Fragment>
-        ))}
-      </Messages>
-      <Form onSubmit={onSubmit}>
+    <>
+      <StyledChat>
+        <Messages ref={messagesRef}>
+          {messages.map((e, i) => (
+            <Fragment key={e.message + e.sendedAt}>
+              {shouldRenderDate(e, messages[i - 1]) && (
+                <Info>{parseDate(e.sendedAt)}</Info>
+              )}
+              {e.senderID === user._id ? (
+                <Message isOwn={true}>{e.message}</Message>
+              ) : (
+                <>
+                  <Message isOwn={false}>{e.message}</Message>
+                  <SendedBy>Wysłane przez {interlocutor.name}</SendedBy>
+                </>
+              )}
+              {messages.length - 1 === i && (
+                <Info>
+                  Wiadomość
+                  {isReaded ? " przeczytana" : " nieprzeczytana"}
+                </Info>
+              )}
+            </Fragment>
+          ))}
+        </Messages>
+      </StyledChat>
+      <Form onSubmit={onSubmit} interlocutorsVisible={interlocutorsVisible}>
         <FormContent>
           <MessageInput
             disabled={!interlocutor}
@@ -109,7 +119,7 @@ const Chat = ({ user, interlocutor, roomName, messages, isReaded }: IProps) => {
           </SendButton>
         </FormContent>
       </Form>
-    </StyledChat>
+    </>
   );
 };
 

@@ -51,16 +51,10 @@ export const ItemInfo = styled.ul`
   `}
 `;
 
-export const ItemAbout = styled(ItemInfo)`
-`;
+export const ItemAbout = styled(ItemInfo)``;
 
 export const Button = styled(Button_2)`
-  &:first-of-type {
-    margin-top: 2rem;
-  }
-  &:not(:first-of-type) {
-    margin-top: 1rem;
-  }
+  margin-top: 1rem;
 `;
 
 export const ImagesGrid = styled.div`
@@ -150,9 +144,9 @@ export const SellerProfile = styled(Link)`
   height: initial;
   display: flex;
   align-items: center;
-  font-size: 1.4rem;
-  margin-bottom: 2rem;
-  padding-bottom: 2rem;
+  font-size: 1.6rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
   ${({ theme }) => `
     border-bottom: ${theme.lightBorder};
   `}

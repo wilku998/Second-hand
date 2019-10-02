@@ -15,6 +15,7 @@ import InterlocutorsStore from "./store/interlocutors";
 import IMessage from "./interfaces/IMessage";
 import IUser from "./interfaces/IUser";
 import IInterlocutor from "./interfaces/IInterlocutor";
+import media from "./styles/media";
 
 export const socket = io();
 
@@ -50,7 +51,7 @@ socket.on("unfollow", (userID: string) => {
 });
 
 socket.on("notification", (notification: any) => {
-  userStore.addToArray("notifications", notification)
+  userStore.addToArray("notifications", notification);
 });
 
 socket.on("messageReaded", (roomName: string) => {
@@ -74,9 +75,12 @@ const start = async () => {
 
 start();
 
+const themeWithMedia = { ...theme, ...media };
+console.log(themeWithMedia);
+
 export const history = createBrowserHistory();
 const app = (
-  <ThemeProvider theme={theme}>
+  <ThemeProvider theme={themeWithMedia}>
     <Provider {...stores}>
       <div>
         <GlobalStyles />

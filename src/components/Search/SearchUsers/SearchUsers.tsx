@@ -45,7 +45,6 @@ const SearchUsers = () => {
   const [sortBy, setSortBy] = useState(sortByOptions[0]);
   const pages = Math.ceil(count / limit);
   const pageButtons = createPageButtons(page, pages);
-
   const onSortByChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
     setSortBy(value);
@@ -76,7 +75,6 @@ const SearchUsers = () => {
     if (searchRequest) {
       let sort = "";
       let order = "";
-
       switch (sortBy) {
         case sortByOptions[0]:
           sort = "_id";
@@ -99,7 +97,7 @@ const SearchUsers = () => {
       const query = `?name=${name}&skip=${(page - 1) *
         limit}&limit=${limit}&sortBy=${sort}&order=${order}`;
 
-      history.push(`/search/users${query}`);
+      history.location.search = query;
       setSearchRequest(false);
     }
   }, [searchRequest]);

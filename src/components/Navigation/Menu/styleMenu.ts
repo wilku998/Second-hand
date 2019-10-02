@@ -65,18 +65,16 @@ export const SubMenuList = styled.ul`
   display: flex;
   flex-direction: column;
   fill: white;
-  box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.2);
   border-radius: 0 0 0.3rem 0.3rem;
   ${({ theme }) => `
     color: ${theme.colorGreyLight4};
+    box-shadow: ${theme.navShadow};
   `};
 
   ${media.small`
     width: 100%;
     position: fixed;
     top: 4.5rem;
-    border-left: none;
-    border-right: none;
   `}
 `;
 

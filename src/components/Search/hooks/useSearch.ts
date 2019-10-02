@@ -18,7 +18,7 @@ export default (
           `${search.split("?")[1] !== "" ? "&" : ""}limit=${defaultLimit}`
         );
       }
-      console.log(search);
+
       const newCount: number = await getCountRequest(search);
       const newItems = await getItemsRequest(search);
 

@@ -110,7 +110,7 @@ const SearchItems = () => {
           : ""
       }`;
 
-      history.push(`/search/items${query}`);
+      history.location.search = query;
       setSearchRequest(false);
     }
   }, [searchRequest]);

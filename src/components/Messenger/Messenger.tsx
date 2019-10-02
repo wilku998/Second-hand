@@ -6,9 +6,12 @@ import IUser from "../../interfaces/IUser";
 import { IUserStore } from "../../store/user";
 import {
   StyledMessanger,
-  InterlocutorsTitle,
+  InterlocutorsSearch,
   MessangerContainer,
-  MessagerStyledUserLabel
+  MessagerStyledUserLabel,
+  InterlocutorsSearchIcon,
+  InterlocutorsSearchInput,
+  InterlocutorsSearchTitle
 } from "./styleMessanger";
 import { IInterlocutorsStore } from "../../store/interlocutors";
 import Interlocutors from "./Interlocutors/Interlocutors";
@@ -21,6 +24,7 @@ import {
 import { socket } from "../../app";
 import IInterlocutor from "../../interfaces/IInterlocutor";
 import IMessage from "../../interfaces/IMessage";
+import InvisibleButton from "../Abstracts/InvisibleButton";
 
 interface IProps {
   match: any;
@@ -34,6 +38,7 @@ const Messanger = ({ match, userStore, interlocutorsStore }: IProps) => {
   ] = useState(undefined);
   const [messages, setMessages]: [Array<IMessage>, any] = useState([]);
   const [roomName, setRoomName] = useState("");
+  const [interlocutorsVisible, setInterlocutorsVisible] = useState(true);
   const interlocutorID = match.params.id;
   const user = userStore.getUser;
   const interlocutors = interlocutorsStore.getInterlocutors;
@@ -46,6 +51,10 @@ const Messanger = ({ match, userStore, interlocutorsStore }: IProps) => {
   if (interlocutorFromStore) {
     isReaded = interlocutorFromStore.isReaded;
   }
+
+  const onInterlocutorsButtonClick = () => {
+    setInterlocutorsVisible(!interlocutorsVisible);
+  };
 
   useEffect(() => {
     if (interlocutorFromStore) {
@@ -95,25 +104,33 @@ const Messanger = ({ match, userStore, interlocutorsStore }: IProps) => {
   }, [messages, roomName]);
 
   return (
-    <MessangerContainer>
-      <StyledMessanger>
-        <InterlocutorsTitle>Twoje rozmowy</InterlocutorsTitle>
-        <UserLabel
-          baseStyledComponent={MessagerStyledUserLabel}
-          user={interlocutor}
-        />
-        <Interlocutors
-          interlocutors={interlocutorsStore.getSortedAndFilteredInterlocutors}
-        />
-        <Chat
-          isReaded={isReaded}
-          user={user}
-          interlocutor={interlocutor}
-          messages={messages}
-          roomName={roomName}
-        />
-      </StyledMessanger>
-    </MessangerContainer>
+    <StyledMessanger interlocutorsVisible={interlocutorsVisible}>
+      <InterlocutorsSearch>
+        <InvisibleButton onClick={onInterlocutorsButtonClick}>
+          <InterlocutorsSearchIcon src="/svg/search.svg" />
+        </InvisibleButton>
+        {interlocutorsVisible && (
+          <InterlocutorsSearchTitle>Twoje rozmowy</InterlocutorsSearchTitle>
+        )}
+      </InterlocutorsSearch>
+      <UserLabel
+        baseStyledComponent={MessagerStyledUserLabel}
+        user={interlocutor}
+      />
+      <Interlocutors
+        onInterlocutorsButtonClick={onInterlocutorsButtonClick}
+        interlocutorsVisible={interlocutorsVisible}
+        interlocutors={interlocutorsStore.getSortedAndFilteredInterlocutors}
+      />
+      <Chat
+        isReaded={isReaded}
+        user={user}
+        interlocutor={interlocutor}
+        messages={messages}
+        roomName={roomName}
+        interlocutorsVisible={interlocutorsVisible}
+      />
+    </StyledMessanger>
   );
 };
 

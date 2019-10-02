@@ -26,14 +26,14 @@ export default createGlobalStyle`
 
 
     body {
-        font-family: 'Source Code Pro', monospace;
+        font-family: 'Lato', sans-serif;
         font-size: 1.4rem;
         line-height: 1.6;
         position: relative;
         ${({ theme }) => `
             color: ${theme.colorGreyDark2};
             // background-color: ${theme.colorGreyLight2};
-            background: linear-gradient(to right bottom, ${theme.colorGreyLight1}, ${theme.colorGreyLight2});
+            background: linear-gradient(to right bottom, ${theme.colorGreyLight1}, ${theme.colorGreyLight3});
             padding-top: ${theme.navigationHeight};
         `}
     }

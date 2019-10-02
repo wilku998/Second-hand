@@ -1,19 +1,15 @@
 import styled from "styled-components";
 import Button_2 from "../../Abstracts/Button_2";
-import { Link } from "react-router-dom";
-import media from "../../../styles/media";
 
 export const StyledChat = styled.section`
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  grid-row: 2/3;
+  grid-column: 2/3;
   ${({ theme }) => `
     border-top: ${theme.darkBorder3};
     border-left: ${theme.darkBorder3};
-  `}
-
-  ${media.medium`
-    flex: 1;
   `}
 `;
 
@@ -32,7 +28,7 @@ export const Message = styled.span<{ isOwn: boolean }>`
   padding: 0.3rem 1rem;
   border-radius: 1rem;
   &:not(:last-child) {
-    margin-bottom: 1rem;
+    margin-bottom: 0.2rem;
   }
 
   ${({ theme, isOwn }) => `
@@ -50,12 +46,24 @@ export const Message = styled.span<{ isOwn: boolean }>`
     `}
 `;
 
-export const Form = styled.form`
+export const Form = styled.form<{interlocutorsVisible: boolean}>`
   padding: 0.5rem 2rem;
+  grid-row: 3/4;
+  grid-column: 2/3;
+
   ${({ theme }) => `
-        border-top: ${theme.darkBorder3};
-        background-color: ${theme.colorGreyLight5};
-    `}
+    border-top: ${theme.darkBorder3};
+    background-color: ${theme.colorGreyLight5};
+  `}
+  ${({ theme, interlocutorsVisible }) => theme.medium_2`
+    ${
+      interlocutorsVisible
+        ? `
+        grid-column: 1/4;
+        `
+        : ""
+    }
+  `}
 `;
 
 export const SendButton = styled(Button_2)`
@@ -99,9 +107,7 @@ export const SendedBy = styled.span`
 `;
 
 export const Info = styled.span`
+  margin-top: 0.3rem;
   text-align: center;
   font-size: 1.2rem;
-  &:not(:last-child) {
-    margin-bottom: 1rem;
-  }
 `;

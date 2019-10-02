@@ -5,7 +5,6 @@ import Navigation from "../components/Navigation/Navigation";
 import EditProfile from "../components/popups/EditProfile/EditProfile";
 import RemoveProfile from "../components/popups/RemoveProfile/RemoveProfile";
 import Gallery from "../components/Gallery/Gallery";
-import Footer from "../components/Footer/Footer";
 import Switch from './Switch';
 
 interface IProps {
@@ -23,7 +22,6 @@ const AppRouter = ({ history, userStore }: IProps) => {
       {isAuth && <RemoveProfile />}
       <Gallery />
       <Switch isAuth={isAuth} />
-      <Footer />
     </Router>
   );
 };

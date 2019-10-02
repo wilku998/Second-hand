@@ -12,8 +12,8 @@ export const sizes = {
 let media: any = {};
 
 Object.keys(sizes).forEach((key) => {
-	media[key] = (args: any) => css`@media only screen and (max-width: ${sizes[key]}em){
-        ${css(args)}
+	media[key] = (...args) => css`@media only screen and (max-width: ${sizes[key]}em){
+        ${css(...args)}
     }`
 });
 

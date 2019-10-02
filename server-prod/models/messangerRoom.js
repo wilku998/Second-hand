@@ -8,7 +8,7 @@ var messangerRoomSchema = new mongoose_1.Schema({
     },
     messages: {
         type: Array,
-        default: []
+        default: [],
     },
     isReaded: {
         type: Boolean,

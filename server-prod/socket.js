@@ -272,7 +272,7 @@ io.on("connection", function (socket) {
                         messageObject = {
                             message: message,
                             senderID: senderID,
-                            sendedAt: Date.now().toString()
+                            sendedAt: Date.now()
                         };
                         room.messages = __spreadArrays(room.messages, [messageObject]);
                         room.isReaded = false;

@@ -7,8 +7,8 @@ export const LoginContainer = styled.main`
   align-items: center;
   justify-content: center;
   padding: 4rem 2rem;
-  ${({ theme }) => `
-    height: calc(100vh - ${theme.navigationHeight});
+  ${({theme}) => `
+    min-height: calc(100vh - ${theme.navigationHeight} - ${theme.footerMarginTop});
   `}
 `;
 
@@ -22,6 +22,7 @@ export const Content = styled.div`
 
   ${({ theme }) => `
     background-color: ${theme.colorGreyLight1};
+    border: ${theme.lightBorder2};
   `}
 
   ${media.tiny`

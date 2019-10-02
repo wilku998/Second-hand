@@ -1,14 +1,16 @@
 const navigationHeight = "4.5rem";
+const messageFormHeight = "4rem";
+const footerMarginTop = "10rem";
 const rowWidth = "109rem";
 const chatHeight = "45rem";
 const lightShadow = "0 2rem 2rem rgba(0,0,0,.05)";
 const lightShadow2 = "0 0.5rem 0.5rem rgba(0, 0, 0, 0.05)";
-const background = "#d1d1d1";
+const navShadow = "0 0.5rem 0.5rem rgba(0, 0, 0, 0.2)";
 const colorRed = "#BF2E21";
 const colorRedLight = "#FFC1B4";
 const colorGreenLight = "#C9FFB0";
 const colorBlue1 = "rgb(107, 164, 218)";
-const colorBlue2 = "rgb(90, 139, 185)";
+const colorBlue2 = "rgb(65, 163, 255)";
 const colorBlue3 = "#1890ff";
 const colorBlue4 = "#084074";
 const colorBlue5 = "#06325a";
@@ -30,6 +32,8 @@ const colorGreyDark6 = "rgb(173, 173, 173)";
 
 export default {
   navigationHeight,
+  messageFormHeight,
+  footerMarginTop,
   rowWidth,
   chatHeight,
   darkBorder: `1px solid ${colorGreyDark3}`,
@@ -39,7 +43,7 @@ export default {
   lightBorder2: `1px solid ${colorGreyLight5}`,
   lightShadow,
   lightShadow2,
-  background,
+  navShadow,
   colorRed,
   colorRedLight,
   colorGreenLight,
@@ -62,5 +66,13 @@ export default {
   colorGreyDark3,
   colorGreyDark4,
   colorGreyDark5,
-  colorGreyDark6
+  colorGreyDark6,
+  headerButtonPseudo: `content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  border-radius: 5rem;
+  transition: all .2s;`
 };

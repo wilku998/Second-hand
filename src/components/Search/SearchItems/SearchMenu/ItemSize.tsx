@@ -19,6 +19,7 @@ interface IProps {
   onSearchMenuButtonClick: (e: any) => void;
   onCleanFiltersClick: (e: any) => void;
   ref: any;
+  closeFilters: () => void;
 }
 
 const ItemSize = forwardRef(
@@ -30,7 +31,8 @@ const ItemSize = forwardRef(
       isSizeSelectorVisible,
       onInputChange,
       onSelectorChange,
-      onCleanFiltersClick
+      onCleanFiltersClick,
+      closeFilters
     }: IProps,
     ref
   ) => {
@@ -76,6 +78,9 @@ const ItemSize = forwardRef(
 
             <ButtonCleanFilter name={name} onClick={onCleanFiltersClick}>
               Usuń filtr
+            </ButtonCleanFilter>
+            <ButtonCleanFilter onClick={closeFilters}>
+              Zamknij okienko
             </ButtonCleanFilter>
           </InputContainer>
         )}
