@@ -41,7 +41,7 @@ router.post(
     const userIDString = req.user._id.toString();
     try {
       const interlocutor = await User.findById(interlocutorID);
-      if(!interlocutor){
+      if (!interlocutor) {
         throw new Error();
       }
       const room = new MessangerRoom({
@@ -57,14 +57,21 @@ router.post(
 );
 
 router.get(
-  "/api/messangerRooms/:roomName",
+  "/api/messangerRooms/messages/:roomName",
   authMiddleware,
   async (req: IAuthRequest, res) => {
     try {
+      let { limit, skip } = req.query;
+      limit = parseInt(limit);
+      skip = parseInt(skip);
       const room = await MessangerRoom.findOne({
         roomName: req.params.roomName
-      });
-      res.send(room);
+      }).select("messages");
+      const messages = room.messages
+        .reverse()
+        .filter((e, i) => i + 1 > skip && i + 1 <= limit + skip).reverse();
+
+      res.send({ messages });
     } catch (e) {
       res.status(404).send();
     }

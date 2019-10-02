@@ -1,25 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { inject, observer } from "mobx-react";
 import Chat from "./Chat/Chat";
-import { getUserRequest } from "../../API/users";
-import IUser from "../../interfaces/IUser";
 import { IUserStore } from "../../store/user";
 import {
   StyledMessanger,
   InterlocutorsSearch,
-  MessangerContainer,
   MessagerStyledUserLabel,
   InterlocutorsSearchIcon,
-  InterlocutorsSearchInput,
   InterlocutorsSearchTitle
 } from "./styleMessanger";
 import { IInterlocutorsStore } from "../../store/interlocutors";
 import Interlocutors from "./Interlocutors/Interlocutors";
 import UserLabel from "../UserLabel/UserLabel";
-import theme from "../../styles/theme";
 import {
   createMessangerRoomRequest,
-  getMessangerRoomRequest
+  getMessages
 } from "../../API/messangerRooms";
 import { socket } from "../../app";
 import IInterlocutor from "../../interfaces/IInterlocutor";
@@ -32,6 +27,7 @@ interface IProps {
   interlocutorsStore: IInterlocutorsStore;
 }
 const Messanger = ({ match, userStore, interlocutorsStore }: IProps) => {
+  const messagesRef = useRef();
   const [interlocutor, setInterlocutor]: [
     IInterlocutor["interlocutor"],
     any
@@ -42,6 +38,7 @@ const Messanger = ({ match, userStore, interlocutorsStore }: IProps) => {
   const interlocutorID = match.params.id;
   const user = userStore.getUser;
   const interlocutors = interlocutorsStore.getInterlocutors;
+  const messagesLimit = 20;
 
   let isReaded = false;
   const interlocutorFromStore = interlocutorsStore.getInterlocutor(
@@ -56,6 +53,21 @@ const Messanger = ({ match, userStore, interlocutorsStore }: IProps) => {
     setInterlocutorsVisible(!interlocutorsVisible);
   };
 
+  const loadMessages = async () => {
+    const newMessages = await getMessages(
+      interlocutorFromStore.roomName,
+      messages.length,
+      messagesLimit
+    );
+    setMessages([...newMessages.messages, ...messages]);
+  };
+
+  const scrollChatToBottom = () => {
+    const messagesElement: any = messagesRef.current;
+    messagesElement.scrollTop =
+      messagesElement.scrollHeight - messagesElement.clientHeight;
+  };
+
   useEffect(() => {
     if (interlocutorFromStore) {
       setInterlocutor(interlocutorFromStore.interlocutor);
@@ -64,18 +76,21 @@ const Messanger = ({ match, userStore, interlocutorsStore }: IProps) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      let room;
       if (!interlocutorFromStore) {
         try {
-          room = await createMessangerRoomRequest(interlocutorID);
+          const room = await createMessangerRoomRequest(interlocutorID);
           socket.emit("sendNewRoom", room, user._id, interlocutorID);
+          setRoomName(room.roomName);
         } catch (e) {}
       } else {
-        room = await getMessangerRoomRequest(interlocutorFromStore.roomName);
-      }
-      if (room) {
-        setMessages(room.messages);
-        setRoomName(room.roomName);
+        const messages = await getMessages(
+          interlocutorFromStore.roomName,
+          0,
+          messagesLimit
+        );
+        setRoomName(interlocutorFromStore.roomName);
+        setMessages(messages.messages);
+        scrollChatToBottom();
       }
     };
     fetchData();
@@ -84,10 +99,11 @@ const Messanger = ({ match, userStore, interlocutorsStore }: IProps) => {
   const onMessage = (message: IMessage, messageRoomName: string) => {
     if (roomName === messageRoomName) {
       setMessages([...messages, message]);
+      scrollChatToBottom();
     }
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     socket.on("message", onMessage);
 
     if (
@@ -123,12 +139,14 @@ const Messanger = ({ match, userStore, interlocutorsStore }: IProps) => {
         interlocutors={interlocutorsStore.getSortedAndFilteredInterlocutors}
       />
       <Chat
+        ref={messagesRef}
         isReaded={isReaded}
         user={user}
         interlocutor={interlocutor}
         messages={messages}
         roomName={roomName}
         interlocutorsVisible={interlocutorsVisible}
+        loadMessages={loadMessages}
       />
     </StyledMessanger>
   );

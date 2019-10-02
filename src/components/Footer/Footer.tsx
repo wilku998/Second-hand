@@ -1,22 +1,26 @@
 import React, { useState, useRef, useLayoutEffect } from "react";
 import { List, About, ListItem, StyledFooter } from "./styleFooter";
+import { history } from "../../app";
 
 const Footer = () => {
   const [marginTop, setMarginTop] = useState(false);
   const componentRef = useRef();
 
-  const calculateMargin = () => {
-    const bodyHeight = document.querySelector("body").clientHeight;
-    const componentHeight = componentRef.current.clientHeight;
-    const windowHeight = window.innerHeight;
-    setMarginTop(bodyHeight - componentHeight > windowHeight);
+  const calculateMargin = (bodyHeight: number) => {
+    const component = componentRef.current;
+    const componentHeight = component.clientHeight;
+    const windowHeight = window.innerHeight - 20;
+    setMarginTop(bodyHeight - componentHeight >= windowHeight);
   };
 
   useLayoutEffect(() => {
-    calculateMargin();
-    window.addEventListener("resize", calculateMargin);
+    const x = new ResizeObserver(e =>
+      calculateMargin(e[0].target.clientHeight)
+    );
+
+    x.observe(document.querySelector("body"));
     return () => {
-      window.removeEventListener("resize", calculateMargin);
+      x.disconnect();
     };
   }, []);
 

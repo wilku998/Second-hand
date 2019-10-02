@@ -20,8 +20,8 @@ export const getInterlocutorsRequest = async () => {
   return interlocutors;
 };
 
-export const getMessangerRoomRequest = async (roomName: string) =>
-  await fetchData(roomName, "/api/messangerRooms/");
+export const getMessages = async (roomName: string, skip: number, limit: number) =>
+  await fetchData(`${roomName}?skip=${skip}&limit=${limit}`, "/api/messangerRooms/messages/");
 
 export const createMessangerRoomRequest = async (interlocutorID: string) => 
   await ajax("POST", "/api/messangerRooms", { interlocutorID }, 201);

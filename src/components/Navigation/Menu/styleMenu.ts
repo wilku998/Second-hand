@@ -64,7 +64,6 @@ export const SubMenuList = styled.ul`
   font-size: 1.2rem;
   display: flex;
   flex-direction: column;
-  fill: white;
   border-radius: 0 0 0.3rem 0.3rem;
   ${({ theme }) => `
     color: ${theme.colorGreyLight4};
@@ -82,6 +81,7 @@ export const SubMenuListItem = styled.li<{
   isunreaded?: string;
 }>`
   position: relative;
+  fill: white;
 
   ${({ theme, isunreaded }) => `
       ${

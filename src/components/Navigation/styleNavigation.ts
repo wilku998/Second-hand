@@ -81,8 +81,10 @@ export const SearchCatButton = styled.button`
 export const SearchCat = styled.div`
   position: relative;
   width: 10rem;
-  font-size: 1.2rem;
   margin-right: -2px;
+  & button {
+    font-size: 1.2rem;
+  }
   ${({ theme }) => `
     &:hover{
       color: ${theme.colorGreyDark1};
@@ -99,7 +101,7 @@ export const SearchCatButtonList = styled.ul`
     border: ${theme.darkBorder2};
     background-color: ${theme.colorGreyLight2};
   `};
-  & > li > button {
+  & button {
     width: 100%;
     border: none;
     background: none;

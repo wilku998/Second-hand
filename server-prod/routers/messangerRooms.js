@@ -114,21 +114,27 @@ router.post("/api/messangerRooms", auth_1.default, function (req, res) { return 
         }
     });
 }); });
-router.get("/api/messangerRooms/:roomName", auth_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var room, e_3;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+router.get("/api/messangerRooms/messages/:roomName", auth_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, limit_1, skip_1, room, messages, e_3;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
+                _b.trys.push([0, 2, , 3]);
+                _a = req.query, limit_1 = _a.limit, skip_1 = _a.skip;
+                limit_1 = parseInt(limit_1);
+                skip_1 = parseInt(skip_1);
                 return [4 /*yield*/, messangerRoom_1.default.findOne({
                         roomName: req.params.roomName
-                    })];
+                    }).select("messages")];
             case 1:
-                room = _a.sent();
-                res.send(room);
+                room = _b.sent();
+                messages = room.messages
+                    .reverse()
+                    .filter(function (e, i) { return i + 1 > skip_1 && i + 1 <= limit_1 + skip_1; }).reverse();
+                res.send({ messages: messages });
                 return [3 /*break*/, 3];
             case 2:
-                e_3 = _a.sent();
+                e_3 = _b.sent();
                 res.status(404).send();
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
