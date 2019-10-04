@@ -76,6 +76,10 @@ export const Content = styled.div`
   width: 55rem;
   text-align: center;
   margin-bottom: 3rem;
+
+  ${media.small`
+    width: 100%;
+  `}
 `;
 
 export const Title = styled.h1`
@@ -83,11 +87,11 @@ export const Title = styled.h1`
   font-weight: 400;
   line-height: 1.2;
   margin-bottom: 1rem;
-  text-shadow: 0 0.5rem 0.5rem rgba(0,0,0,.3);
+  text-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.3);
 `;
 
 export const Description = styled.p`
   line-height: 1.4;
   font-size: 2rem;
-  text-shadow: 0 0.5rem 0.5rem rgba(0,0,0,.3);
+  text-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, 0.3);
 `;

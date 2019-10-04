@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import Modal from "react-modal";
 import { inject, observer } from "mobx-react";
 import { IViewStore } from "../../store/view";
 import styles, {
   Content,
-  Image,
   PositionContainer,
   Circle,
   MoveIcon,
@@ -13,6 +12,7 @@ import styles, {
   Button,
   Nav
 } from "./styleGallery";
+import Image from "./Image";
 
 interface IProps {
   viewStore?: IViewStore;
@@ -48,17 +48,22 @@ const Gallery = ({ viewStore }: IProps) => {
       <Content>
         <Nav>
           <Title>{title}</Title>
-            <Button onClick={decreasePosition}>
-              <MoveIcon src="/svg/left.svg" />
-            </Button>
-            <Button onClick={increasePosition}>
-              <MoveIcon isright="true" src="/svg/left.svg" />
-            </Button>
-            <Button onClick={viewStore.closeGallery}>
-              <CloseIcon src="/svg/close.svg" />
-            </Button>
+          <Button onClick={decreasePosition}>
+            <MoveIcon src="/svg/left.svg" />
+          </Button>
+          <Button onClick={increasePosition}>
+            <MoveIcon isright="true" src="/svg/left.svg" />
+          </Button>
+          <Button onClick={viewStore.closeGallery}>
+            <CloseIcon src="/svg/close.svg" />
+          </Button>
         </Nav>
-        <Image src={images[position]} />
+        <Image
+          increasePosition={increasePosition}
+          decreasePosition={decreasePosition}
+          position={position}
+          images={images}
+        />
         <PositionContainer>
           {images.map((e, i) => (
             <Circle key={e} isActive={i === position} />

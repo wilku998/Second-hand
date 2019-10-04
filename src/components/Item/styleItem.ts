@@ -63,7 +63,7 @@ export const ImagesGrid = styled.div`
   grid-auto-rows: 1fr;
   grid-auto-columns: 1fr;
   height: 60rem;
-  grid-gap: 0.2rem;
+  grid-gap: 0.5rem;
   ${({ theme }) => `
     box-shadow: ${theme.lightShadow};
   `}
@@ -91,7 +91,6 @@ export const Image = styled.img`
   position: absolute;
   top: 0;
   left: 0;
-  border-radius: 0.3rem;
 `;
 
 export const ImageContainer = styled.div<{
@@ -99,7 +98,12 @@ export const ImageContainer = styled.div<{
   imagePosition: number;
 }>`
   position: relative;
-  ${({ imagesQuantity, imagePosition }) => `
+  border-radius: 0.3rem;
+  overflow: hidden;
+
+  ${({ imagesQuantity, imagePosition, theme }) => `
+    border: ${theme.lightBorder2};
+
     ${
       imagePosition === 0
         ? `
@@ -153,6 +157,7 @@ export const SellerProfile = styled(Link)`
 `;
 
 export const SellerOtherItemsContainer = styled.div`
+  width: 100%;
   ${media.medium`
     order: 2;
   `}

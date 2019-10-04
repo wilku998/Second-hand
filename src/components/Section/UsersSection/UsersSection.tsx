@@ -31,7 +31,6 @@ const UsersSection = ({ users, title, limit }: IUserProps) => {
           {(!limit || allShowed ? users : users.slice(0, limit)).map(user => (
             <UserSection key={user.user._id}>
               <UserLabel
-                additionalStyles="grid-column: 1/5; margin-bottom: 2rem;"
                 user={user.user}
               />
               {user.ownItems.length > 0 ? (

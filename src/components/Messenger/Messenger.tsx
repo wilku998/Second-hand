@@ -34,7 +34,7 @@ const Messanger = ({ match, userStore, interlocutorsStore }: IProps) => {
   ] = useState(undefined);
   const [messages, setMessages]: [Array<IMessage>, any] = useState([]);
   const [roomName, setRoomName] = useState("");
-  const [interlocutorsVisible, setInterlocutorsVisible] = useState(true);
+  const [interlocutorsVisible, setInterlocutorsVisible] = useState(false);
   const interlocutorID = match.params.id;
   const user = userStore.getUser;
   const interlocutors = interlocutorsStore.getInterlocutors;

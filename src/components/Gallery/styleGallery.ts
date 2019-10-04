@@ -3,6 +3,7 @@ import reactModalStyles from "../../styles/reactModalStyles";
 import ReactSVG from "react-svg";
 import InvisibleButton from "../Abstracts/InvisibleButton";
 import media from "../../styles/media";
+import { left, right } from "./utilities";
 
 export default {
   overlay: {
@@ -33,11 +34,33 @@ export const Title = styled.h3`
   text-overflow: ellipsis;
 `;
 
-export const Image = styled.img`
+export const ImagesContainer = styled.div`
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+`;
+
+export const ImageContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  transition: all .3s;
+`;
+
+export const StyledImage = styled.img<{
+  translateX: number;
+  side?: string;
+  shouldMainImage0TransformAnimate: boolean;
+}>`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   border-radius: 0.3rem;
   width: auto;
   max-width: 100%;
-  overflow: hidden;
   object-fit: contain;
   justify-self: center;
 `;

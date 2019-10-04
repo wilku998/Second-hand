@@ -9,6 +9,11 @@ export const MessagerStyledUserLabel = styled(StyledUserLabel)`
   ${({ theme }) => `
     border-left: ${theme.darkBorder3};
   `}
+  ${media.medium_2`
+    & button {
+      display: none;
+    }
+  `}
 `;
 
 export const StyledMessanger = styled.main<{ interlocutorsVisible: boolean }>`
