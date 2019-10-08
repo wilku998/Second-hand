@@ -1,4 +1,4 @@
-# Tetris game
+# SecondHand
 * [Live](#live)
 * [About](#about)
 * [Features](#features)
