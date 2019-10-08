@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -62,10 +51,11 @@ var mongoose_1 = require("mongoose");
 var messangerRoom_1 = __importDefault(require("./models/messangerRoom"));
 var createInterlocutor_1 = __importDefault(require("./functions/createInterlocutor"));
 var user_1 = __importDefault(require("./models/user"));
-var getMinifed_1 = require("./functions/getMinifed");
-var checkIfNotificationsExist_1 = __importDefault(require("./functions/checkIfNotificationsExist"));
+var checkIfNotificationDoesntExist_1 = __importDefault(require("./functions/checkIfNotificationDoesntExist"));
 var server_1 = require("./server");
 var parseUser_1 = require("./routers/functions/parseUser");
+var item_1 = __importDefault(require("./models/item"));
+var parseNotifications_1 = __importDefault(require("./routers/functions/parseNotifications"));
 var io = socket_io_1.default(server_1.server);
 var clients = [];
 var findClients = function (userID) {
@@ -77,59 +67,81 @@ var emitToUser = function (userID, callback) {
         callback(socketsToEmit);
     }
 };
-var emitToUserTemplate = function (name, userToEmit, data) {
-    emitToUser(userToEmit, function (socketsToEmit) {
+var emitToUserTemplate = function (name, userToEmitID, data) {
+    emitToUser(userToEmitID, function (socketsToEmit) {
         socketsToEmit.forEach(function (socketID) {
             io.to(socketID).emit(name, data);
         });
     });
 };
-var createAndEmitNotification = function (user, kind, userForNotification, propertyForNotification, propertyName) { return __awaiter(void 0, void 0, void 0, function () {
-    var _id, notification, e_1;
-    var _a;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
-            case 0:
+var createAndEmitNotification = function (userToEmitID, kind, userID, secondPropertyForNotificationID, secondPropertyName) { return __awaiter(void 0, void 0, void 0, function () {
+    var UserToEmit, _id, notification, parsedNotification, e_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, user_1.default.findById(userToEmitID)];
+            case 1:
+                UserToEmit = _a.sent();
+                if (!checkIfNotificationDoesntExist_1.default(UserToEmit.notifications, kind, userID, secondPropertyForNotificationID, secondPropertyName)) return [3 /*break*/, 6];
                 _id = mongoose_1.Types.ObjectId();
                 notification = {
                     _id: _id,
                     kind: kind,
-                    user: userForNotification,
+                    user: userID,
                     addedAt: Date.now(),
                     isReaded: false
                 };
-                if (propertyForNotification) {
-                    notification[propertyName] = propertyForNotification;
+                if (secondPropertyForNotificationID) {
+                    notification[secondPropertyName] = secondPropertyForNotificationID;
                 }
-                if (!checkIfNotificationsExist_1.default(user.notifications, notification.kind, userForNotification, propertyForNotification, propertyName)) return [3 /*break*/, 4];
-                _b.label = 1;
-            case 1:
-                _b.trys.push([1, 3, , 4]);
-                user.notifications = __spreadArrays(user.notifications, [notification]);
-                return [4 /*yield*/, user.save()];
+                _a.label = 2;
             case 2:
-                _b.sent();
-                emitToUserTemplate("notification", user._id.toString(), propertyForNotification
-                    ? __assign(__assign({}, notification), (_a = {}, _a[propertyName] = propertyForNotification, _a)) : notification);
-                return [3 /*break*/, 4];
+                _a.trys.push([2, 5, , 6]);
+                UserToEmit.notifications = __spreadArrays(UserToEmit.notifications, [notification]);
+                return [4 /*yield*/, UserToEmit.save()];
             case 3:
-                e_1 = _b.sent();
+                _a.sent();
+                return [4 /*yield*/, parseNotifications_1.default([notification])];
+            case 4:
+                parsedNotification = _a.sent();
+                emitToUserTemplate("notification", userToEmitID, parsedNotification[0]);
+                return [3 /*break*/, 6];
+            case 5:
+                e_1 = _a.sent();
                 console.log(e_1);
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
+                return [3 /*break*/, 6];
+            case 6: return [2 /*return*/];
         }
     });
 }); };
-var emitNotificationForFollowedBy = function (kind, user, propertyForNotification, propertyName) { return __awaiter(void 0, void 0, void 0, function () {
+var emitNotificationForFollowedBy = function (userID, kind, propertyForNotificationID, propertyName, itemOwnerID) { return __awaiter(void 0, void 0, void 0, function () {
     var userToEmitFollowedBy;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, parseUser_1.getFollowedBy(user._id)];
+            case 0: return [4 /*yield*/, parseUser_1.getFollowedBy(userID)];
             case 1:
                 userToEmitFollowedBy = _a.sent();
                 return [4 /*yield*/, Promise.all(userToEmitFollowedBy.map(function (e, i) { return __awaiter(void 0, void 0, void 0, function () {
+                        var userToEmitID, emit;
                         return __generator(this, function (_a) {
-                            createAndEmitNotification(e, kind, user, propertyForNotification, propertyName);
+                            userToEmitID = e._id.toString();
+                            emit = function () {
+                                return createAndEmitNotification(userToEmitID, kind, userID, propertyForNotificationID, propertyName);
+                            };
+                            switch (kind) {
+                                case "followedUserFollows":
+                                    if (userToEmitID !== propertyForNotificationID) {
+                                        emit();
+                                    }
+                                    break;
+                                case "followedUserLiked":
+                                    if (userToEmitID !== itemOwnerID) {
+                                        emit();
+                                    }
+                                    break;
+                                default:
+                                    emit();
+                                    break;
+                            }
                             return [2 /*return*/];
                         });
                     }); }))];
@@ -148,81 +160,71 @@ io.on("connection", function (socket) {
     socket.on("cleanUserID", function () {
         clients[socket.id] = { userID: "" };
     });
-    socket.on("sendNewItem", function (user, itemID) { return __awaiter(void 0, void 0, void 0, function () {
+    socket.on("sendNewItem", function (itemID) { return __awaiter(void 0, void 0, void 0, function () {
         var item;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, getMinifed_1.getMinifedItem(itemID)];
+                case 0: return [4 /*yield*/, item_1.default.findById(itemID)];
                 case 1:
                     item = _a.sent();
-                    return [4 /*yield*/, emitNotificationForFollowedBy("followedUserAddedItem", user, item, "item")];
+                    return [4 /*yield*/, emitNotificationForFollowedBy(item.owner.toString(), "followedUserAddedItem", itemID, "item")];
                 case 2:
                     _a.sent();
                     return [2 /*return*/];
             }
         });
     }); });
-    socket.on("sendLikeItem", function (itemID, userToEmitID, user) { return __awaiter(void 0, void 0, void 0, function () {
-        var item, userToEmit, _a;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0: return [4 /*yield*/, getMinifed_1.getMinifedItem(itemID)];
+    socket.on("sendLikeItem", function (itemID, userWhoLikedID) { return __awaiter(void 0, void 0, void 0, function () {
+        var item, ownerID;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, item_1.default.findById(itemID)];
                 case 1:
-                    item = _b.sent();
-                    return [4 /*yield*/, user_1.default.findById(userToEmitID)];
+                    item = _a.sent();
+                    ownerID = item.owner.toString();
+                    emitToUserTemplate("likeItem", ownerID, { itemID: itemID, userID: userWhoLikedID });
+                    return [4 /*yield*/, createAndEmitNotification(ownerID, "ownItemLikedBySomeone", userWhoLikedID, itemID, "item")];
                 case 2:
-                    userToEmit = _b.sent();
-                    userToEmit.populate("ownItems").execPopulate();
-                    console.log(userToEmit.ownItems);
-                    _a = createAndEmitNotification;
-                    return [4 /*yield*/, user_1.default.findById(userToEmitID)];
-                case 3: return [4 /*yield*/, _a.apply(void 0, [_b.sent(),
-                        "ownItemLikedBySomeone",
-                        user,
-                        item,
-                        "item"])];
-                case 4:
-                    _b.sent();
-                    if (!(userToEmit.ownItems.findIndex(function (e) { return e._id.toString() === itemID; }) === -1)) return [3 /*break*/, 6];
-                    return [4 /*yield*/, emitNotificationForFollowedBy("followedUserLiked", user, item, "item")];
-                case 5:
-                    _b.sent();
-                    _b.label = 6;
-                case 6: return [2 /*return*/];
-            }
-        });
-    }); });
-    socket.on("sendUnlikeItem", function (itemID, userToEmit, user) {
-        emitToUserTemplate("unlikeItem", userToEmit, { itemID: itemID, user: user });
-    });
-    socket.on("sendFollow", function (userToEmitID, userID) { return __awaiter(void 0, void 0, void 0, function () {
-        var user, userWhoGotFollow, _a;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0:
-                    emitToUserTemplate("follow", userToEmitID, userID);
-                    return [4 /*yield*/, getMinifed_1.getMinifedUser(userID)];
-                case 1:
-                    user = _b.sent();
-                    return [4 /*yield*/, getMinifed_1.getMinifedUser(userToEmitID)];
-                case 2:
-                    userWhoGotFollow = _b.sent();
-                    _a = createAndEmitNotification;
-                    return [4 /*yield*/, user_1.default.findById(userToEmitID)];
-                case 3: return [4 /*yield*/, _a.apply(void 0, [_b.sent(),
-                        "follow",
-                        user])];
-                case 4:
-                    _b.sent();
-                    return [4 /*yield*/, emitNotificationForFollowedBy("followedUserFollows", user, userWhoGotFollow, "userWhoGotFollow")];
-                case 5:
-                    _b.sent();
+                    _a.sent();
+                    return [4 /*yield*/, emitNotificationForFollowedBy(userWhoLikedID, "followedUserLiked", itemID, "item", ownerID)];
+                case 3:
+                    _a.sent();
                     return [2 /*return*/];
             }
         });
     }); });
-    socket.on("sendUnfollow", function (userToEmitID, userID) {
-        emitToUserTemplate("unfollow", userToEmitID, userID);
+    socket.on("sendUnlikeItem", function (itemID, userWhoLikedID) { return __awaiter(void 0, void 0, void 0, function () {
+        var item;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, item_1.default.findById(itemID)];
+                case 1:
+                    item = _a.sent();
+                    emitToUserTemplate("unlikeItem", item.owner.toString(), {
+                        itemID: itemID,
+                        userID: userWhoLikedID
+                    });
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    socket.on("sendFollow", function (userWhoGotFollowID, userID) { return __awaiter(void 0, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    emitToUserTemplate("follow", userWhoGotFollowID, userID);
+                    return [4 /*yield*/, createAndEmitNotification(userWhoGotFollowID, "follow", userID)];
+                case 1:
+                    _a.sent();
+                    return [4 /*yield*/, emitNotificationForFollowedBy(userID, "followedUserFollows", userWhoGotFollowID, "userWhoGotFollow")];
+                case 2:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    socket.on("sendUnfollow", function (userWhoGotFollowID, userID) {
+        emitToUserTemplate("unfollow", userWhoGotFollowID, userID);
     });
     socket.on("sendNewRoom", function (room, userID, interlocutorID) { return __awaiter(void 0, void 0, void 0, function () {
         var interlocutor;

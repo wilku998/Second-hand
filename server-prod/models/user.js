@@ -51,15 +51,6 @@ var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var bcryptjs_1 = __importDefault(require("bcryptjs"));
 var path_1 = __importDefault(require("path"));
 require("dotenv").config({ path: path_1.default.resolve(__dirname, "..", ".env.all") });
-/*
-notifcations types
-- new folow / like done
-- followed user add item / like item done / follow user done
-
-
-create of notifaction in separate function
-newly created notfication will be fetched by client and sended by socket
-*/
 var userSchema = new mongoose_1.Schema({
     name: {
         type: String,

@@ -59,6 +59,7 @@ var findUser_1 = __importDefault(require("../middlwares/findUser"));
 var item_1 = __importDefault(require("../models/item"));
 var parseUser_1 = require("./functions/parseUser");
 var other_1 = require("./functions/other");
+var parseNotifications_1 = __importDefault(require("./functions/parseNotifications"));
 var router = express_1.default.Router();
 router.post("/api/users", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var user, token, parsedUser, e_1;
@@ -465,7 +466,7 @@ router.patch("/api/users/me/readNotification", auth_1.default, function (req, re
                 notificationID_1 = req.body.id;
                 user = req.user;
                 user.notifications.forEach(function (e) {
-                    if (e._id.toString() === notificationID_1) {
+                    if (notificationID_1 === "all" || e._id.toString() === notificationID_1) {
                         e.isReaded = true;
                     }
                 });
@@ -476,6 +477,26 @@ router.patch("/api/users/me/readNotification", auth_1.default, function (req, re
                 return [3 /*break*/, 3];
             case 2:
                 e_15 = _a.sent();
+                res.status(500).send();
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); });
+router.get("/api/user/notifications", auth_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, skip, limit, notifications, e_16;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                _b.trys.push([0, 2, , 3]);
+                _a = req.query, skip = _a.skip, limit = _a.limit;
+                return [4 /*yield*/, parseNotifications_1.default(other_1.onScrollLoadingSlice(skip, limit, req.user.notifications))];
+            case 1:
+                notifications = _b.sent();
+                res.send({ notifications: notifications });
+                return [3 /*break*/, 3];
+            case 2:
+                e_16 = _b.sent();
                 res.status(500).send();
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];

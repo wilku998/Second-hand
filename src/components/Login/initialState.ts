@@ -1,28 +1,28 @@
 export default {
   email: {
-    value: "bartoszwilk@test.pl",
-    valid: true,
+    value: "",
+    valid: false,
     label: "Email",
     type: "email",
     errorMessage: "Email jest nieprawidłowy"
   },
   name: {
-    value: "Bartosz Wilk",
-    valid: true,
+    value: "",
+    valid: false,
     label: "Imię",
     type: "text",
     errorMessage: "Imię powinno mieć co najmniej 6 znaków oraz mniej niż 20"
   },
   password: {
-    value: "123456",
-    valid: true,
+    value: "",
+    valid: false,
     label: "Hasło",
     type: "password",
     errorMessage: "Hasło powinno mieć co najmniej 6 znaków"
   },
   confirmPassword: {
-    value: "123456",
-    valid: true,
+    value: "",
+    valid: false,
     label: "Powtórz hasło",
     type: "password",
     errorMessage: "Hasła są niezgodne"

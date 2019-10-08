@@ -52,7 +52,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var user_1 = __importDefault(require("../../models/user"));
 var parseItems_1 = require("./parseItems");
-var getMinifed_1 = require("../../functions/getMinifed");
+var parseNotifications_1 = __importDefault(require("./parseNotifications"));
+var other_1 = require("./other");
 exports.parseFollowsAndLikes = function (items, property) {
     return items
         .filter(function (e) { return e[property]; })
@@ -74,21 +75,21 @@ exports.getFollowedBy = function (userID) { return __awaiter(void 0, void 0, voi
     }
 }); }); };
 exports.parseUser = function (user, notificationsDelete) { return __awaiter(void 0, void 0, void 0, function () {
-    var followedBy, ownItems, parsedUser, notifications;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var followedBy, ownItems, parsedUser, unreadedNotificationsQuantity, _a, _b, _c, _d, _e, _f;
+    return __generator(this, function (_g) {
+        switch (_g.label) {
             case 0: return [4 /*yield*/, user.populate("ownItems").execPopulate()];
             case 1:
-                _a.sent();
+                _g.sent();
                 return [4 /*yield*/, user.populate("follows.user").execPopulate()];
             case 2:
-                _a.sent();
+                _g.sent();
                 return [4 /*yield*/, user.populate("likedItems.item").execPopulate()];
             case 3:
-                _a.sent();
+                _g.sent();
                 return [4 /*yield*/, exports.getFollowedBy(user._id)];
             case 4:
-                followedBy = _a.sent();
+                followedBy = _g.sent();
                 return [4 /*yield*/, Promise.all(user.ownItems.map(function (item) { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0: return [4 /*yield*/, parseItems_1.parseItem(item)];
@@ -96,7 +97,7 @@ exports.parseUser = function (user, notificationsDelete) { return __awaiter(void
                         }
                     }); }); }))];
             case 5:
-                ownItems = _a.sent();
+                ownItems = _g.sent();
                 parsedUser = {
                     user: __assign(__assign({}, user.toJSON()), { follows: getIdOfFollowsAndLiked(user.follows, "user").reverse(), likedItems: getIdOfFollowsAndLiked(user.likedItems, "item").reverse(), followedBy: followedBy.map(function (e) { return e._id; }).reverse() }),
                     ownItems: ownItems.reverse()
@@ -104,51 +105,19 @@ exports.parseUser = function (user, notificationsDelete) { return __awaiter(void
                 delete parsedUser.followedByQuantity;
                 if (!notificationsDelete) return [3 /*break*/, 6];
                 delete parsedUser.user.notifications;
-                delete parsedUser.user.notificationsReaded;
                 return [2 /*return*/, parsedUser];
-            case 6: return [4 /*yield*/, Promise.all(user.notifications.map(function (e) { return __awaiter(void 0, void 0, void 0, function () {
-                    var userWhoGotFollow, item, kind, addedAt, isReaded, _id, user, parsedUser, parsedNotification, parsedItem, parsedUserWhoGotFollow;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0:
-                                userWhoGotFollow = e.userWhoGotFollow, item = e.item, kind = e.kind, addedAt = e.addedAt, isReaded = e.isReaded, _id = e._id, user = e.user;
-                                return [4 /*yield*/, getMinifed_1.getMinifedUser(user)];
-                            case 1:
-                                parsedUser = _a.sent();
-                                if (!parsedUser) {
-                                    return [2 /*return*/, null];
-                                }
-                                parsedNotification = {
-                                    kind: kind,
-                                    addedAt: addedAt,
-                                    isReaded: isReaded,
-                                    _id: _id,
-                                    user: parsedUser
-                                };
-                                if (!item) return [3 /*break*/, 3];
-                                return [4 /*yield*/, getMinifed_1.getMinifedItem(item)];
-                            case 2:
-                                parsedItem = _a.sent();
-                                if (!parsedItem) {
-                                    return [2 /*return*/, null];
-                                }
-                                return [2 /*return*/, __assign(__assign({}, parsedNotification), { item: parsedItem })];
-                            case 3:
-                                if (!userWhoGotFollow) return [3 /*break*/, 5];
-                                return [4 /*yield*/, getMinifed_1.getMinifedUser(e.userWhoGotFollow)];
-                            case 4:
-                                parsedUserWhoGotFollow = _a.sent();
-                                if (!parsedUserWhoGotFollow) {
-                                    return [2 /*return*/, null];
-                                }
-                                return [2 /*return*/, __assign(__assign({}, parsedNotification), { userWhoGotFollow: parsedUserWhoGotFollow })];
-                            case 5: return [2 /*return*/, parsedNotification];
-                        }
-                    });
-                }); }))];
-            case 7:
-                notifications = _a.sent();
-                return [2 /*return*/, __assign(__assign({}, parsedUser), { user: __assign(__assign({}, parsedUser.user), { notifications: notifications.filter(function (e) { return e; }).reverse() }) })];
+            case 6:
+                unreadedNotificationsQuantity = user.notifications.filter(function (e) { return !e.isReaded; }).length;
+                delete parsedUser.user.notifications;
+                _a = [__assign({}, parsedUser)];
+                _b = {};
+                _c = [__assign({}, parsedUser.user)];
+                _d = { unreadedNotificationsQuantity: unreadedNotificationsQuantity, notificationsQuantity: user.notifications.length };
+                _e = other_1.onScrollLoadingSlice;
+                _f = ["0",
+                    "3"];
+                return [4 /*yield*/, parseNotifications_1.default(user.notifications)];
+            case 7: return [2 /*return*/, __assign.apply(void 0, _a.concat([(_b.user = __assign.apply(void 0, _c.concat([(_d.notifications = _e.apply(void 0, _f.concat([_g.sent()])), _d)])), _b)]))];
         }
     });
 }); };

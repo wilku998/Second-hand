@@ -71,4 +71,11 @@ exports.createQueryItems = function (query) {
     });
     return match;
 };
+exports.onScrollLoadingSlice = function (skip, limit, array) {
+    var skipInt = parseInt(skip);
+    var limitInt = parseInt(limit);
+    return array
+        .reverse()
+        .filter(function (e, i) { return i + 1 > skipInt && i + 1 <= limitInt + skipInt; });
+};
 //# sourceMappingURL=other.js.map

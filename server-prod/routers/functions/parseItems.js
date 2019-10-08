@@ -63,10 +63,7 @@ exports.parseItem = function (item) { return __awaiter(void 0, void 0, void 0, f
                 return [4 /*yield*/, user_1.default.find({ "likedItems.item": item._id })];
             case 2:
                 likedBy = _b.sent();
-                return [2 /*return*/, __assign(__assign({}, itemObject), { likedBy: likedBy.map(function (_a) {
-                            var _id = _a._id, avatar = _a.avatar, name = _a.name;
-                            return ({ _id: _id, avatar: avatar, name: name });
-                        }), owner: { avatar: avatar, name: name, _id: _id } })];
+                return [2 /*return*/, __assign(__assign({}, itemObject), { owner: { avatar: avatar, name: name, _id: _id }, likedBy: likedBy.map(function (e) { return e._id; }) })];
         }
     });
 }); };
