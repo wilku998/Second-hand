@@ -4,7 +4,7 @@ import authMiddleware from "../middlwares/auth";
 import MessangerRoom from "../models/messangerRoom";
 import createInterlocutor from "../functions/createInterlocutor";
 import User from "../models/user";
-import { createRegexObj } from "./functions/other";
+import { createRegexObj, onScrollLoadingSlice } from "./functions/other";
 
 const router = express.Router();
 
@@ -62,15 +62,14 @@ router.get(
   async (req: IAuthRequest, res) => {
     try {
       let { limit, skip } = req.query;
-      limit = parseInt(limit);
-      skip = parseInt(skip);
       const room = await MessangerRoom.findOne({
         roomName: req.params.roomName
       }).select("messages");
-      const messages = room.messages
-        .reverse()
-        .filter((e, i) => i + 1 > skip && i + 1 <= limit + skip).reverse();
-
+      const messages = onScrollLoadingSlice(
+        skip,
+        limit,
+        room.messages
+      ).reverse();
       res.send({ messages });
     } catch (e) {
       res.status(404).send();

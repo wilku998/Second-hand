@@ -5,7 +5,7 @@ import React, {
   Dispatch,
   SetStateAction
 } from "react";
-import { StyledSearch } from "../styleSearch";
+import { StyledSearch, LoaderContainer } from "../styleSearch";
 import { SearchMenu, SearchContainer, NameInput } from "./styleSearchUsers";
 import UsersSection from "../../Section/UsersSection/UsersSection";
 import { getUsersRequest, getUsersCountRequest } from "../../../API/users";
@@ -23,6 +23,7 @@ import Button_2 from "../../Abstracts/Button_2";
 import IItem from "../../../interfaces/IItem";
 import parsePolishChars from "../../../functions/parsePolishChars";
 import Container from "../../Abstracts/Container";
+import Loader from "../../Abstracts/Loader";
 
 const SearchUsers = () => {
   const sortByOptions = [
@@ -32,7 +33,7 @@ const SearchUsers = () => {
     "Popularność malejąco"
   ];
   const resultsCountOptions = [3, 6, 9, 12, 15];
-
+  const [isFetching, setIsFetching] = useState(false);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
   const [limit, setLimit] = useState(resultsCountOptions[0]);
@@ -97,7 +98,7 @@ const SearchUsers = () => {
       const query = `?name=${name}&skip=${(page - 1) *
         limit}&limit=${limit}&sortBy=${sort}&order=${order}`;
 
-      history.location.search = query;
+      history.push(`/search/users${query}`);
       setSearchRequest(false);
     }
   }, [searchRequest]);
@@ -144,7 +145,8 @@ const SearchUsers = () => {
     getUsersCountRequest,
     resultsCountOptions[0],
     setCount,
-    setUsers
+    setUsers,
+    setIsFetching
   );
 
   return (
@@ -169,14 +171,22 @@ const SearchUsers = () => {
             resultsCountOptions={resultsCountOptions}
           />
         </SearchMenu>
-        <UsersSection users={users} />
-        {pages > 1 && (
-          <MoveButtons
-            page={page}
-            pages={pages}
-            pageButtons={pageButtons}
-            onMoveButtonClick={onMoveButtonClick}
-          />
+        {isFetching ? (
+          <LoaderContainer>
+            <Loader size={4} />
+          </LoaderContainer>
+        ) : (
+          <>
+            <UsersSection users={users} />
+            {pages > 1 && (
+              <MoveButtons
+                page={page}
+                pages={pages}
+                pageButtons={pageButtons}
+                onMoveButtonClick={onMoveButtonClick}
+              />
+            )}
+          </>
         )}
       </StyledSearch>
     </Container>

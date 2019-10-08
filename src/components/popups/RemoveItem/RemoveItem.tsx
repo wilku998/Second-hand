@@ -1,6 +1,6 @@
 import React, { FormEvent } from "react";
 import Modal from "react-modal";
-import { ErrorMessage, Content } from "../styles";
+import { Content } from "../styles";
 import { Form } from "../../Abstracts/Form";
 import Button_2 from "../../Abstracts/Button_2";
 import { history } from "../../../app";

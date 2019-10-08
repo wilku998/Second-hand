@@ -78,16 +78,16 @@ export const SubMenuList = styled.ul`
 `;
 
 export const SubMenuListItem = styled.li<{
-  isunreaded?: string;
+  isunreaded?: boolean;
 }>`
   position: relative;
   fill: white;
 
   ${({ theme, isunreaded }) => `
       ${
-        isunreaded === "true"
+        !isunreaded || isunreaded === undefined
           ? `background-color: ${theme.colorGreyDark0};`
-          : `background-color: ${theme.colorGreyDark1};`
+          : `background-color: ${theme.colorBlue6};`
       }
 
       &:not(:last-child):after{
@@ -112,7 +112,7 @@ export const SubMenuListItem = styled.li<{
     width: 100%;
     background-color: rgba(255, 255, 255, 0.01);
     opacity: 0;
-    transition: opacity .1s;
+    transition: opacity 0.1s;
   }
 
   &:hover:before {
@@ -127,13 +127,6 @@ export const SubMenuListItem = styled.li<{
   }
 `;
 
-export const NotificationInfo = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.5rem;
-  color: white;
-`;
-
-export const NoNotificationsInfo = styled.div`
+export const NotificationsInfo = styled.div`
   text-align: center;
 `;

@@ -16,10 +16,11 @@ import {
   createMessangerRoomRequest,
   getMessages
 } from "../../API/messangerRooms";
-import { socket } from "../../app";
 import IInterlocutor from "../../interfaces/IInterlocutor";
 import IMessage from "../../interfaces/IMessage";
 import InvisibleButton from "../Abstracts/InvisibleButton";
+import { sendMessageReadedSocket, sendNewRoomSocket } from "../../sockets";
+import { socket } from "../../socket";
 
 interface IProps {
   match: any;
@@ -40,13 +41,12 @@ const Messanger = ({ match, userStore, interlocutorsStore }: IProps) => {
   const interlocutors = interlocutorsStore.getInterlocutors;
   const messagesLimit = 20;
 
-  let isReaded = false;
   const interlocutorFromStore = interlocutorsStore.getInterlocutor(
     interlocutorID
   );
 
   if (interlocutorFromStore) {
-    isReaded = interlocutorFromStore.isReaded;
+    var isReaded = interlocutorFromStore.isReaded;
   }
 
   const onInterlocutorsButtonClick = () => {
@@ -79,7 +79,7 @@ const Messanger = ({ match, userStore, interlocutorsStore }: IProps) => {
       if (!interlocutorFromStore) {
         try {
           const room = await createMessangerRoomRequest(interlocutorID);
-          socket.emit("sendNewRoom", room, user._id, interlocutorID);
+          sendNewRoomSocket(room, interlocutorID);
           setRoomName(room.roomName);
         } catch (e) {}
       } else {
@@ -88,6 +88,9 @@ const Messanger = ({ match, userStore, interlocutorsStore }: IProps) => {
           0,
           messagesLimit
         );
+        if(interlocutorFromStore.lastMessage.senderID === interlocutorID){
+          sendMessageReadedSocket(interlocutorFromStore.roomName);
+        }
         setRoomName(interlocutorFromStore.roomName);
         setMessages(messages.messages);
         scrollChatToBottom();
@@ -98,6 +101,11 @@ const Messanger = ({ match, userStore, interlocutorsStore }: IProps) => {
 
   const onMessage = (message: IMessage, messageRoomName: string) => {
     if (roomName === messageRoomName) {
+      console.log(message);
+      if(message.senderID === interlocutorID){
+        console.log('on messeage readed');
+        sendMessageReadedSocket(roomName);
+      }
       setMessages([...messages, message]);
       scrollChatToBottom();
     }
@@ -105,15 +113,6 @@ const Messanger = ({ match, userStore, interlocutorsStore }: IProps) => {
 
   useLayoutEffect(() => {
     socket.on("message", onMessage);
-
-    if (
-      messages.length > 0 &&
-      messages[messages.length - 1].senderID !== user._id &&
-      messages[messages.length - 1].senderID === interlocutorID
-    ) {
-      socket.emit("sendMessageReaded", roomName);
-    }
-
     return () => {
       socket.off("message", onMessage);
     };

@@ -11,6 +11,7 @@ import SearchItems from "../components/Search/SearchItems/SearchItems";
 import SearchUsers from "../components/Search/SearchUsers/SearchUsers";
 import Messenger from "../components/Messenger/Messenger";
 import ItemContainer from "../components/Item/ItemContainer";
+import Notifications from "../components/Notifications/Notifications";
 
 interface IProps {
   isAuth: boolean;
@@ -24,6 +25,13 @@ export default ({ isAuth }: IProps) => (
       path="/"
       exact
       component={Dashboard}
+    />
+    <Route
+      displayFooter={true}
+      type="private"
+      path="/notifications"
+      isAuth={isAuth}
+      component={Notifications}
     />
     <Route
       displayFooter={false}

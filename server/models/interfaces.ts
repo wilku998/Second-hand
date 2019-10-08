@@ -8,9 +8,9 @@ export interface INotification {
     | "followedUserLiked"
     | "followedUserFollows"
     | "followedUserAddedItem";
-  user: mongoose.Types.ObjectId;
-  item?: mongoose.Types.ObjectId;
-  userWhoGotFollow?: mongoose.Types.ObjectId;
+  user: mongoose.Types.ObjectId | string;
+  item?: mongoose.Types.ObjectId | string;
+  userWhoGotFollow?: mongoose.Types.ObjectId | string;
   addedAt: number;
   isReaded?: boolean;
 }

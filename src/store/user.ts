@@ -8,10 +8,9 @@ export interface IUserStore {
   user: IUser;
   ownItems: Array<IItem>;
   getUser: IUser;
-  getMinifiedUser: IUser;
+  getID: string;
   getOwnItems: IUserStore["ownItems"];
   isAuth: boolean;
-  unreadedNotificationsQuantity: number;
   updateItem: (_id: string, update: IUpdate) => void;
   updateUser: (update: any) => void;
   likeItem: (_id: string) => void;
@@ -21,13 +20,14 @@ export interface IUserStore {
   ownItemLikedBySomeone: (_id: string, user: IUser) => void;
   ownItemUnlikedBySomeone: (_id: string, user: IUser) => void;
   readNotification: (id: string) => void;
-  getSortedNotifications: INotification[]
+  addNotification: (notification: INotification) => void;
+  getSortedNotifications: INotification[];
 }
 
 export default class UserStore {
   constructor() {
     autorun(() => {
-      console.log(this.getUser);
+      // console.log(this.getUser);
       // console.log(this.getOwnItems);
     });
   }
@@ -39,13 +39,8 @@ export default class UserStore {
     return toJS(this.user);
   }
 
-  @computed get getMinifiedUser() {
-    const { avatar, _id, name } = this.user;
-    return {
-      avatar,
-      _id,
-      name
-    };
+  @computed get getID() {
+    return this.user._id;
   }
 
   @computed get getOwnItems() {
@@ -55,14 +50,10 @@ export default class UserStore {
     return !!this.user;
   }
 
-  @computed get unreadedNotificationsQuantity() {
-    return this.user.notifications.filter(e => !e.isReaded).length
-  };
-
-  @computed get getSortedNotifications(){
+  @computed get getSortedNotifications() {
     return this.user.notifications.sort((a, b) => {
       if (a.isReaded === b.isReaded) {
-        return parseInt(b.addedAt) - parseInt(a.addedAt)
+        return parseInt(b.addedAt) - parseInt(a.addedAt);
       } else {
         return a.isReaded ? 2 : -2;
       }
@@ -70,11 +61,11 @@ export default class UserStore {
   }
 
   updateUser(update: any) {
-    this.user={
+    this.user = {
       ...this.user,
       ...update
-    }
-  };
+    };
+  }
 
   updateItem(_id: string, update: IUpdate) {
     this.ownItems = this.ownItems.map(e => {
@@ -95,7 +86,7 @@ export default class UserStore {
   }
 
   addItem(item: IItem) {
-    this.ownItems = [...this.ownItems, item];
+    this.ownItems = [item, ...this.ownItems];
   }
 
   removeFromArray(
@@ -105,16 +96,25 @@ export default class UserStore {
     this.user[property] = this.user[property].filter(e => e !== _id);
   }
 
-  addToArray(property: "follows" | "likedItems" | "followedBy" | "notifications", any: any) {
+  addToArray(
+    property: "follows" | "likedItems" | "followedBy" | "notifications",
+    any: any
+  ) {
     this.user[property] = [any, ...this.user[property]];
   }
 
-  ownItemLikedBySomeone(_id: string, user: IUser) {
+  addNotification(notification: INotification) {
+    this.addToArray("notifications", notification);
+    this.user.notificationsQuantity++;
+    this.user.unreadedNotificationsQuantity++;
+  }
+
+  ownItemLikedBySomeone(_id: string, userID: string) {
     this.ownItems = this.ownItems.map(e => {
       if (e._id === _id) {
         return {
           ...e,
-          likedBy: [...e.likedBy, user]
+          likedBy: [userID, ...e.likedBy]
         };
       } else {
         return e;
@@ -136,8 +136,13 @@ export default class UserStore {
   }
 
   readNotification(id: string) {
+    if (id === "all") {
+      this.user.unreadedNotificationsQuantity = 0;
+    } else {
+      this.user.unreadedNotificationsQuantity -= 1;
+    }
     this.user.notifications = this.user.notifications.map(e =>
-      e._id === id ? { ...e, isReaded: true } : e
+      id === "all" || e._id === id ? { ...e, isReaded: true } : e
     );
   }
 }

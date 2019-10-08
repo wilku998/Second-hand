@@ -7,10 +7,12 @@ export default (
   getCountRequest: any,
   defaultLimit: number,
   setCount: (count: number) => void,
-  setItems: (items: any) => void
+  setItems: (items: any) => void,
+  setIsFetching: (boolean: boolean) => void
 ) => {
   return useEffect(() => {
     const fetchData = async () => {
+      setIsFetching(true);
       let search = history.location.search;
       const limitFromSearch = getValueFromQueryString(search, "limit");
       if (!limitFromSearch) {
@@ -24,6 +26,7 @@ export default (
 
       setCount(newCount);
       setItems(newItems);
+      setIsFetching(false);
     };
     fetchData();
   }, [history.location.search]);

@@ -22,22 +22,22 @@ const ItemContainer = ({ match, userStore }: IProps) => {
   const userID = user ? user._id : undefined;
 
   if (item) {
-    var isLiked = item.likedBy.findIndex(user => user._id === userID) > -1;
+    var isLiked = item.likedBy.findIndex(e => e === userID) > -1;
   }
 
   const onLikeClick = async () => {
     try {
       if (isLiked) {
         try {
-          await unlikeItemRequest(itemID, item.owner._id);
+          await unlikeItemRequest(itemID);
           setItem({
             ...item,
-            likedBy: item.likedBy.filter(e => e._id !== user._id)
+            likedBy: item.likedBy.filter(e => e !== user._id)
           });
         } catch (e) {}
       } else {
         try {
-          await likeItemRequest(itemID, item.owner._id);
+          await likeItemRequest(itemID);
           setItem({
             ...item,
             likedBy: [

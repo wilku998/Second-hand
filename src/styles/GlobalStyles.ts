@@ -47,6 +47,7 @@ export default createGlobalStyle`
     button {
         cursor: pointer;
         color: inherit;
+        font-size: inherit;
         font-family: inherit;
         &:focus{
             outline: none;

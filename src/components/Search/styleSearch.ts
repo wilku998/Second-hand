@@ -15,3 +15,8 @@ export const StyledSearch = styled.main`
     width: 100%;
   `}
 `;
+
+export const LoaderContainer = styled.div`
+  height: 20rem;
+  position: relative;
+`

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import ReactSVG from "react-svg";
 import parseDate from "../../functions/parseDate";
 
-const Date = ({ date }: { date: string }) => (
+const Date = ({ date }: { date: string | number }) => (
   <StyledDate>
     <DateIcon src="/svg/calendar.svg" />
     {parseDate(date)}

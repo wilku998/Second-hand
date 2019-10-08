@@ -53,6 +53,7 @@ export const Form = styled.form<{interlocutorsVisible: boolean}>`
 
   ${({ theme }) => `
     border-top: ${theme.darkBorder3};
+    border-left: ${theme.darkBorder3};
     background-color: ${theme.colorGreyLight5};
   `}
   ${({ theme, interlocutorsVisible }) => theme.medium_2`
@@ -102,12 +103,10 @@ export const FormContent = styled.div`
 export const SendedBy = styled.span`
   align-self: flex-end;
   font-size: 1rem;
-  margin-top: -0.7rem;
   margin-bottom: 1rem;
 `;
 
 export const Info = styled.span`
-  margin-top: 0.3rem;
   text-align: center;
   font-size: 1.2rem;
 `;

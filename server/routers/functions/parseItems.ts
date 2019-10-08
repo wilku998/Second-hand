@@ -8,7 +8,7 @@ export const parseItem = async (item: IItem) => {
     const likedBy = await User.find({ "likedItems.item": item._id });
     return {
       ...itemObject,
-      likedBy: likedBy.map(({ _id, avatar, name }) => ({ _id, avatar, name })),
-      owner: { avatar, name, _id }
+      owner: { avatar, name, _id },
+      likedBy: likedBy.map(e => e._id)
     };
   };

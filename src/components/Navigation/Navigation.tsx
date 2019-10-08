@@ -11,14 +11,11 @@ import {
   SearchCat,
   StyledNavigation,
   LogoContainer,
-  Login,
   NavigationLogo,
-  MobileSearchIcon
 } from "./styleNavigation";
 import { history } from "../../app";
 import Menu from "./Menu/Menu";
 import { IUserStore } from "../../store/user";
-import { ButtonIcon, MenuItem } from "./Menu/styleMenu";
 import CollapseIcon from "../Abstracts/CollapseIcon";
 
 export interface IProps {

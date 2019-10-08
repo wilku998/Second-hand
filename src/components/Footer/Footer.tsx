@@ -1,31 +1,9 @@
-import React, { useState, useRef, useLayoutEffect } from "react";
+import React from "react";
 import { List, About, ListItem, StyledFooter } from "./styleFooter";
-import { history } from "../../app";
 
 const Footer = () => {
-  const [marginTop, setMarginTop] = useState(false);
-  const componentRef = useRef();
-
-  const calculateMargin = (bodyHeight: number) => {
-    const component = componentRef.current;
-    const componentHeight = component.clientHeight;
-    const windowHeight = window.innerHeight - 20;
-    setMarginTop(bodyHeight - componentHeight >= windowHeight);
-  };
-
-  useLayoutEffect(() => {
-    const x = new ResizeObserver(e =>
-      calculateMargin(e[0].target.clientHeight)
-    );
-
-    x.observe(document.querySelector("body"));
-    return () => {
-      x.disconnect();
-    };
-  }, []);
-
   return (
-    <StyledFooter marginTop={marginTop} ref={componentRef}>
+    <StyledFooter>
       <About>Aplikacja została stworzona w celach edukacyjnych</About>
       <List>
         <ListItem>Bartosz Wilk</ListItem>

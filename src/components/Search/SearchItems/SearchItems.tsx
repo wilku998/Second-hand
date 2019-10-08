@@ -1,7 +1,7 @@
 import React, { useState, useEffect, ChangeEvent } from "react";
 import ItemsSection from "../../Section/ItemsSection/ItemsSection";
 import SearchMenu from "./SearchMenu/SearchMenu";
-import { StyledSearch } from "../styleSearch";
+import { StyledSearch, LoaderContainer } from "../styleSearch";
 import initialFormState from "./initialFormState";
 import { getItemsRequest, getItemsCountRequest } from "../../../API/items";
 import { createActiveFiltersObject } from "./functions/createActiveFiltersObject";
@@ -18,6 +18,7 @@ import {
 import useSearch from "../hooks/useSearch";
 import SortContainer from "../SortContainer/SortContainer";
 import Container from "../../Abstracts/Container";
+import Loader from "../../Abstracts/Loader";
 
 const SearchItems = () => {
   const sortByOptions = [
@@ -27,6 +28,7 @@ const SearchItems = () => {
     "Od najwyższej ceny"
   ];
   const resultsCountOptions = [4, 12, 16, 20, 24];
+  const [isFetching, setIsFetching] = useState(false);
   const [searchRequest, setSearchRequest] = useState(false);
   const [form, setForm] = useState(initialFormState);
   const [page, setPage] = useState(1);
@@ -110,7 +112,8 @@ const SearchItems = () => {
           : ""
       }`;
 
-      history.location.search = query;
+      history.push(`/search/items${query}`);
+
       setSearchRequest(false);
     }
   }, [searchRequest]);
@@ -209,7 +212,8 @@ const SearchItems = () => {
     getItemsCountRequest,
     resultsCountOptions[0],
     setCount,
-    setItems
+    setItems,
+    setIsFetching
   );
 
   return (
@@ -234,14 +238,23 @@ const SearchItems = () => {
           onLimitChange={onLimitChange}
           resultsCountOptions={resultsCountOptions}
         />
-        <ItemsSection items={items} />
-        {pages > 1 && (
-          <MoveButtons
-            page={page}
-            pages={pages}
-            pageButtons={pageButtons}
-            onMoveButtonClick={onMoveButtonClick}
-          />
+
+        {isFetching ? (
+          <LoaderContainer>
+            <Loader size={4} />
+          </LoaderContainer>
+        ) : (
+          <>
+            <ItemsSection items={items} />
+            {pages > 1 && (
+              <MoveButtons
+                page={page}
+                pages={pages}
+                pageButtons={pageButtons}
+                onMoveButtonClick={onMoveButtonClick}
+              />
+            )}
+          </>
         )}
       </StyledSearch>
     </Container>

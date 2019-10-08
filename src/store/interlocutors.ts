@@ -1,6 +1,6 @@
 import { observable, computed, autorun, toJS } from "mobx";
 import IInterlocutor from "../interfaces/IInterlocutor";
-import { userStore } from "../app";
+import { userStore, socket } from "../app";
 
 export interface IInterlocutorsStore {
   interlocutors: Array<IInterlocutor>;
@@ -25,28 +25,33 @@ export default class InterlocutorsStore {
   }
 
   @computed get getSortedAndFilteredInterlocutors() {
-    return toJS(
-      this.interlocutors
-        .filter(e => e.lastMessage)
-        .sort((a, b) => {
-          if (a.isReaded === b.isReaded) {
-            return (
-              parseInt(b.lastMessage.sendedAt) -
-              parseInt(a.lastMessage.sendedAt)
-            );
-          } else {
-            return a.isReaded ? 2 : -2;
-          }
-        })
-    );
+    const user = userStore.getUser;
+    const sort = arr =>
+      arr.sort(
+        (a, b) =>
+          parseInt(b.lastMessage.sendedAt) - parseInt(a.lastMessage.sendedAt)
+      );
+    const readed = [];
+    const unreaded = this.interlocutors.filter(e => {
+      if (e.lastMessage) {
+        if (e.lastMessage.senderID === user._id || e.isReaded) {
+          readed.push(e);
+          return false;
+        }
+        return true;
+      }
+      return false;
+    });
+
+    return toJS([...sort(unreaded), ...sort(readed)]);
   }
 
   @computed get unreadedMessagesQuantity() {
-    const user = userStore.getMinifiedUser;
+    const id = userStore.getID;
     return this.interlocutors.filter(
       e =>
         !e.isReaded &&
-        (e.lastMessage ? e.lastMessage.senderID !== user._id : false)
+        (e.lastMessage ? e.lastMessage.senderID !== id : false)
     ).length;
   }
 
@@ -54,7 +59,7 @@ export default class InterlocutorsStore {
     const indexOfInterlocutor = this.interlocutors.findIndex(
       e => e.interlocutor._id === _id
     );
-    return computed(() => this.interlocutors[indexOfInterlocutor]).get();
+    return computed(() => toJS(this.interlocutors[indexOfInterlocutor])).get();
   }
 
   readMessage(roomName: string) {
@@ -67,6 +72,6 @@ export default class InterlocutorsStore {
   }
 
   addInterlocutor(interlocutor: IInterlocutor) {
-    this.interlocutors.push(interlocutor);
+    this.interlocutors = [interlocutor, ...this.interlocutors];
   }
 }

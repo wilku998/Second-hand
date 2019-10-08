@@ -1,9 +1,10 @@
 import IItem from "../interfaces/IItem";
 import ajax from "./ajax";
-import { userStore, socket } from "../app";
+import { userStore } from "../app";
 import fetchData from "./fetchData";
 import { IUpdate } from "../components/CreateItem/interfaces";
 import { addImagesRequest, removeImageRequest } from "./images";
+import { sendNewItemSocket } from "../sockets";
 
 export const addItemRequest = async (item: IItem, images: Array<string>) => {
   try {
@@ -17,7 +18,7 @@ export const addItemRequest = async (item: IItem, images: Array<string>) => {
       201
     );
     userStore.addItem(response);
-    socket.emit("sendNewItem", userStore.getMinifiedUser, response._id);
+    sendNewItemSocket(response._id)
   } catch (e) {
   }
 };

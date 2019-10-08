@@ -10,6 +10,8 @@ export default interface IUser {
   followedBy?: Array<string>;
   likedItems?: Array<string>;
   notifications?: INotification[];
+  unreadedNotificationsQuantity?: number;
+  notificationsQuantity?: number;
 }
 
 export interface IMinifedUser {

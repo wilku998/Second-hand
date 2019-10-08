@@ -1,5 +1,5 @@
 import ajax from "./ajax";
-import { userStore, socket } from "../app";
+import { userStore } from "../app";
 import {
   setUserStore,
   onlyAuthRequest,
@@ -7,6 +7,12 @@ import {
 } from "./functions";
 import fetchData from "./fetchData";
 import { addImagesRequest } from "./images";
+import {
+  likeItemSocket,
+  unlikeItemSocket,
+  unfollowSocket,
+  followSocket
+} from "../sockets";
 
 export const loginRequest = async (data: {
   email: string;
@@ -25,8 +31,7 @@ export const getProfileRequest = async () => {
     const response = await fetch("/api/users/me");
     const data = await response.json();
     await setUserStore(data);
-  } catch (e) {
-  }
+  } catch (e) {}
 };
 
 export const registerRequest = async (data: {
@@ -80,70 +85,66 @@ export const updateUserRequest = async (update: any, avatar: string) => {
 
 const likesRequestTemplate = async (
   likedID: string,
-  userToEmitID: string,
   httpMethod: string,
-  userStoreMethod: "addToArray" | "removeFromArray",
-  socketName: string
+  userStoreMethod: "addToArray" | "removeFromArray"
 ) => {
   await onlyAuthRequest(async () => {
     try {
       await ajax(httpMethod, "/api/users/me/likes", { likedID }, 200);
       userStore[userStoreMethod]("likedItems", likedID);
-      socket.emit(socketName, likedID, userToEmitID, userStore.getMinifiedUser);
     } catch (e) {}
   });
 };
 
-export const likeItemRequest = async (likedID: string, userToEmitID: string) =>
-  await likesRequestTemplate(
-    likedID,
-    userToEmitID,
-    "PATCH",
-    "addToArray",
-    "sendLikeItem"
-  );
+export const likeItemRequest = async (likedID: string) => {
+  try {
+    await likesRequestTemplate(likedID, "PATCH", "addToArray");
+    likeItemSocket(likedID);
+  } catch (e) {}
+};
 
-export const unlikeItemRequest = async (
-  likedID: string,
-  userToEmitID: string
-) =>
-  await likesRequestTemplate(
-    likedID,
-    userToEmitID,
-    "DELETE",
-    "removeFromArray",
-    "sendUnlikeItem"
-  );
+export const unlikeItemRequest = async (likedID: string) => {
+  try {
+    await likesRequestTemplate(likedID, "DELETE", "removeFromArray");
+    unlikeItemSocket(likedID);
+  } catch (e) {}
+};
 
 const followsRequestTemplate = async (
   userID: string,
   httpMethod: string,
-  userStoreMethod: "addToArray" | "removeFromArray",
-  socketName: string
+  userStoreMethod: "addToArray" | "removeFromArray"
 ) => {
-  const ownProfile = userStore.getMinifiedUser;
-
   await onlyAuthRequest(async () => {
     try {
       await ajax(httpMethod, "/api/users/me/follows", { userID }, 200);
       userStore[userStoreMethod]("follows", userID);
-      socket.emit(socketName, userID, ownProfile._id);
     } catch (e) {}
   });
 };
 
-export const followUserRequest = async (userID: string) =>
-  followsRequestTemplate(userID, "PATCH", "addToArray", "sendFollow");
+export const followUserRequest = async (userID: string) => {
+  try {
+    await followsRequestTemplate(userID, "PATCH", "addToArray");
+    followSocket(userID);
+  } catch (e) {}
+};
 
-export const unfollowUserRequest = async (userID: string) =>
-  followsRequestTemplate(userID, "DELETE", "removeFromArray", "sendUnfollow");
+export const unfollowUserRequest = async (userID: string) => {
+  try {
+    await followsRequestTemplate(userID, "DELETE", "removeFromArray");
+    unfollowSocket(userID);
+  } catch (e) {}
+};
 
 export const getUserRequest = async (id: string) =>
   await fetchData(id, "/api/users/");
 
 export const getUsersCountRequest = async (query: string) => {
-  const response = await fetchData(query, "/api/users/count");
-  return response.count;
+  try {
+    const response = await fetchData(query, "/api/users/count");
+    return response.count;
+  } catch (e) {}
 };
 
 export const getUsersRequest = async (query: string) => {
@@ -154,7 +155,8 @@ export const getUsersRequest = async (query: string) => {
   return users;
 };
 
-export const getMostPopularUsersRequest = async () => await getUsersRequest('?sortBy=followedByQuantity&order=-1&limit=3');
+export const getMostPopularUsersRequest = async () =>
+  await getUsersRequest("?sortBy=followedByQuantity&order=-1&limit=3");
 
 export const getFollowsAndLikes = async (userID: string) =>
   await fetchData(userID, "/api/users/followsAndLikes/");
@@ -163,3 +165,6 @@ export const readNotificationRequest = async (id: string) => {
   await ajax("PATCH", "/api/users/me/readNotification", { id }, 200);
   userStore.readNotification(id);
 };
+
+export const getNotifications = async (skip: number, limit: number) =>
+  await fetchData(`?skip=${skip}&limit=${limit}`, "/api/user/notifications");

@@ -80,3 +80,15 @@ export const createQueryItems = (query: any) => {
   );
   return match;
 };
+
+export const onScrollLoadingSlice = (
+  skip: string,
+  limit: string,
+  array: any[]
+) => {
+  const skipInt = parseInt(skip);
+  const limitInt = parseInt(limit);
+  return array
+    .reverse()
+    .filter((e, i) => i + 1 > skipInt && i + 1 <= limitInt + skipInt)
+};

@@ -1,16 +1,17 @@
-import { userStore, history, interlocutorsStore, socket } from "../app";
-import { IInterlocutorsStore } from "../store/interlocutors";
+import { userStore, history, interlocutorsStore } from "../app";
 import { getInterlocutorsRequest } from "./messangerRooms";
+import { cleanUserIDSocket, leaveRoomSocket, setUserIDSocket } from "../sockets";
+import { IProfile } from "../interfaces/IUser";
 
 export const parseResponse = (response: any) =>
   !response || Object.keys(response).length === 0 || response.error
     ? undefined
     : response;
 
-export const setUserStore = async (data: any) => {
+export const setUserStore = async (data: IProfile) => {
   if (parseResponse(data.user)) {
     userStore.user = data.user;
-    socket.emit("setUserID", data.user._id);
+    setUserIDSocket(data.user._id)
   }
   if (parseResponse(data.ownItems)) {
     userStore.ownItems = data.ownItems;
@@ -26,10 +27,10 @@ export const clearUserAndInterlocutorsStores = () => {
 };
 
 export const cleanSockets = () => {
-  socket.emit("cleanUserID");
+  cleanUserIDSocket();
   interlocutorsStore.getInterlocutors.forEach(
-    (interlocutor: IInterlocutorsStore["interlocutors"][0]) => {
-      socket.emit("leave", interlocutor.roomName);
+    (interlocutor) => {
+      leaveRoomSocket(interlocutor.roomName)
     }
   );
 };

@@ -1,5 +1,4 @@
 import "normalize.css";
-import io from "socket.io-client";
 import * as React from "react";
 import { render } from "react-dom";
 import { ThemeProvider } from "styled-components";
@@ -12,55 +11,11 @@ import { getProfileRequest } from "./API/users";
 import UserStore from "./store/user";
 import ViewStore from "./store/view";
 import InterlocutorsStore from "./store/interlocutors";
-import IMessage from "./interfaces/IMessage";
-import IUser from "./interfaces/IUser";
-import IInterlocutor from "./interfaces/IInterlocutor";
 import media from "./styles/media";
-
-export const socket = io();
-
-socket.on("newInterlocutor", (interlocutor: IInterlocutor) => {
-  socket.emit("join", interlocutor.roomName);
-  interlocutorsStore.addInterlocutor(interlocutor);
-});
-
-socket.on("message", (newMessage: IMessage, roomName: string) => {
-  interlocutorsStore.interlocutors = interlocutorsStore.getInterlocutors.map(
-    e => ({
-      ...e,
-      isReaded: false,
-      lastMessage: e.roomName === roomName ? newMessage : e.lastMessage
-    })
-  );
-});
-
-socket.on("likeItem", ({ itemID, user }: { itemID: string; user: IUser }) => {
-  userStore.ownItemLikedBySomeone(itemID, user);
-});
-
-socket.on("unlikeItem", ({ itemID, user }: { itemID: string; user: IUser }) => {
-  userStore.ownItemUnlikedBySomeone(itemID, user._id);
-});
-
-socket.on("follow", (userID: string) => {
-  userStore.addToArray("followedBy", userID);
-});
-
-socket.on("unfollow", (userID: string) => {
-  userStore.removeFromArray("followedBy", userID);
-});
-
-socket.on("notification", (notification: any) => {
-  userStore.addToArray("notifications", notification);
-});
-
-socket.on("messageReaded", (roomName: string) => {
-  interlocutorsStore.readMessage(roomName);
-});
-
 export const userStore = new UserStore();
 export const viewStore = new ViewStore();
 export const interlocutorsStore = new InterlocutorsStore();
+import "./socket";
 
 const stores = {
   userStore,
@@ -76,7 +31,6 @@ const start = async () => {
 start();
 
 const themeWithMedia = { ...theme, ...media };
-console.log(themeWithMedia);
 
 export const history = createBrowserHistory();
 const app = (

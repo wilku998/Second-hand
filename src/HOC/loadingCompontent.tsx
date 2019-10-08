@@ -1,11 +1,12 @@
 import React, { FunctionComponent } from "react";
 import Container from "../components/Abstracts/Container";
 import Loader from "../components/Abstracts/Loader";
+import NotFoundMessage from "../components/Abstracts/NotFoundMessage";
 
 export interface ILoadingComponent extends FunctionComponent {
   isFetching: boolean;
   shouldRender: boolean;
-  notFoundMessage: string;
+  notFoundMessage?: string;
 }
 
 export default (Component: ILoadingComponent) => {
@@ -16,7 +17,7 @@ export default (Component: ILoadingComponent) => {
       ) : shouldRender ? (
         <Component {...rest} />
       ) : (
-        <span>{notFoundMessage}</span>
+        <NotFoundMessage>{notFoundMessage}</NotFoundMessage>
       )}
     </Container>
   );

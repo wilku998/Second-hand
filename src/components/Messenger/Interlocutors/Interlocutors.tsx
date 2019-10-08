@@ -69,7 +69,7 @@ const Interlocutors = ({
             />
           </InterlocutorsSearchInputContainer>
         )}
-        {interlocutors.length > 0 ? (
+        {interlocutors.length > 0 && (
           <InterlocutorsList>
             {filter(interlocutors).map(e => (
               <Interlocutor key={e.interlocutor._id}>
@@ -91,8 +91,6 @@ const Interlocutors = ({
               </Interlocutor>
             ))}
           </InterlocutorsList>
-        ) : (
-          <NoMessages>Brak rozmów</NoMessages>
         )}
       </InterlocutorsContent>
     </InterlocutorsContainer>

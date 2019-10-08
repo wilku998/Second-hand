@@ -6,8 +6,19 @@ import { IAuthRequest, IUserRequest } from "./interfaces";
 import AuthMiddleware from "../middlwares/auth";
 import FindUserMiddleware from "../middlwares/findUser";
 import Item from "../models/item";
-import { parseUser, parseFollowsAndLikes, parseUsers, getFollowedBy } from "./functions/parseUser";
-import { uploadImage, createQueryUsers, parseNumber } from "./functions/other";
+import {
+  parseUser,
+  parseFollowsAndLikes,
+  parseUsers,
+  getFollowedBy
+} from "./functions/parseUser";
+import {
+  uploadImage,
+  createQueryUsers,
+  parseNumber,
+  onScrollLoadingSlice
+} from "./functions/other";
+import parseNotifications from "./functions/parseNotifications";
 
 const router = express.Router();
 
@@ -258,7 +269,6 @@ router.get("/api/users/followsAndLikes/:id", async (req, res) => {
       follows: await parseUsers(parseFollowsAndLikes(follows, "user")),
       followedBy: await parseUsers(followedBy)
     });
-    
   } catch (e) {
     res.status(404).send();
   }
@@ -272,12 +282,28 @@ router.patch(
       const notificationID = req.body.id;
       const { user } = req;
       user.notifications.forEach(e => {
-        if (e._id.toString() === notificationID) {
+        if (notificationID === "all" || e._id.toString() === notificationID) {
           e.isReaded = true;
         }
       });
       await user.save();
       res.send();
+    } catch (e) {
+      res.status(500).send();
+    }
+  }
+);
+
+router.get(
+  "/api/user/notifications",
+  AuthMiddleware,
+  async (req: IAuthRequest, res) => {
+    try {
+      const { skip, limit } = req.query;
+      const notifications = await parseNotifications(
+        onScrollLoadingSlice(skip, limit, req.user.notifications)
+      );
+      res.send({ notifications });
     } catch (e) {
       res.status(500).send();
     }

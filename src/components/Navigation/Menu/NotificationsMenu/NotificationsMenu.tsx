@@ -5,18 +5,16 @@ import {
   ButtonIcon,
   SubMenuButton,
   MenuItem,
-  NotificationInfo,
-  NoNotificationsInfo
+  NotificationsInfo,
+  SubMenuListItem
 } from "../styleMenu";
-import getItemTitle from "../../../../functions/getItemTitle";
 import { readNotificationRequest } from "../../../../API/users";
 import AlertCircle from "../../../Abstracts/AlertCircle";
 import { IUserStore } from "../../../../store/user";
 import { Link } from "react-router-dom";
-import Date from "../../../Abstracts/Date";
-import { IMinifedUser } from "../../../../interfaces/IUser";
-import { IMinifedItem } from "../../../../interfaces/IItem";
 import { SubMenuListItemNotification } from "./styleNotificationsMenu";
+import InvisibleButton from "../../../Abstracts/InvisibleButton";
+import Notification from "../../../Notification/Notification";
 
 export interface IProps {
   isVisible: boolean;
@@ -28,8 +26,7 @@ export interface IProps {
 const NotificationsMenu = React.forwardRef(
   ({ isVisible, closeMenu, openMenu, userStore }: IProps, ref) => {
     const notifications = userStore.getSortedNotifications;
-    const unreadedNotificationsQuantity =
-      userStore.unreadedNotificationsQuantity;
+    const user = userStore.getUser;
 
     const onClick = () => {
       if (isVisible) {
@@ -44,59 +41,15 @@ const NotificationsMenu = React.forwardRef(
       readNotificationRequest(id);
     };
 
-    const parsedNotifications = notifications.map(notification => {
-      const { user, isReaded, addedAt } = notification;
-      const object: {
-        user: IMinifedUser;
-        _id: string;
-        isReaded: boolean;
-        addedAt: string;
-        info?: string;
-        secondLink?: { name: string; link: string };
-      } = {
-        user,
-        _id: notification._id,
-        isReaded,
-        addedAt
-      };
-
-      const createSecondLinkForItem = (item: IMinifedItem) => ({
-        link: `/items/${item._id}`,
-        name: getItemTitle(item)
-      });
-
-      switch (notification.kind) {
-        case `follow`:
-          object.info = ` zabserwował cię`;
-          break;
-        case `followedUserAddedItem`:
-          object.info = " dodał przedmiot ";
-          object.secondLink = createSecondLinkForItem(notification.item);
-          break;
-        case `followedUserLiked`:
-          object.info = ` polubił przedmiot `;
-          object.secondLink = createSecondLinkForItem(notification.item);
-          break;
-        case `followedUserFollows`:
-          object.info = ` zabserwował użytkownika `;
-          object.secondLink = {
-            link: `/users/${notification.userWhoGotFollow._id}`,
-            name: notification.userWhoGotFollow.name
-          };
-          break;
-        case `ownItemLikedBySomeone`:
-          object.info = ` polubił twój przedmiot `;
-          object.secondLink = createSecondLinkForItem(notification.item);
-          break;
-      }
-      return object;
-    });
+    const readAll = () => {
+      readNotificationRequest("all");
+    };
 
     return (
       <MenuItem isselected={isVisible.toString()} onClick={onClick} ref={ref}>
         <SubMenuButton>
-          {unreadedNotificationsQuantity > 0 && (
-            <AlertCircle number={unreadedNotificationsQuantity} />
+          {user.unreadedNotificationsQuantity > 0 && (
+            <AlertCircle number={user.unreadedNotificationsQuantity} />
           )}
           <ButtonIcon src="/svg/bell.svg" />
         </SubMenuButton>
@@ -104,29 +57,38 @@ const NotificationsMenu = React.forwardRef(
           <SubMenuList>
             {notifications.length > 0 ? (
               <>
-                {parsedNotifications.map(e => (
+                {notifications.map(e => (
                   <SubMenuListItemNotification
                     key={e._id}
                     data-id={e._id}
                     onClick={onNotificationClick}
-                    isunreaded={(!e.isReaded).toString()}
+                    isunreaded={!e.isReaded}
                   >
-                    <div>
-                      <NotificationInfo>
-                        <Date date={e.addedAt} />
-                      </NotificationInfo>
-                      <Link to={`/users/${e.user._id}`}>{e.user.name}</Link>
-                      {e.info}
-                      {e.secondLink && (
-                        <Link to={e.secondLink.link}>{e.secondLink.name}</Link>
-                      )}
-                    </div>
+                    <Notification
+                      notification={e}
+                      key={e.addedAt}
+                      infoColor="white"
+                    />
                   </SubMenuListItemNotification>
                 ))}
+                {user.unreadedNotificationsQuantity > 0 && (
+                  <SubMenuListItem>
+                    <InvisibleButton onClick={readAll}>
+                      Oznacz wszystkie jako przeczytane
+                    </InvisibleButton>
+                  </SubMenuListItem>
+                )}
+                {user.notificationsQuantity > notifications.length && (
+                  <SubMenuListItem>
+                    <NotificationsInfo as={Link} to="/notifications">
+                      Zobacz resztę
+                    </NotificationsInfo>
+                  </SubMenuListItem>
+                )}
               </>
             ) : (
               <SubMenuListItemNotification>
-                <NoNotificationsInfo>Brak powiadomień</NoNotificationsInfo>
+                <NotificationsInfo>Brak powiadomień</NotificationsInfo>
               </SubMenuListItemNotification>
             )}
           </SubMenuList>

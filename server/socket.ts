@@ -10,9 +10,11 @@ import {
   IMinifedUser,
   IMinifedItem
 } from "./functions/getMinifed";
-import checkIfNotificationsExist from "./functions/checkIfNotificationsExist";
+import checkIfNotificationDoesntExist from "./functions/checkIfNotificationDoesntExist";
 import { server } from "./server";
 import { getFollowedBy } from "./routers/functions/parseUser";
+import Item from "./models/item";
+import parseNotifications from "./routers/functions/parseNotifications";
 
 const io = socketio(server);
 
@@ -28,8 +30,8 @@ const emitToUser = (userID: string, callback: any) => {
   }
 };
 
-const emitToUserTemplate = (name: string, userToEmit: string, data: any) => {
-  emitToUser(userToEmit, (socketsToEmit: any) => {
+const emitToUserTemplate = (name: string, userToEmitID: string, data: any) => {
+  emitToUser(userToEmitID, (socketsToEmit: any) => {
     socketsToEmit.forEach((socketID: string) => {
       io.to(socketID).emit(name, data);
     });
@@ -37,45 +39,40 @@ const emitToUserTemplate = (name: string, userToEmit: string, data: any) => {
 };
 
 const createAndEmitNotification = async (
-  user: IUser,
+  userToEmitID: string,
   kind: INotification["kind"],
-  userForNotification: IMinifedUser,
-  propertyForNotification?: IMinifedItem | IMinifedUser,
-  propertyName?: "item" | "userWhoGotFollow"
+  userID: string,
+  secondPropertyForNotificationID?: string,
+  secondPropertyName?: "item" | "userWhoGotFollow"
 ) => {
-  const _id = Types.ObjectId();
-  const notification: any = {
-    _id,
-    kind: kind,
-    user: userForNotification,
-    addedAt: Date.now(),
-    isReaded: false
-  };
-  if (propertyForNotification) {
-    notification[propertyName] = propertyForNotification;
-  }
+  const UserToEmit = await User.findById(userToEmitID);
   if (
-    checkIfNotificationsExist(
-      user.notifications,
-      notification.kind,
-      userForNotification,
-      propertyForNotification,
-      propertyName
+    checkIfNotificationDoesntExist(
+      UserToEmit.notifications,
+      kind,
+      userID,
+      secondPropertyForNotificationID,
+      secondPropertyName
     )
   ) {
+    const _id = Types.ObjectId();
+    const notification: INotification = {
+      _id,
+      kind,
+      user: userID,
+      addedAt: Date.now(),
+      isReaded: false
+    };
+
+    if (secondPropertyForNotificationID) {
+      notification[secondPropertyName] = secondPropertyForNotificationID;
+    }
+
     try {
-      user.notifications = [...user.notifications, notification];
-      await user.save();
-      emitToUserTemplate(
-        "notification",
-        user._id.toString(),
-        propertyForNotification
-          ? {
-              ...notification,
-              [propertyName]: propertyForNotification
-            }
-          : notification
-      );
+      UserToEmit.notifications = [...UserToEmit.notifications, notification];
+      await UserToEmit.save();
+      const parsedNotification = await parseNotifications([notification]);
+      emitToUserTemplate("notification", userToEmitID, parsedNotification[0]);
     } catch (e) {
       console.log(e);
     }
@@ -83,22 +80,40 @@ const createAndEmitNotification = async (
 };
 
 const emitNotificationForFollowedBy = async (
+  userID: string,
   kind: INotification["kind"],
-  user: IMinifedUser,
-  propertyForNotification?: IMinifedItem | IMinifedUser,
-  propertyName?: "item" | "userWhoGotFollow"
+  propertyForNotificationID: string,
+  propertyName: "item" | "userWhoGotFollow",
+  itemOwnerID?: string
 ) => {
-  const userToEmitFollowedBy = await getFollowedBy(user._id);
+  const userToEmitFollowedBy = await getFollowedBy(userID);
 
   await Promise.all(
     userToEmitFollowedBy.map(async (e, i) => {
-      createAndEmitNotification(
-        e,
-        kind,
-        user,
-        propertyForNotification,
-        propertyName
-      );
+      const userToEmitID = e._id.toString();
+      const emit = () =>
+        createAndEmitNotification(
+          userToEmitID,
+          kind,
+          userID,
+          propertyForNotificationID,
+          propertyName
+        );
+      switch (kind) {
+        case "followedUserFollows":
+          if (userToEmitID !== propertyForNotificationID) {
+            emit();
+          }
+          break;
+        case "followedUserLiked":
+          if (userToEmitID !== itemOwnerID) {
+            emit();
+          }
+          break;
+        default:
+          emit();
+          break;
+      }
     })
   );
 };
@@ -116,70 +131,65 @@ io.on("connection", (socket: Socket) => {
     clients[socket.id] = { userID: "" };
   });
 
-  socket.on("sendNewItem", async (user: IMinifedUser, itemID: string) => {
-    const item = await getMinifedItem(itemID);
+  socket.on("sendNewItem", async (itemID: string) => {
+    const item = await Item.findById(itemID);
     await emitNotificationForFollowedBy(
+      item.owner.toString(),
       "followedUserAddedItem",
-      user,
-      item,
+      itemID,
       "item"
     );
   });
 
-  socket.on(
-    "sendLikeItem",
-    async (itemID, userToEmitID, user: IMinifedUser) => {
-      const item = await getMinifedItem(itemID);
-      const userToEmit = await User.findById(userToEmitID);
-      userToEmit.populate("ownItems").execPopulate();
-      console.log(userToEmit.ownItems);
+  socket.on("sendLikeItem", async (itemID: string, userWhoLikedID: string) => {
+    const item = await Item.findById(itemID);
+    const ownerID = item.owner.toString();
 
-      await createAndEmitNotification(
-        await User.findById(userToEmitID),
-        "ownItemLikedBySomeone",
-        user,
-        item,
-        "item"
-      );
-      if (
-        userToEmit.ownItems.findIndex(
-          (e: any) => e._id.toString() === itemID
-        ) === -1
-      ) {
-        await emitNotificationForFollowedBy(
-          "followedUserLiked",
-          user,
-          item,
-          "item"
-        );
-      }
-    }
-  );
+    emitToUserTemplate("likeItem", ownerID, { itemID, userID: userWhoLikedID });
 
-  socket.on("sendUnlikeItem", (itemID, userToEmit, user) => {
-    emitToUserTemplate("unlikeItem", userToEmit, { itemID, user });
-  });
-
-  socket.on("sendFollow", async (userToEmitID, userID) => {
-    emitToUserTemplate("follow", userToEmitID, userID);
-    const user = await getMinifedUser(userID);
-    const userWhoGotFollow = await getMinifedUser(userToEmitID);
     await createAndEmitNotification(
-      await User.findById(userToEmitID),
-      "follow",
-      user
+      ownerID,
+      "ownItemLikedBySomeone",
+      userWhoLikedID,
+      itemID,
+      "item"
     );
 
     await emitNotificationForFollowedBy(
+      userWhoLikedID,
+      "followedUserLiked",
+      itemID,
+      "item",
+      ownerID
+    );
+  });
+
+  socket.on(
+    "sendUnlikeItem",
+    async (itemID: string, userWhoLikedID: string) => {
+      const item = await Item.findById(itemID);
+      emitToUserTemplate("unlikeItem", item.owner.toString(), {
+        itemID,
+        userID: userWhoLikedID
+      });
+    }
+  );
+
+  socket.on("sendFollow", async (userWhoGotFollowID, userID) => {
+    emitToUserTemplate("follow", userWhoGotFollowID, userID);
+
+    await createAndEmitNotification(userWhoGotFollowID, "follow", userID);
+
+    await emitNotificationForFollowedBy(
+      userID,
       "followedUserFollows",
-      user,
-      userWhoGotFollow,
+      userWhoGotFollowID,
       "userWhoGotFollow"
     );
   });
 
-  socket.on("sendUnfollow", (userToEmitID, userID) => {
-    emitToUserTemplate("unfollow", userToEmitID, userID);
+  socket.on("sendUnfollow", (userWhoGotFollowID, userID) => {
+    emitToUserTemplate("unfollow", userWhoGotFollowID, userID);
   });
 
   socket.on(

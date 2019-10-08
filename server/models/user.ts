@@ -6,16 +6,6 @@ import { IUser, IUserModel } from "./interfaces";
 
 require("dotenv").config({ path: path.resolve(__dirname, "..", ".env.all") });
 
-/*
-notifcations types
-- new folow / like done
-- followed user add item / like item done / follow user done
-
-
-create of notifaction in separate function
-newly created notfication will be fetched by client and sended by socket
-*/
-
 const userSchema = new Schema(
   {
     name: {

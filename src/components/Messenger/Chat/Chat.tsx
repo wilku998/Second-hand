@@ -5,9 +5,7 @@ import React, {
   Fragment,
   useRef,
   useLayoutEffect,
-  useEffect
 } from "react";
-import { socket } from "../../../app";
 import IUser from "../../../interfaces/IUser";
 import IMessage from "../../../interfaces/IMessage";
 
@@ -23,8 +21,11 @@ import {
   Info
 } from "./styleChat";
 import ReactSVG from "react-svg";
-import parseDate from "../../../functions/parseDate";
 import IInterlocutor from "../../../interfaces/IInterlocutor";
+import moment from "moment";
+import { sendNewMessageSocket } from "../../../sockets";
+
+moment.locale("pl");
 
 interface IProps {
   user: IUser;
@@ -45,16 +46,17 @@ const Chat = React.forwardRef(
       messages,
       isReaded,
       interlocutorsVisible,
-      loadMessages,
+      loadMessages
     }: IProps,
     ref
   ) => {
+    const inputRef = useRef();
     const [message, setMessage] = useState("");
     const onSubmit = (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (message) {
         setMessage("");
-        socket.emit("sendMessage", { message, roomName, senderID: user._id });
+        sendNewMessageSocket(message, roomName, user._id);
       }
     };
 
@@ -93,6 +95,10 @@ const Chat = React.forwardRef(
       return () => ref.current.removeEventListener("scroll", onScroll);
     }, [messages]);
 
+    useLayoutEffect(() => {
+      inputRef.current.focus();
+    }, [interlocutor]);
+
     return (
       <>
         <StyledChat>
@@ -100,7 +106,7 @@ const Chat = React.forwardRef(
             {messages.map((e, i) => (
               <Fragment key={e.message + e.sendedAt}>
                 {shouldRenderDate(e, messages[i - 1]) && (
-                  <Info>{parseDate(e.sendedAt)}</Info>
+                  <Info>{moment(e.sendedAt).calendar()}</Info>
                 )}
                 {e.senderID === user._id ? (
                   <Message isOwn={true}>{e.message}</Message>
@@ -123,6 +129,7 @@ const Chat = React.forwardRef(
         <Form onSubmit={onSubmit} interlocutorsVisible={interlocutorsVisible}>
           <FormContent>
             <MessageInput
+              ref={inputRef}
               disabled={!interlocutor}
               type="text"
               value={message}

@@ -1,22 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { inject, observer } from "mobx-react";
 import {
   ButtonIcon,
   SubMenuList,
   SubMenuButton,
   MenuItem,
-  NotificationInfo,
   SubMenuListItem,
-  NoNotificationsInfo
+  NotificationsInfo
 } from "../styleMenu";
 import { Link } from "react-router-dom";
-import Avatar from "../../../Abstracts/Avatar";
 import AlertCircle from "../../../Abstracts/AlertCircle";
 import { IInterlocutorsStore } from "../../../../store/interlocutors";
-import parseDate from "../../../../functions/parseDate";
 import { IUserStore } from "../../../../store/user";
-import Date from "../../../Abstracts/Date";
-import { InterlocutorName } from "./styleMessagesMenu";
+import InvisibleButton from "../../../Abstracts/InvisibleButton";
+import MessageNotification from "../../../Notification/MessageNotification";
+import { sendMessageReadedSocket } from "../../../../sockets";
 
 export interface IProps {
   isVisible: boolean;
@@ -30,6 +28,7 @@ const MessagesMenu = React.forwardRef(
     { isVisible, closeMenu, openMenu, interlocutorsStore, userStore }: IProps,
     ref
   ) => {
+    const [allVisible, setAllVisible] = useState(false);
     const interlocutors = interlocutorsStore.getSortedAndFilteredInterlocutors;
     const user = userStore.getUser;
     const unreadedMessagesQuantity =
@@ -43,9 +42,19 @@ const MessagesMenu = React.forwardRef(
       }
     };
 
+    const onSeeRestClick = () => setAllVisible(!allVisible);
+
+    const readAll = () => {
+      interlocutors.forEach(interlocutor => {
+        if (!interlocutor.isReaded) {
+          sendMessageReadedSocket(interlocutor.roomName)
+        }
+      });
+    };
+
     return (
-      <MenuItem onClick={onClick} isselected={isVisible.toString()} ref={ref}>
-        <SubMenuButton>
+      <MenuItem isselected={isVisible.toString()} ref={ref}>
+        <SubMenuButton onClick={onClick}>
           {unreadedMessagesQuantity > 0 && (
             <AlertCircle number={unreadedMessagesQuantity} />
           )}
@@ -55,28 +64,39 @@ const MessagesMenu = React.forwardRef(
           <SubMenuList>
             {interlocutors.length > 0 ? (
               <>
-                {interlocutors.map(e => (
-                  <SubMenuListItem
-                    key={e.interlocutor._id}
-                    isunreaded={(
-                      !e.isReaded && e.lastMessage.senderID !== user._id
-                    ).toString()}
-                  >
-                    <Link to={`/messenger/${e.interlocutor._id}`}>
-                      <NotificationInfo>
-                        <Date date={e.lastMessage.sendedAt} />
-                        <InterlocutorName>
-                          {e.interlocutor.name}
-                        </InterlocutorName>
-                      </NotificationInfo>
-                      {e.lastMessage.message}
-                    </Link>
+                {interlocutors
+                  .slice(0, allVisible ? interlocutors.length : 5)
+                  .map(e => (
+                    <SubMenuListItem
+                      onClick={onClick}
+                      key={e.interlocutor._id}
+                      isunreaded={
+                        !e.isReaded && e.lastMessage.senderID !== user._id
+                      }
+                    >
+                      <Link to={`/messenger/${e.interlocutor._id}`}>
+                        <MessageNotification interlocutor={e} />
+                      </Link>
+                    </SubMenuListItem>
+                  ))}
+                {unreadedMessagesQuantity > 0 && (
+                  <SubMenuListItem>
+                    <InvisibleButton onClick={readAll}>
+                      Oznacz wszystkie jako przeczytane
+                    </InvisibleButton>
                   </SubMenuListItem>
-                ))}
+                )}
+                {interlocutors.length > 5 && (
+                  <SubMenuListItem>
+                    <InvisibleButton onClick={onSeeRestClick}>
+                      {allVisible ? "Ukryj" : "Zobacz"} resztę
+                    </InvisibleButton>
+                  </SubMenuListItem>
+                )}
               </>
             ) : (
               <SubMenuListItem>
-                <NoNotificationsInfo>Brak wiadomości</NoNotificationsInfo>
+                <NotificationsInfo>Brak wiadomości</NotificationsInfo>
               </SubMenuListItem>
             )}
           </SubMenuList>

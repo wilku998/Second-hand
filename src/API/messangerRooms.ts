@@ -1,27 +1,33 @@
 import fetchData from "./fetchData";
-import { interlocutorsStore, socket, userStore } from "../app";
-import { IInterlocutorsStore } from "../store/interlocutors";
-import { cleanSockets } from "./functions";
+import { interlocutorsStore } from "../app";
 import ajax from "./ajax";
+import { joinRoomSocket } from "../sockets";
 
 export const getInterlocutorsRequest = async () => {
-  const interlocutors = await fetchData(
-    "",
-    "/api/messangerRooms/interlocutors"
-  );
-  if (interlocutors) {
-    interlocutors.forEach(
-      (lastMessage: IInterlocutorsStore["interlocutors"][0]) => {
-        socket.emit("join", lastMessage.roomName);
-      }
+  try {
+    const interlocutors = await fetchData(
+      "",
+      "/api/messangerRooms/interlocutors"
     );
-    interlocutorsStore.interlocutors = interlocutors;
-  }
-  return interlocutors;
+    if (interlocutors) {
+      interlocutors.forEach(interlocutor => {
+        joinRoomSocket(interlocutor.roomName);
+      });
+      interlocutorsStore.interlocutors = interlocutors;
+    }
+    return interlocutors;
+  } catch (e) {}
 };
 
-export const getMessages = async (roomName: string, skip: number, limit: number) =>
-  await fetchData(`${roomName}?skip=${skip}&limit=${limit}`, "/api/messangerRooms/messages/");
+export const getMessages = async (
+  roomName: string,
+  skip: number,
+  limit: number
+) =>
+  await fetchData(
+    `${roomName}?skip=${skip}&limit=${limit}`,
+    "/api/messangerRooms/messages/"
+  );
 
-export const createMessangerRoomRequest = async (interlocutorID: string) => 
+export const createMessangerRoomRequest = async (interlocutorID: string) =>
   await ajax("POST", "/api/messangerRooms", { interlocutorID }, 201);
