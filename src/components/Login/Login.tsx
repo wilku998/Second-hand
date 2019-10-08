@@ -12,7 +12,7 @@ export interface IProps {
 
 const Login = ({ className }: IProps) => {
   const [form, onFormChange] = useUserForm(initialState);
-  const [type, setType] = useState("register");
+  const [type, setType] = useState("login");
   const [errorMessage, setErrorMessage] = useState("");
   const { name, password, email } = form;
 

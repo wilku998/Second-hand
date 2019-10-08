@@ -47,7 +47,8 @@ export const parseUser = async (user: IUser, notificationsDelete?: boolean) => {
     delete parsedUser.user.notifications;
     return parsedUser;
   } else {
-    const unreadedNotificationsQuantity = user.notifications.filter(
+    const notifications = await parseNotifications(user.notifications)
+    const unreadedNotificationsQuantity = notifications.filter(
       e => !e.isReaded
     ).length;
     delete parsedUser.user.notifications;
@@ -57,11 +58,11 @@ export const parseUser = async (user: IUser, notificationsDelete?: boolean) => {
       user: {
         ...parsedUser.user,
         unreadedNotificationsQuantity,
-        notificationsQuantity: user.notifications.length,
+        notificationsQuantity: notifications.length,
         notifications: onScrollLoadingSlice(
           "0",
           "3",
-          await parseNotifications(user.notifications)
+          notifications
         )
       }
     };

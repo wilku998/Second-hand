@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import media from "../../styles/media";
 
 export const NotificationsList = styled.ul`
   list-style: none;
@@ -13,9 +14,14 @@ export const NotificationsList = styled.ul`
       color: ${theme.colorBlue4};    
     }
   `}
+
+  ${media.big`
+    width: 100%;
+  `}
 `;
 
 export const NotificationsListItem = styled.li<{ isReaded: boolean }>`
+  width: 100%;
   padding: 1rem;
   &:not(:last-child) {
     ${({ theme, isReaded }) => `

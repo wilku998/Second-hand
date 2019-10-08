@@ -27,7 +27,7 @@ const SearchItems = () => {
     "Od najniższej ceny",
     "Od najwyższej ceny"
   ];
-  const resultsCountOptions = [4, 12, 16, 20, 24];
+  const resultsCountOptions = [8, 12, 16, 20, 24];
   const [isFetching, setIsFetching] = useState(false);
   const [searchRequest, setSearchRequest] = useState(false);
   const [form, setForm] = useState(initialFormState);
