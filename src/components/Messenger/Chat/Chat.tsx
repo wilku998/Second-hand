@@ -4,7 +4,7 @@ import React, {
   ChangeEvent,
   Fragment,
   useRef,
-  useLayoutEffect,
+  useLayoutEffect
 } from "react";
 import IUser from "../../../interfaces/IUser";
 import IMessage from "../../../interfaces/IMessage";
@@ -24,7 +24,9 @@ import ReactSVG from "react-svg";
 import IInterlocutor from "../../../interfaces/IInterlocutor";
 import moment from "moment";
 import { sendNewMessageSocket } from "../../../sockets";
+import mobileCheck from "../../../functions/mobileCheck";
 
+const isMobile = mobileCheck();
 moment.locale("pl");
 
 interface IProps {
@@ -96,7 +98,9 @@ const Chat = React.forwardRef(
     }, [messages]);
 
     useLayoutEffect(() => {
-      inputRef.current.focus();
+      if (!isMobile) {
+        inputRef.current.focus();
+      }
     }, [interlocutor]);
 
     return (
