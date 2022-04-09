@@ -24,7 +24,7 @@
     "jsonwebtoken": "^8.5.1",
     "mobx": "^5.13.0",
     "mobx-react": "^6.1.2",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "mongodb": "^3.2.7",
     "mongoose": "^5.6.3",
     "multer": "^1.4.1",
